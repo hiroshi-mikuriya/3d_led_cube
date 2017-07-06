@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\sender\main.cpp" />
+    <ClCompile Include="..\OpenCvLink.cpp" />
+    <ClCompile Include="..\..\sender\led.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\sender\letters.hxx" />
+    <ClInclude Include="..\..\sender\letters2.hxx" />
+    <ClInclude Include="..\..\common\led.h" />
+    <ClInclude Include="..\..\common\port.h" />
+  </ItemGroup>
+</Project>
