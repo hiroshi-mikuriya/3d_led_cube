@@ -114,6 +114,7 @@
 				TargetAttributes = {
 					28C379361D7E9D8900C11D92 = {
 						CreatedOnToolsVersion = 7.3.1;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -231,6 +232,8 @@
 		28C3793F1D7E9D8900C11D92 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/include,
 					"$(PROJECT_DIR)/../common",
@@ -241,12 +244,15 @@
 					/usr/local/Cellar/opencv/2.4.13/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
 		28C379401D7E9D8900C11D92 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/include,
 					"$(PROJECT_DIR)/../common",
@@ -257,6 +263,7 @@
 					/usr/local/Cellar/opencv/2.4.13/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

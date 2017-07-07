@@ -219,12 +219,12 @@
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/include,
-					/usr/local/Cellar/opencv/2.4.12_2/include,
 					"$(PROJECT_DIR)/../common",
+					/usr/local/Cellar/opencv/2.4.13/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/lib,
-					/usr/local/Cellar/opencv/2.4.12_2/lib,
+					/usr/local/Cellar/opencv/2.4.13/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -235,12 +235,12 @@
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/include,
-					/usr/local/Cellar/opencv/2.4.12_2/include,
 					"$(PROJECT_DIR)/../common",
+					/usr/local/Cellar/opencv/2.4.13/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/lib,
-					/usr/local/Cellar/opencv/2.4.12_2/lib,
+					/usr/local/Cellar/opencv/2.4.13/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
