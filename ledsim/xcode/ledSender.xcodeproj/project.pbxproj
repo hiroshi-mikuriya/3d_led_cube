@@ -114,6 +114,7 @@
 				TargetAttributes = {
 					28C379361D7E9D8900C11D92 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 9WCD62U6V9;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -233,7 +234,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 9WCD62U6V9;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/include,
 					"$(PROJECT_DIR)/../common",
@@ -243,6 +244,7 @@
 					/usr/local/Cellar/boost/1.60.0_2/lib,
 					/usr/local/Cellar/opencv/2.4.13/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -252,7 +254,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 9WCD62U6V9;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/include,
 					"$(PROJECT_DIR)/../common",
@@ -262,6 +264,7 @@
 					/usr/local/Cellar/boost/1.60.0_2/lib,
 					/usr/local/Cellar/opencv/2.4.13/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
