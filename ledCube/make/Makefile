@@ -17,13 +17,7 @@ LIBS =  -lpthread \
 	-lopencv_imgproc \
 	-lopencv_highgui \
 	-lopencv_ml \
-	-lopencv_video \
-	-lopencv_features2d \
-	-lopencv_calib3d \
-	-lopencv_objdetect \
-	-lopencv_contrib \
-	-lopencv_legacy \
-	-lopencv_flann \
+	-lboost_serialization \
 	-lboost_serialization \
 	-lboost_system \
 	-lbcm2835 \
