@@ -1,0 +1,273 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		285745161D7EBEF9004D9835 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285745151D7EBEF9004D9835 /* main.cpp */; };
+		28C379481D7E9E0E00C11D92 /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C379471D7E9E0E00C11D92 /* libboost_system.a */; };
+		28C379641D7EB0FF00C11D92 /* libopencv_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C379611D7EB0FF00C11D92 /* libopencv_core.dylib */; };
+		28C379651D7EB0FF00C11D92 /* libopencv_highgui.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C379621D7EB0FF00C11D92 /* libopencv_highgui.dylib */; };
+		28C379661D7EB0FF00C11D92 /* libopencv_imgproc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C379631D7EB0FF00C11D92 /* libopencv_imgproc.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		28C379221D7E9D7200C11D92 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		285745151D7EBEF9004D9835 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../receiver/main.cpp; sourceTree = "<group>"; };
+		289E27B71D7FC68E00B4209D /* base64.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = base64.hpp; path = ../common/base64.hpp; sourceTree = "<group>"; };
+		289E27B81D7FC68E00B4209D /* led.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = led.h; path = ../common/led.h; sourceTree = "<group>"; };
+		289E27B91D7FC68E00B4209D /* port.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = port.h; path = ../common/port.h; sourceTree = "<group>"; };
+		289E27BA1D7FC68E00B4209D /* show.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = show.hpp; path = ../common/show.hpp; sourceTree = "<group>"; };
+		28C379471D7E9E0E00C11D92 /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = ../../../../../../../../usr/local/Cellar/boost/1.60.0_2/lib/libboost_system.a; sourceTree = "<group>"; };
+		28C379571D7EA58E00C11D92 /* ledReceiver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ledReceiver; sourceTree = BUILT_PRODUCTS_DIR; };
+		28C379611D7EB0FF00C11D92 /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = ../../../../../../../../usr/local/Cellar/opencv/2.4.12_2/lib/libopencv_core.dylib; sourceTree = "<group>"; };
+		28C379621D7EB0FF00C11D92 /* libopencv_highgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.dylib; path = ../../../../../../../../usr/local/Cellar/opencv/2.4.12_2/lib/libopencv_highgui.dylib; sourceTree = "<group>"; };
+		28C379631D7EB0FF00C11D92 /* libopencv_imgproc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_imgproc.dylib; path = ../../../../../../../../usr/local/Cellar/opencv/2.4.12_2/lib/libopencv_imgproc.dylib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		28C379211D7E9D7200C11D92 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28C379481D7E9E0E00C11D92 /* libboost_system.a in Frameworks */,
+				28C379641D7EB0FF00C11D92 /* libopencv_core.dylib in Frameworks */,
+				28C379651D7EB0FF00C11D92 /* libopencv_highgui.dylib in Frameworks */,
+				28C379661D7EB0FF00C11D92 /* libopencv_imgproc.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		28C3791B1D7E9D7200C11D92 = {
+			isa = PBXGroup;
+			children = (
+				285745151D7EBEF9004D9835 /* main.cpp */,
+				289E27B71D7FC68E00B4209D /* base64.hpp */,
+				289E27B81D7FC68E00B4209D /* led.h */,
+				289E27B91D7FC68E00B4209D /* port.h */,
+				289E27BA1D7FC68E00B4209D /* show.hpp */,
+				28C379611D7EB0FF00C11D92 /* libopencv_core.dylib */,
+				28C379621D7EB0FF00C11D92 /* libopencv_highgui.dylib */,
+				28C379631D7EB0FF00C11D92 /* libopencv_imgproc.dylib */,
+				28C379471D7E9E0E00C11D92 /* libboost_system.a */,
+				28C379571D7EA58E00C11D92 /* ledReceiver */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		28C379231D7E9D7200C11D92 /* ledReceiver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28C3792B1D7E9D7200C11D92 /* Build configuration list for PBXNativeTarget "ledReceiver" */;
+			buildPhases = (
+				28C379201D7E9D7200C11D92 /* Sources */,
+				28C379211D7E9D7200C11D92 /* Frameworks */,
+				28C379221D7E9D7200C11D92 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ledReceiver;
+			productName = ledReceiver;
+			productReference = 28C379571D7EA58E00C11D92 /* ledReceiver */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		28C3791C1D7E9D7200C11D92 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = mikuriya;
+				TargetAttributes = {
+					28C379231D7E9D7200C11D92 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 28C3791F1D7E9D7200C11D92 /* Build configuration list for PBXProject "ledReceiver" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 28C3791B1D7E9D7200C11D92;
+			productRefGroup = 28C3791B1D7E9D7200C11D92;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				28C379231D7E9D7200C11D92 /* ledReceiver */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		28C379201D7E9D7200C11D92 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				285745161D7EBEF9004D9835 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		28C379291D7E9D7200C11D92 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		28C3792A1D7E9D7200C11D92 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		28C3792C1D7E9D7200C11D92 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/boost/1.60.0_2/include,
+					"$(PROJECT_DIR)/../common",
+					/usr/local/Cellar/opencv/2.4.13/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/Cellar/boost/1.60.0_2/lib,
+					/usr/local/Cellar/opencv/2.4.13/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		28C3792D1D7E9D7200C11D92 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/boost/1.60.0_2/include,
+					"$(PROJECT_DIR)/../common",
+					/usr/local/Cellar/opencv/2.4.13/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/Cellar/boost/1.60.0_2/lib,
+					/usr/local/Cellar/opencv/2.4.13/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		28C3791F1D7E9D7200C11D92 /* Build configuration list for PBXProject "ledReceiver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28C379291D7E9D7200C11D92 /* Debug */,
+				28C3792A1D7E9D7200C11D92 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28C3792B1D7E9D7200C11D92 /* Build configuration list for PBXNativeTarget "ledReceiver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28C3792C1D7E9D7200C11D92 /* Debug */,
+				28C3792D1D7E9D7200C11D92 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 28C3791C1D7E9D7200C11D92 /* Project object */;
+}

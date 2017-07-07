@@ -1,0 +1,27 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "82b33b4d-0e02-41d9-a6dc-869436cdfb7d",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "82b33b4d-0e02-41d9-a6dc-869436cdfb7d" : {
+      "DVTSourceControlWorkingCopyRepositoryBranchesLocationKey" : "branches",
+      "DVTSourceControlWorkingCopyRepositoryTagsLocationKey" : "tags",
+      "DVTSourceControlWorkingCopyRepositoryPrimaryBranchLocationKey" : "trunk"
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "82b33b4d-0e02-41d9-a6dc-869436cdfb7d" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "08E83D26-5996-46D0-BF15-E64C347F3309",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "82b33b4d-0e02-41d9-a6dc-869436cdfb7d" : "submarine\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ledReceiver",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "trunk\/Develop\/ledcom\/xcode\/ledReceiver.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/yuzumore2.rdh.fujixerox.co.jp\/svn\/solution\/2015\/submarine",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "82b33b4d-0e02-41d9-a6dc-869436cdfb7d"
+    }
+  ]
+}
