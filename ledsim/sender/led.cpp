@@ -11,7 +11,7 @@ void makerfaire::fxat::Wait(int ms)
 {
 	static auto sLastWaitTime = std::chrono::system_clock::now();
 	auto now = std::chrono::system_clock::now();
-	int diff = std::chrono::duration_cast<std::chrono::milliseconds>(now - sLastWaitTime).count();
+	int diff = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(now - sLastWaitTime).count());
 	ms = std::max(1, ms - diff);
 #ifdef _WIN32
 	Sleep(ms);

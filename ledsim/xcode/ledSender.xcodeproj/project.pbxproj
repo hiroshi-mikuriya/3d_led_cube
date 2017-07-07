@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2857451B1D7EBF3F004D9835 /* ledSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285745171D7EBF3F004D9835 /* ledSender.cpp */; };
+		2857451B1D7EBF3F004D9835 /* led.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285745171D7EBF3F004D9835 /* led.cpp */; };
 		2857451C1D7EBF3F004D9835 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2857451A1D7EBF3F004D9835 /* main.cpp */; };
 		289E27B41D7FB30000B4209D /* libopencv_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 289E27B11D7FB30000B4209D /* libopencv_core.dylib */; };
 		289E27B51D7FB30000B4209D /* libopencv_highgui.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 289E27B21D7FB30000B4209D /* libopencv_highgui.dylib */; };
@@ -28,7 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		285745171D7EBF3F004D9835 /* ledSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ledSender.cpp; path = ../sender/ledSender.cpp; sourceTree = "<group>"; };
+		285745171D7EBF3F004D9835 /* led.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = led.cpp; path = ../sender/led.cpp; sourceTree = "<group>"; };
 		285745181D7EBF3F004D9835 /* letters.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = letters.hxx; path = ../sender/letters.hxx; sourceTree = "<group>"; };
 		285745191D7EBF3F004D9835 /* letters2.hxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = letters2.hxx; path = ../sender/letters2.hxx; sourceTree = "<group>"; };
 		2857451A1D7EBF3F004D9835 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../sender/main.cpp; sourceTree = "<group>"; };
@@ -66,7 +66,7 @@
 				2857451D1D7EBF46004D9835 /* base64.hpp */,
 				2857451E1D7EBF46004D9835 /* led.h */,
 				2857451F1D7EBF46004D9835 /* port.h */,
-				285745171D7EBF3F004D9835 /* ledSender.cpp */,
+				285745171D7EBF3F004D9835 /* led.cpp */,
 				285745181D7EBF3F004D9835 /* letters.hxx */,
 				285745191D7EBF3F004D9835 /* letters2.hxx */,
 				2857451A1D7EBF3F004D9835 /* main.cpp */,
@@ -140,7 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2857451C1D7EBF3F004D9835 /* main.cpp in Sources */,
-				2857451B1D7EBF3F004D9835 /* ledSender.cpp in Sources */,
+				2857451B1D7EBF3F004D9835 /* led.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,11 +234,11 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/include,
 					"$(PROJECT_DIR)/../common",
-					/usr/local/Cellar/opencv/2.4.12_2/include,
+					/usr/local/Cellar/opencv/2.4.13/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/lib,
-					/usr/local/Cellar/opencv/2.4.12_2/lib,
+					/usr/local/Cellar/opencv/2.4.13/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -250,11 +250,11 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/include,
 					"$(PROJECT_DIR)/../common",
-					/usr/local/Cellar/opencv/2.4.12_2/include,
+					/usr/local/Cellar/opencv/2.4.13/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/Cellar/boost/1.60.0_2/lib,
-					/usr/local/Cellar/opencv/2.4.12_2/lib,
+					/usr/local/Cellar/opencv/2.4.13/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
