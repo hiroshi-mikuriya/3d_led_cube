@@ -17,24 +17,23 @@ XY平面のパネルを描画する
 inline void DrawPanelXY(
 	cv::Mat & canvas,
 	cv::Point2f const & lt,
-	int const (&led)[makerfaire::fxat::Led::Width][makerfaire::fxat::Led::Height][makerfaire::fxat::Led::Depth],
+	int const (&led)[LED_WIDTH][LED_HEIGHT][LED_DEPTH],
 	int ledsize,
 	int z,
 	float wirelen,
 	cv::Scalar const & wirecolor)
 {
-	using makerfaire::fxat::Led;
-	for (int x = 0; x < Led::Width; ++x){
-		for (int y = 0; y < Led::Height; ++y){
-			if (x < Led::Width - 1 && y < Led::Height - 1){
+	for (int x = 0; x < LED_WIDTH; ++x){
+		for (int y = 0; y < LED_HEIGHT; ++y){
+			if (x < LED_WIDTH - 1 && y < LED_HEIGHT - 1){
 				cv::Point2f p(lt.x + x * wirelen, lt.y + y * wirelen);
 				cv::Size2f s(wirelen + 1, wirelen + 1);
 				cv::rectangle(canvas, cv::Rect(p, s), wirecolor);
 			}
 		}
 	}
-	for (int x = 0; x < Led::Width; ++x){
-		for (int y = 0; y < Led::Height; ++y){
+	for (int x = 0; x < LED_WIDTH; ++x){
+		for (int y = 0; y < LED_HEIGHT; ++y){
 			int rgb = led[x][y][z];
 			if (rgb == 0){
 				continue;
@@ -58,20 +57,19 @@ YZ平面のパネルを描画する
 inline void DrawPanelYZ(
 	cv::Mat & canvas,
 	cv::Point2f const & lt,
-	int const (&led)[makerfaire::fxat::Led::Width][makerfaire::fxat::Led::Height][makerfaire::fxat::Led::Depth],
+    int const (&led)[LED_WIDTH][LED_HEIGHT][LED_DEPTH],
 	int ledsize,
 	int x,
 	float wirelen)
 {
-	using makerfaire::fxat::Led;
-	for (int y = 0; y < Led::Height; ++y){
-		for (int z = 0; z < Led::Depth; ++z){
+	for (int y = 0; y < LED_HEIGHT; ++y){
+		for (int z = 0; z < LED_DEPTH; ++z){
 			int rgb = led[x][y][z];
 			if (rgb == 0){
 				continue;
 			}
 			cv::Scalar c((rgb >> 0) & 0xFF & 0xFF, (rgb >> 8) & 0xFF, (rgb >> 16) & 0xFF);
-			cv::Point2f p(lt.x + (Led::Depth - z - 1) * wirelen, lt.y + y * wirelen);	// z軸を水平反転させないと表示が逆になる
+			cv::Point2f p(lt.x + (LED_DEPTH - z - 1) * wirelen, lt.y + y * wirelen);	// z軸を水平反転させないと表示が逆になる
 			cv::circle(canvas, p, ledsize, c, CV_FILLED);
 		}
 	}
@@ -82,7 +80,7 @@ inline void DrawPanelYZ(
 @param[in] title ウィンドウタイトル
 @param[in] led 発光パターン
 */
-inline void ShowWindow(std::string const & title, int const (&led)[makerfaire::fxat::Led::Width][makerfaire::fxat::Led::Height][makerfaire::fxat::Led::Depth])
+inline void ShowWindow(std::string const & title, int const (&led)[LED_WIDTH][LED_HEIGHT][LED_DEPTH])
 {
 	// const parameters
 	const auto backgroundcolor = cv::Scalar::all(0x20);	// 背景色
@@ -94,20 +92,19 @@ inline void ShowWindow(std::string const & title, int const (&led)[makerfaire::f
 	const float leftmargin = 50 * ratio;	// 画面の左から箱の距離
 	const float swing = 8.0f * ratio; // 振り幅
 
-	using makerfaire::fxat::Led;
 	static double s_pattern = 0.0;
 	s_pattern += CV_PI / 20;
 	float parallax = static_cast<float>(std::sin(s_pattern) * swing);
 	const auto zfactor = 0.25f;
 	cv::Mat canvas(backgroundsize, CV_8UC3, backgroundcolor);
-	for (int z = Led::Depth - 1; 0 <= z; --z){
+	for (int z = LED_DEPTH - 1; 0 <= z; --z){
 		const float wirelen = (depthmargin - z / 8.0f);
-		cv::Point2f const lt(leftmargin + parallax * z*zfactor + (Led::Depth + 4)* wirelen, wirelen * (Led::Depth - z*zfactor));
+		cv::Point2f const lt(leftmargin + parallax * z*zfactor + (LED_DEPTH + 4)* wirelen, wirelen * (LED_DEPTH - z*zfactor));
 		DrawPanelXY(canvas, lt, led, ledsize, z, wirelen, wirecolor);
 	}
-	for (int x = Led::Width - 1; 0 <= x; --x){
+	for (int x = LED_WIDTH - 1; 0 <= x; --x){
 		const float wirelen = (depthmargin - x / 8.0f);
-		cv::Point2f const lt(leftmargin + parallax * x * zfactor, wirelen * (Led::Depth - x*zfactor));
+		cv::Point2f const lt(leftmargin + parallax * x * zfactor, wirelen * (LED_DEPTH - x*zfactor));
 		DrawPanelYZ(canvas, lt, led, ledsize, x, wirelen);
 	}
 	cv::imshow(title, canvas);
