@@ -2,14 +2,19 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++11 -v
 
-TARGET = receiver
+TARGET = 3dLed
+
 PROJ_ROOT = $(realpath ..)
-SRCS = $(PROJ_ROOT)/receiver/main.cpp \
-	$(PROJ_ROOT)/receiver/spi.cpp
+
+SRCS = $(PROJ_ROOT)/sender/led.cpp \
+	$(PROJ_ROOT)/sender/main.cpp
+
 OBJS := $(SRCS:.cpp=.o)
+
 INCLUDES = -I/usr/local/include/opencv \
-	-I/usr/local/include/boost \
+	-I/usr/local/include/ \
 	-I $(PROJ_ROOT)/common \
+	-I $(PROJ_ROOT)/sender \
 	
 LIBS =  -lpthread \
 	-ldl \
