@@ -7,7 +7,7 @@
 #include <mutex>
 #include <chrono>
 
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 #ifdef _DEBUG
 #define LIB_EXTENSION "d.lib"
 #else
@@ -22,7 +22,7 @@
 #pragma comment( lib, "User32.lib")
 #pragma comment( lib, "Gdi32.lib")
 #pragma comment( lib, "Advapi32.lib")
-#endif // WIN32
+#endif // WIN32 or WIN64
 
 namespace
 {

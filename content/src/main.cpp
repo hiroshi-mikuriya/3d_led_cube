@@ -1,4 +1,7 @@
+#if defined(__APPLE__)
 #include "LoadLibrary.hpp"
+#endif
+
 #include <cstdlib>
 #include <cmath>
 
@@ -877,7 +880,9 @@ int main(int argc, const char* argv[])
     if (1 < argc){
         SetUrl(argv[1]);
     }
+#if defined(__APPLE__)
     loadLibrary("./libledLib.dylib");
+#endif
     for (;;) {
         // letters2();
         wave();
