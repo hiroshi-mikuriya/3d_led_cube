@@ -10,18 +10,18 @@ int main()
   Led led;
   for (int i = 0;; ++i) {
     if (0 == (i % 128)) {
-      led.Clear();
+      Clear();
     } else {
-      int x = rand() % Led::Width;
-      int y = rand() % Led::Height;
-      int z = rand() % Led::Depth;
+      int x = rand() % LED_WIDTH;
+      int y = rand() % LED_HEIGHT;
+      int z = rand() % LED_DEPTH;
       int r = rand() & 0xFF;
       int g = rand() & 0xFF;
       int b = rand() & 0xFF;
       int rgb = (r << 16) + (g << 8) + b;
-      led.SetLed(x, y, z, rgb);
+      SetLed(x, y, z, rgb);
     }
-    led.Show();
+    Show();
     Wait(50);
   }
   return 0;
@@ -55,18 +55,17 @@ t max3(t const & a, t const & b, t const & c)
 }
 
 template< typename proc_t >
-void concentric(makerfaire::fxat::Led & led, proc_t const & proc)
+void concentric(proc_t const & proc)
 {
-  using makerfaire::fxat::Led;
   for (int ix = 0; ix<N; ++ix) {
-    int cx = Led::Width / 2;
-    int cy = Led::Height / 2;
-    int cz = Led::Depth / 2;
-    led.Clear();
+    int cx = LED_WIDTH / 2;
+    int cy = LED_HEIGHT / 2;
+    int cz = LED_DEPTH / 2;
+    Clear();
     int power = get_power(ix);
-    for (int x = 0; x < Led::Width; ++x) {
-      for (int y = 0; y < Led::Height; ++y) {
-        for (int z = 0; z < Led::Depth; ++z) {
+    for (int x = 0; x < LED_WIDTH; ++x) {
+      for (int y = 0; y < LED_HEIGHT; ++y) {
+        for (int z = 0; z < LED_DEPTH; ++z) {
           double d = proc(x - cx, y - cy, z - cz, ix*1.0/N);
           int col0 = static_cast<int>(std::round(ix - d)) % 64;
           int col = (col0 % 6) == 0 ? col0 % 7 + 1 : 0;
@@ -74,12 +73,12 @@ void concentric(makerfaire::fxat::Led & led, proc_t const & proc)
           int g = (col & 2) ? power : 0;
           int b = (col & 4) ? power : 0;
           int rgb = (r << 16) + (g << 8) + b;
-          led.SetLed(x, y, z, rgb);
+          SetLed(x, y, z, rgb);
         }
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   }
 }
 
@@ -154,16 +153,14 @@ xyz_t sphere_face(std::mt19937 & rng)
 
 bool can_show(xyz_t const & p)
 {
-  using makerfaire::fxat::Led;
-  return 0 <= p.x && p.x < Led::Width
-    && 0 <= p.y && p.y < Led::Height
-    && 0 <= p.z && p.z < Led::Depth;
+  return 0 <= p.x && p.x < LED_WIDTH
+    && 0 <= p.y && p.y < LED_HEIGHT
+    && 0 <= p.z && p.z < LED_DEPTH;
 }
 
-void color_cube(makerfaire::fxat::Led & led)
+void color_cube()
 {
   using namespace std;
-  using makerfaire::fxat::Led;
   const int N = 200;
   std::vector<xyzc_t> points;
   auto rgb = [](double x, double y, double z)->int {
@@ -195,7 +192,7 @@ void color_cube(makerfaire::fxat::Led & led)
   }
 #endif
   for (int i = 0; i < N; ++i) {
-    led.Clear();
+    Clear();
     for (auto p0 : points) {
       double t = cos(6.28*i / N * 2)*3.14;
       double t1 = sin(6.28*i / N * 2)*3.14;
@@ -216,21 +213,20 @@ void color_cube(makerfaire::fxat::Led & led)
         zo*(-p1.x * sin(t1) + p1.y * cos(t1)),
         zo*p1.z,
       };
-      double x = (p.x / 2 + 0.5)* (Led::Width - 1);
-      double y = (p.y / 2 + 0.5)* (Led::Height - 1);
-      double z = (p.z / 2 + 0.5)* (Led::Depth - 1);
+      double x = (p.x / 2 + 0.5)* (LED_WIDTH - 1);
+      double y = (p.y / 2 + 0.5)* (LED_HEIGHT - 1);
+      double z = (p.z / 2 + 0.5)* (LED_DEPTH - 1);
       if (can_show({ x, y, z })) {
-        led.SetLed(x, y, z, p0.color);
+        SetLed(x, y, z, p0.color);
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   }
 }
 
-void fireworks(makerfaire::fxat::Led & led)
+void fireworks()
 {
-  using makerfaire::fxat::Led;
   const int N = 200;
   std::vector<xyzc_t> poss;
   std::vector<xyz_t> vs(poss.size());
@@ -259,11 +255,11 @@ void fireworks(makerfaire::fxat::Led & led)
   };
   std::uniform_real_distribution<double> dist(0, 1);
   for (int ix = 0; ix < N; ++ix) {
-    led.Clear();
+    Clear();
     if (ix % 20 == 0 && 20<N-ix) {
-      double cx = Led::Width * dist(rng);
-      double cy = Led::Height * dist(rng);
-      double cz = Led::Depth * dist(rng);
+      double cx = LED_WIDTH * dist(rng);
+      double cy = LED_HEIGHT * dist(rng);
+      double cz = LED_DEPTH * dist(rng);
       for (int i = 0; i < PS; ++i) {
         vs.push_back(sphere_face(rng));
         poss.push_back({ { cx, cy, cz }, rgb(vs.back().len()) });
@@ -273,21 +269,20 @@ void fireworks(makerfaire::fxat::Led & led)
       auto & p = poss[i];
       auto & v = vs[i];
       if (can_show(p.p)) {
-        led.SetLed(p.p.x, p.p.y, p.p.z, p.color);
+        SetLed(p.p.x, p.p.y, p.p.z, p.color);
       } else {
 
       }
       p.p = p.p + v;
       p.color = darken(p.color);
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   }
 }
 
-void repbang(makerfaire::fxat::Led & led)
+void repbang()
 {
-  using makerfaire::fxat::Led;
   std::vector<xyzc_t> ps;
   std::mt19937 rng;
   auto newp = [&rng]()->xyzc_t{
@@ -305,7 +300,7 @@ void repbang(makerfaire::fxat::Led & led)
   }
   int N = 216;
   for (int i = 0; i < N; ++i){
-    led.Clear();
+    Clear();
     double r = 1-std::cos(i*3.1416 / N * 8);
     double t = i*3.1416 / N * 16;
     for (auto & p : ps){
@@ -314,20 +309,19 @@ void repbang(makerfaire::fxat::Led & led)
         p.p.y,
         std::sin(t)*p.p.x + std::cos(t)*p.p.z,
       };
-      xyz_t pos = q * r * Led::Height + xyz(Led::Width, Led::Height, Led::Depth)*0.5;
+      xyz_t pos = q * r * LED_HEIGHT + xyz(LED_WIDTH, LED_HEIGHT, LED_DEPTH)*0.5;
 
       if (can_show(pos)){
-        led.SetLed(pos.x, pos.y, pos.z, p.color);
+        SetLed(pos.x, pos.y, pos.z, p.color);
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   }
 }
 
-void spiral(makerfaire::fxat::Led & led)
+void spiral()
 {
-  using makerfaire::fxat::Led;
   struct rty_t{ double r, t, y; };
   struct rtyc_t { rty_t p; int c; };
   std::vector<rtyc_t> pcs;
@@ -357,37 +351,36 @@ void spiral(makerfaire::fxat::Led & led)
     return r + g + b;
   };
   for (int i = 0; i < N; ++i){
-    led.Clear();
+    Clear();
     int d = i < D ? i : N < i + D ? N - i : D;
     for (auto & pc : pcs){
-      double y = int((pc.p.y) * Led::Height+N-i*U) % Led::Height;
-      double x = (pc.p.r * std::cos(pc.p.t + i*T)) * Led::Width / 2 + Led::Width/2;
-      double z = (pc.p.r * std::sin(pc.p.t + i*T)) * Led::Width / 2 + Led::Depth/2;
+      double y = int((pc.p.y) * LED_HEIGHT+N-i*U) % LED_HEIGHT;
+      double x = (pc.p.r * std::cos(pc.p.t + i*T)) * LED_WIDTH / 2 + LED_WIDTH/2;
+      double z = (pc.p.r * std::sin(pc.p.t + i*T)) * LED_WIDTH / 2 + LED_DEPTH/2;
       if (can_show({ x, y, z })){
-        led.SetLed(x, y, z, darken( pc.c, d ));
+        SetLed(x, y, z, darken( pc.c, d ));
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   }
 }
 
-void brown(makerfaire::fxat::Led & led)
+void brown()
 {
-  using makerfaire::fxat::Led;
   int len = N * 2;
   struct pos_t{ int x, y, z; };
   std::deque<pos_t> poses[3]{
-      {{ Led::Width / 2, Led::Height / 4, Led::Depth / 2 }},
-      { { Led::Width / 2, Led::Height / 2, Led::Depth / 2 } },
-      { { Led::Width / 2, Led::Height*3 / 4, Led::Depth / 2 } }
+      {{ LED_WIDTH / 2, LED_HEIGHT / 4, LED_DEPTH / 2 }},
+      { { LED_WIDTH / 2, LED_HEIGHT / 2, LED_DEPTH / 2 } },
+      { { LED_WIDTH / 2, LED_HEIGHT*3 / 4, LED_DEPTH / 2 } }
   };
 
   auto normalize = [](pos_t const & s) -> pos_t {
     return{
-      (s.x + Led::Width) % Led::Width,
-      (s.y + Led::Height) % Led::Height,
-      (s.z + Led::Depth) % Led::Depth
+      (s.x + LED_WIDTH) % LED_WIDTH,
+      (s.y + LED_HEIGHT) % LED_HEIGHT,
+      (s.z + LED_DEPTH) % LED_DEPTH
     };
   };
   auto move = [](pos_t const & s) -> pos_t {
@@ -420,7 +413,7 @@ void brown(makerfaire::fxat::Led & led)
     }
   };
   for (int i = 0; i < len; ++i) {
-    led.Clear();
+    Clear();
     for (int i = 0; i < 3; ++i) {
       auto & pos = poses[i];
       for (int j = 0; j < 3; ++j) {
@@ -436,31 +429,31 @@ void brown(makerfaire::fxat::Led & led)
         int g = red(ix + 30)* power / 255;
         int b = red(ix + 60)* power / 255;
         int rgb = (r << 16) + (g << 8) + b;
-        led.SetLed(it->x, it->y, it->z, rgb);
+        SetLed(it->x, it->y, it->z, rgb);
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   }
 }
 
-void cube(makerfaire::fxat::Led & led)
+void cube()
 {
-  concentric(led, [](int dx, int dy, int dz, double t)->double {
+  concentric([](int dx, int dy, int dz, double t)->double {
     return max3(std::abs(dx), std::abs(dy), std::abs(dz));
   });
 }
 
-void sphere(makerfaire::fxat::Led & led)
+void sphere()
 {
-  concentric(led, [](int dx, int dy, int dz, double t)->double {
+  concentric([](int dx, int dy, int dz, double t)->double {
     return std::sqrt(dx*dx + dy*dy + dz*dz);
   });
 }
 
-void skewed_sphere(makerfaire::fxat::Led & led)
+void skewed_sphere()
 {
-  concentric(led, [](int dx0, int dy, int dz0, double t)->double {
+  concentric([](int dx0, int dy, int dz0, double t)->double {
     double T = 4;
     double s = std::sin(t*3.14*T);
     double c = std::cos(t*3.14*T);
@@ -470,9 +463,8 @@ void skewed_sphere(makerfaire::fxat::Led & led)
   });
 }
 
-void gala(makerfaire::fxat::Led & led)
+void gala()
 {
-  using makerfaire::fxat::Led;
   struct rtyc_t{ double r, t, y; int c; };
   std::mt19937 rng;
   std::uniform_real_distribution<> tdist(0, 3.1416 * 2);
@@ -501,7 +493,7 @@ void gala(makerfaire::fxat::Led & led)
   };
   const int N = 200;
   for (int i = 0; i < N; ++i){
-    led.Clear();
+    Clear();
     int d = i < D ? i : N < i + D ? N - i : D;
     for (auto & star : stars){
       star.t += 0.005 / (std::abs(star.r) + 0.1);
@@ -519,42 +511,41 @@ void gala(makerfaire::fxat::Led & led)
         std::sin(U)*x + std::cos(U)*z,
       };
       xyz_t pos{
-        p.x * Led::Width / 2 + Led::Width / 2,
-        p.y * Led::Width / 2 + Led::Height / 2,
-        p.z * Led::Width / 2 + Led::Depth / 2 };
+        p.x * LED_WIDTH / 2 + LED_WIDTH / 2,
+        p.y * LED_WIDTH / 2 + LED_HEIGHT / 2,
+        p.z * LED_WIDTH / 2 + LED_DEPTH / 2 };
       if (can_show(pos)){
-        led.SetLed(pos.x, pos.y, pos.z, darken(star.c, d));
+        SetLed(pos.x, pos.y, pos.z, darken(star.c, d));
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   }
 }
 
-void balls(makerfaire::fxat::Led & led)
+void balls()
 {
-  using makerfaire::fxat::Led;
   struct p_t { xyz_t p, v; int c; };
   std::vector<p_t> ps;
   std::mt19937 rng;
   for (int i = 1; i < 7; ++i){
     ps.push_back({
-        {static_cast<double>(i & 1 ? 0 : Led::Width),
-          static_cast<double>(i & 2 ? 0 : Led::Height),
-          static_cast<double>(i & 4 ? 0 : Led::Depth)},
+        {static_cast<double>(i & 1 ? 0 : LED_WIDTH),
+          static_cast<double>(i & 2 ? 0 : LED_HEIGHT),
+          static_cast<double>(i & 4 ? 0 : LED_DEPTH)},
         {0,0,0},
         (i & 1 ? 0xff0000 : 0) + (i & 2 ? 0xff00 : 0) + (i & 4 ? 0xff : 0)
     });
   }
   int N = 200;
   for (int ix = 0;; ++ix){
-    led.Clear();
+    Clear();
     bool shown = false;
     for (auto & p : ps){
       if (ix<N && ( !can_show(p.p) || p.v.len() == 0)){
         xyz_t dir;
         for (;;){
-          xyz_t dest{ static_cast<double>(rng() % Led::Width), static_cast<double>(rng() % Led::Height), static_cast<double>(rng() % Led::Depth) };
+          xyz_t dest{ static_cast<double>(rng() % LED_WIDTH), static_cast<double>(rng() % LED_HEIGHT), static_cast<double>(rng() % LED_DEPTH) };
           dir = dest - p.p;
           if (dir.len() != 0){
             break;
@@ -572,22 +563,21 @@ void balls(makerfaire::fxat::Led & led)
           xyz_t pos = p.p + delta;
           if (can_show(pos)){
             shown = true;
-            led.SetLed(pos.x, pos.y, pos.z, p.c);
+            SetLed(pos.x, pos.y, pos.z, p.c);
           }
         }
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
     if (!shown){
       break;
     }
   }
 }
 
-void threed(makerfaire::fxat::Led & led)
+void threed()
 {
-  using makerfaire::fxat::Led;
   char m0[] =
     "00000000"/*0*/
     "01111110"/*1*/
@@ -622,7 +612,6 @@ void threed(makerfaire::fxat::Led & led)
     "01111100"/*d*/
     "01111000"/*e*/
     "00000000"/*f*/;
-  int N = 200;
   std::mt19937 rng;
   auto col_at = [&m0, &m1, &rng](int x, int y, int c)->int {
     char const * m = c == 0 ? m0 : m1;
@@ -639,21 +628,21 @@ void threed(makerfaire::fxat::Led & led)
   std::vector<pp_t> pps;
   while (pps.size()<2000){
     xyz_t a{
-      static_cast<double>(rng() % Led::Width),
-      static_cast<double>(rng() % Led::Height),
-      static_cast<double>(rng() % Led::Depth) };
+      static_cast<double>(rng() % LED_WIDTH),
+      static_cast<double>(rng() % LED_HEIGHT),
+      static_cast<double>(rng() % LED_DEPTH) };
     xyz_t b{
-      static_cast<double>(rng() % Led::Width),
-      static_cast<double>(rng() % Led::Height),
-      static_cast<double>(rng() % Led::Depth) };
+      static_cast<double>(rng() % LED_WIDTH),
+      static_cast<double>(rng() % LED_HEIGHT),
+      static_cast<double>(rng() % LED_DEPTH) };
     if (col_at2(a,0) && col_at2(b,1)) {
       pps.push_back({ { a, b } });
     }
   }
   int N0 = 20;
   int N1 = 20;
-  auto show = [&col_at2,&pps, &led, N0](double c, double d)->void {
-    led.Clear();
+  auto show = [&col_at2,&pps, N0](double c, double d)->void {
+    Clear();
     for (auto & pp : pps) {
       xyz_t p = pp.p[0] * (1-c) + pp.p[1] * c;
       int c0 = col_at2(pp.p[0], 0);
@@ -664,11 +653,11 @@ void threed(makerfaire::fxat::Led & led)
       };
       int col = mean(0xff0000,d) + mean(0xff00,d) + mean(0xff,d);
       if (can_show(p)) {
-        led.SetLed(p.x, p.y, p.z, col);
+        SetLed(p.x, p.y, p.z, col);
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   };
   for (int ix = 0; ix < N0; ++ix) {
     show(0, ix*1.0/N0);
@@ -694,29 +683,24 @@ t max_(t const & a, t const & b, t const & c){
   return max_(a, max_(b, c));
 }
 
-void wave(makerfaire::fxat::Led & led)
+void wave()
 {
-  using makerfaire::fxat::Led;
   const int N0 = 300;
-  int C = 9;
   for (int i = 0; i < N0; ++i){
-    led.Clear();
+    Clear();
     double it = 3.14 * 10 / N0;
     double xt = 3.14 * 2;
     double yt = 3.14 * 2 * 1.41;
-    double rt= 3.14 * 1 * 1.41 / N0;
-    double gt = 3.14 * 1 * 1.26 / N0;
-    double bt = 3.14 * 1 * 1.59 / N0;
     double LT = 20.0;
     double light = i < LT ? i / LT : N0 - i<LT ? (N0 - i) / LT : 1;
-    for (int iy = 0; iy < Led::Height; ++iy){
-      for (int ix = 0; ix < Led::Width; ++ix){
-        double x = xt*(ix-Led::Width/2)/Led::Width*2;
-        double y = yt*(iy - Led::Height / 2) / Led::Height*2;
-        double iz = static_cast<int>(sin(x)*sin(y)*sin(i*it)*Led::Depth/2+ Led::Depth/2);
+    for (int iy = 0; iy < LED_HEIGHT; ++iy){
+      for (int ix = 0; ix < LED_WIDTH; ++ix){
+        double x = xt*(ix-LED_WIDTH/2)/LED_WIDTH*2;
+        double y = yt*(iy - LED_HEIGHT / 2) / LED_HEIGHT*2;
+        double iz = static_cast<int>(sin(x)*sin(y)*sin(i*it)*LED_DEPTH/2+ LED_DEPTH/2);
         auto col = [&](double t)->int{
-          double dx = (ix - Led::Width / 2);
-          double dy = (iy - Led::Height / 2);
+          double dx = (ix - LED_WIDTH / 2);
+          double dy = (iy - LED_HEIGHT / 2);
           double d = std::pow(dx*dx + dy*dy, 0.7) / 10.0 + t + i*it;
           double W = sin(3.1416 * 7 / 6);
           double v = sin(d) < W ? 0 : (sin(d)-W) / (1-W);
@@ -726,13 +710,13 @@ void wave(makerfaire::fxat::Led & led)
         int c = col(T) * 1 + col(T*2) * 0x100 + col(T*3) * 0x10000;
         for (int dz : { -1, 0, 1 }){
           if (can_show({ static_cast<double>(ix), static_cast<double>(iy), iz+dz })){
-            led.SetLed(ix, iy, iz+dz, c);
+            SetLed(ix, iy, iz+dz, c);
           }
         }
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   }
 }
 
@@ -741,9 +725,9 @@ struct yz_t
   double y, z;
 };
 
-void letters2(makerfaire::fxat::Led & led)
+/*
+void letters2()
 {
-  using makerfaire::fxat::Led;
   std::vector<std::string> letters{
 #include "letters2.hxx"
   };
@@ -757,7 +741,7 @@ void letters2(makerfaire::fxat::Led & led)
   };
   const int LH = 16;
   for (int i = 0; i < letters.size()*LH + positions.size(); ++i) {
-    led.Clear();
+    Clear();
     for (size_t pi = 0; pi < positions.size(); ++pi ){
       int pi0 = i + pi -int(positions.size());
       int c = (pi0 + LH * 10) / LH - 10;
@@ -773,24 +757,23 @@ void letters2(makerfaire::fxat::Led & led)
         };
         return c(t) + c(t + t0) * 256 + c(t + t0 * 2) * 65536;
       };
-      for (int x = 0; x < Led::Width; ++x) {
+      for (int x = 0; x < LED_WIDTH; ++x) {
         int y_in_c = pi0 % LH;
-        int col = letters.at(c).at(y_in_c * Led::Width + x) - 'A';
+        int col = letters.at(c).at(y_in_c * LED_WIDTH + x) - 'A';
         auto yz = positions.at(pi);
-        led.SetLed(x, yz.y, yz.z, color(col));
+        SetLed(x, yz.y, yz.z, color(col));
         if (yz.z < 7) {
-          led.SetLed(x, yz.y, yz.z + 1, color(col));
+          SetLed(x, yz.y, yz.z + 1, color(col));
         }
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   }
 }
 
-void letters(makerfaire::fxat::Led & led)
+void letters()
 {
-  using makerfaire::fxat::Led;
   std::vector<std::string> letters{
 #include "letters.hxx"
   };
@@ -798,8 +781,8 @@ void letters(makerfaire::fxat::Led & led)
   const int N1 = 4*2;
   auto color = [&](std::string const & a, xyz_t p, int ix)->int {
     int colbase;
-    int xx = p.x * 15 / Led::Width;
-    int yy = p.y * 15 / Led::Height;
+    int xx = p.x * 15 / LED_WIDTH;
+    int yy = p.y * 15 / LED_HEIGHT;
     auto cb=[](int r, int g, int b)->int
     {
       return 0x1 * r + 0x100 * g + 0x10000* b;
@@ -811,7 +794,7 @@ void letters(makerfaire::fxat::Led & led)
     default:
       throw "DEATH!";
     }
-    return (a[p.x + p.y*Led::Width] - 'A' ) * colbase;
+    return (a[p.x + p.y*LED_WIDTH] - 'A' ) * colbase;
   };
   auto show = [&](std::string const & a, std::string const & b, double move, double light, int ix) {
     struct pp_t{
@@ -821,18 +804,18 @@ void letters(makerfaire::fxat::Led & led)
     std::vector<pp_t> pps;
     while (pps.size()<2000) {
       xyz_t p0{
-        static_cast<double>(rng() % Led::Width),
-        static_cast<double>(rng() % Led::Height),
-        static_cast<double>(rng() % Led::Depth) };
+        static_cast<double>(rng() % LED_WIDTH),
+        static_cast<double>(rng() % LED_HEIGHT),
+        static_cast<double>(rng() % LED_DEPTH) };
       xyz_t p1{
-        static_cast<double>(rng() % Led::Width),
-        static_cast<double>(rng() % Led::Height),
-        static_cast<double>(rng() % Led::Depth) };
+        static_cast<double>(rng() % LED_WIDTH),
+        static_cast<double>(rng() % LED_HEIGHT),
+        static_cast<double>(rng() % LED_DEPTH) };
       if (color(a, p0,ix) && color(b, p1,ix+1)) {
         pps.push_back({ { p0, p1 } });
       }
     }
-    led.Clear();
+    Clear();
     for (auto const & pp : pps) {
       xyz_t p = pp.p[0] * (1 - move) + pp.p[1] * move;
       int c0 = color(a, pp.p[0],ix);
@@ -843,11 +826,11 @@ void letters(makerfaire::fxat::Led & led)
       };
       int col = mean(0xff0000, light) + mean(0xff00, light) + mean(0xff, light);
       if (can_show(p)) {
-        led.SetLed(p.x, p.y, p.z, col);
+        SetLed(p.x, p.y, p.z, col);
       }
     }
-    led.Show();
-    makerfaire::fxat::Wait(50);
+    Show();
+    Wait(50);
   };
   auto fade_in = [&](std::string const & c, int letter_index) {
     for (int ix = 0; ix < N0; ++ix) {
@@ -885,31 +868,30 @@ void letters(makerfaire::fxat::Led & led)
     }
   }
 }
-
+*/
+ 
 int main(int argc, const char* argv[])
 {
   static_cast<void>(argc); // unused
   static_cast<void>(argv); // unused
-  using namespace makerfaire::fxat;
-  Led led;
   if (1 < argc){
-	  led.SetUrl(argv[1]);
+	  SetUrl(argv[1]);
   }
   for (;;) {
-    letters2(led);
-    wave(led);
-    letters(led);
-    balls(led);
-    gala(led);
-    skewed_sphere(led);
-    threed(led);
-    repbang(led);
-    color_cube (led);
-    spiral(led);
-    cube(led);
-    fireworks(led);
-    brown(led);
-    sphere(led);
+    // letters2();
+    wave();
+    // letters();
+    balls();
+    gala();
+    skewed_sphere();
+    threed();
+    repbang();
+    color_cube ();
+    spiral();
+    cube();
+    fireworks();
+    brown();
+    sphere();
   }
 }
 
