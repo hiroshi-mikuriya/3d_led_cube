@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07781E571F123901006FBCA8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07781E561F123901006FBCA8 /* main.cpp */; };
-		07781E5A1F123A48006FBCA8 /* libledLib.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 07781E591F123A48006FBCA8 /* libledLib.dylib */; };
+		07104D0A1F1246250042507E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07104D091F1246250042507E /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,7 +24,9 @@
 
 /* Begin PBXFileReference section */
 		070FBB431F1238400062BA53 /* ledContents */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ledContents; sourceTree = BUILT_PRODUCTS_DIR; };
-		07781E561F123901006FBCA8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../../../src/main.cpp; sourceTree = "<group>"; };
+		07104D091F1246250042507E /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../../../src/main.cpp; sourceTree = "<group>"; };
+		07104D0B1F1246580042507E /* loadLibrary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = loadLibrary.hpp; sourceTree = SOURCE_ROOT; };
+		07104D0C1F125DB30042507E /* led.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = led.h; sourceTree = SOURCE_ROOT; };
 		07781E591F123A48006FBCA8 /* libledLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libledLib.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -34,7 +35,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07781E5A1F123A48006FBCA8 /* libledLib.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +61,9 @@
 		070FBB451F1238400062BA53 /* ledContents */ = {
 			isa = PBXGroup;
 			children = (
-				07781E561F123901006FBCA8 /* main.cpp */,
+				07104D0C1F125DB30042507E /* led.h */,
+				07104D091F1246250042507E /* main.cpp */,
+				07104D0B1F1246580042507E /* loadLibrary.hpp */,
 			);
 			path = ledContents;
 			sourceTree = "<group>";
@@ -131,7 +133,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07781E571F123901006FBCA8 /* main.cpp in Sources */,
+				07104D0A1F1246250042507E /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,11 +232,8 @@
 		070FBB4B1F1238400062BA53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/\"";
-				LIBRARY_SEARCH_PATHS = (
-					"\"$(SRCROOT)/\"",
-					"$(PROJECT_DIR)",
-				);
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -242,11 +241,9 @@
 		070FBB4C1F1238400062BA53 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/\"";
-				LIBRARY_SEARCH_PATHS = (
-					"\"$(SRCROOT)/\"",
-					"$(PROJECT_DIR)",
-				);
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

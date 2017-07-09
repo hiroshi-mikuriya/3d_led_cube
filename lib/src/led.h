@@ -9,10 +9,7 @@
  If you specify a URL, the drawing data is transferred each time you call the Show function.
  @param[in] url 3D LED CUBE IP ADDRESS
 */
-#ifdef __cplusplus
-extern "C"
-#endif
-void SetUrl(char const * url);
+typedef void * SetUrl_t(char const * url);
 
 /*!
  Specify the color of each LED.
@@ -22,27 +19,18 @@ void SetUrl(char const * url);
  @param[in] z 0 <= z < LED_DEPTH
  @param[in] rgb 0x000000 <= rgb <= 0xFFFFFF
 */
-#ifdef __cplusplus
-extern "C"
-#endif
-void SetLed(int x, int y, int z, int rgb);
+typedef void * SetLed_t(int x, int y, int z, int rgb);
 
 /*!
  Clear all LED.
  Just by calling this function, drawing data is not transferred to 3D LED CUBE.
 */
-#ifdef __cplusplus
-extern "C"
-#endif
-void Clear();
+typedef void * Clear_t();
 
 /*!
  Show 3D LED simulator window and transfer color of each LED to 3D LED CUBE.
 */
-#ifdef __cplusplus
-extern "C"
-#endif
-void Show();
+typedef void * Show_t();
 
 
 /*!
@@ -50,7 +38,4 @@ void Show();
  This function stores the time waiting for the previous time,
  taking into consideration the processing delay.
 */
-#ifdef __cplusplus
-extern "C"
-#endif
-void Wait(int ms);
+typedef void * Wait_t(int ms);
