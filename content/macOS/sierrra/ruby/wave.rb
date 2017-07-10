@@ -12,6 +12,7 @@ module LED
   extern 'void Clear()'
   extern 'void Show()'
   extern 'void Wait(int)'
+  extern 'void ShowMotioningText1(char *)'
 end
 
 LED.SetUrl(ARGV[0]) if 0 < ARGV.size
@@ -57,4 +58,5 @@ def wave
   end
 end
 
+LED.ShowMotioningText1("Demo")
 wave()
