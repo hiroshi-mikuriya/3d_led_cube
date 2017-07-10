@@ -39,3 +39,17 @@ typedef void * Show_t();
  taking into consideration the processing delay.
 */
 typedef void * Wait_t(int ms);
+
+/*!
+ Display characters one by one
+ When the motion ends, it returns from the function.
+ @param[in] text
+*/
+typedef void * ShowMotioningText1_t(const char * text);
+
+/*!
+Show up and down moving text.
+When the motion ends, it returns from the function.
+@param[in] text
+*/
+// typedef void * ShowMotioningText2_t(const char * text);

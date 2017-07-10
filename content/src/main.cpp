@@ -870,6 +870,7 @@ struct yz_t
  }
  */
 
+
 int main(int argc, const char* argv[])
 {
     static_cast<void>(argc); // unused
@@ -883,6 +884,7 @@ int main(int argc, const char* argv[])
     loadLibrary("./libledLib.dylib");
 #endif
     for (;;) {
+		ShowMotioningText1("HelloWorld");
         // letters2();
         wave();
         // letters();

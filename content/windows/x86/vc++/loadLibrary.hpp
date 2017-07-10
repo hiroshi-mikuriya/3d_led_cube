@@ -10,6 +10,7 @@ SetLed_t * SetLed;
 Clear_t * Clear;
 Show_t * Show;
 Wait_t * Wait;
+ShowMotioningText1_t * ShowMotioningText1;
 
 inline void loadLibrary(const char * lib)
 {
@@ -21,5 +22,6 @@ inline void loadLibrary(const char * lib)
 	SetLed = reinterpret_cast<SetLed_t*>(GetProcAddress(mod, "SetLed"));
 	Clear = reinterpret_cast<Clear_t*>(GetProcAddress(mod, "Clear"));
 	Show = reinterpret_cast<Show_t*>(GetProcAddress(mod, "Show"));
-    Wait = reinterpret_cast<Wait_t*>(GetProcAddress(mod, "Wait"));
+	Wait = reinterpret_cast<Wait_t*>(GetProcAddress(mod, "Wait"));
+	ShowMotioningText1 = reinterpret_cast<ShowMotioningText1_t*>(GetProcAddress(mod, "ShowMotioningText1"));
 }
