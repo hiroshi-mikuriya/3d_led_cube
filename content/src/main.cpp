@@ -1,7 +1,4 @@
-#if defined(__APPLE__)
-#include "LoadLibrary.hpp"
-#endif
-
+#include "loadLibrary.hpp"
 #include <cstdlib>
 #include <cmath>
 
@@ -880,7 +877,9 @@ int main(int argc, const char* argv[])
     if (1 < argc){
         SetUrl(argv[1]);
     }
-#if defined(__APPLE__)
+#if defined(WIN32) || defined(WIN64)
+    loadLibrary("ledLib.dll");
+#else if defined(__APPLE__)
     loadLibrary("./libledLib.dylib");
 #endif
     for (;;) {
