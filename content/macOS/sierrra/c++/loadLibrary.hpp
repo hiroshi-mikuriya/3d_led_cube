@@ -10,6 +10,7 @@ SetLed_t * SetLed;
 Clear_t * Clear;
 Show_t * Show;
 Wait_t * Wait;
+ShowMotioningText1_t * ShowMotioningText1;
 
 inline void loadLibrary(const char * lib)
 {
@@ -22,4 +23,5 @@ inline void loadLibrary(const char * lib)
     Clear = (Clear_t*)dlsym(dylib, "Clear");
     Show = (Show_t*)dlsym(dylib, "Show");
     Wait = (Wait_t*)dlsym(dylib, "Wait");
+    ShowMotioningText1 = (ShowMotioningText1_t*)dlsym(dylib, "ShowMotioningText1");
 }
