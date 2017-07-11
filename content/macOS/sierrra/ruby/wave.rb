@@ -54,7 +54,7 @@ def wave
       end
     end
     LED.Show()
-    LED.Wait(50)
+    LED.Wait(20)
   end
 end
 
