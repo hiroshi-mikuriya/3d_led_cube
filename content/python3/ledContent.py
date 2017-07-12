@@ -1,6 +1,4 @@
-from ctypes import *
-
-led = cdll.ledLib
+from lib.led_cube import *
 
 for x in range(16):
     for y in range(32):

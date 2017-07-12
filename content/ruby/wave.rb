@@ -1,19 +1,8 @@
-require 'fiddle/import'
+require_relative './lib/led_cube'
 
 WIDTH = 16
 HEIGHT = 32
 DEPTH = 8
-
-module LED
-  extend Fiddle::Importer
-  dlload './ledLib.dll'
-  extern 'void SetUrl(char *)'
-  extern 'void SetLed(int, int, int, int)'
-  extern 'void Clear()'
-  extern 'void Show()'
-  extern 'void Wait(int)'
-  extern 'void ShowMotioningText1(char*)'
-end
 
 LED.SetUrl(ARGV[0]) if 0 < ARGV.size
 
@@ -54,7 +43,7 @@ def wave
       end
     end
     LED.Show()
-    LED.Wait(50)
+    LED.Wait(20)
   end
 end
 
