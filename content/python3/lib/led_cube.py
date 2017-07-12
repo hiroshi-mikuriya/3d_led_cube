@@ -1,15 +1,24 @@
 import os
 from ctypes import *
 from sys import platform
+import sys
 
-cd = os.path.dirname(__file__)
+dirname = os.path.dirname(__file__)
 if platform == 'darwin':
-    ledlib = cd + '/libledLib.dylib'
+    ledlib = dirname + '/libledLib.dylib'
 elif platform == 'win32':
-    ledlib = cd + '/ledLib32.dll'
+    ledlib = dirname + '/ledLib32.dll'
 elif platform == 'win64':
-    ledlib = cd + '/ledLib64.dll'
+    ledlib = dirname + '/ledLib64.dll'
 else:
     raise NotImplementedError('Unsupported OS.')
 
 led = cdll.LoadLibrary(ledlib)
+
+argvs = sys.argv
+argc = len(argvs)
+
+if argc > 1:
+    led.SetUrl(argvs[1])
+ 
+ 
