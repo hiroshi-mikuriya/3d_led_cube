@@ -22,14 +22,15 @@ end
 module LED
   extend Fiddle::Importer
 
+  dirname = File.dirname(__FILE__)
   case os
   when :macosx
-    dlload './lib/libledLib.dylib'
+    dlload dirname + '/libledLib.dylib'
   when :windows
     if RbConfig::CONFIG['target_cpu'] == 'i386' then
-      dlload './lib/ledLib32.dll'
+      dlload dirname + '/ledLib32.dll'
     else
-      dlload './lib/ledLib64.dll'
+      dlload dirname + '/ledLib64.dll'
     end
   else
     raise RuntimeError
@@ -42,3 +43,5 @@ module LED
   extern 'void Wait(int)'
   extern 'void ShowMotioningText1(char *)'
 end
+
+LED.SetUrl(ARGV[0]) if 0 < ARGV.size

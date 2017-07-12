@@ -4,8 +4,6 @@ WIDTH = 16
 HEIGHT = 32
 DEPTH = 8
 
-LED.SetUrl(ARGV[0]) unless ARGV.empty?
-
 def corner?(pos)
   pos.zip([WIDTH, HEIGHT, DEPTH]).all? { |a, b| a.zero? || a == b - 1 }
 end

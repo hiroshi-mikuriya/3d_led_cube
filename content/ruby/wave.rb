@@ -4,8 +4,6 @@ WIDTH = 16
 HEIGHT = 32
 DEPTH = 8
 
-LED.SetUrl(ARGV[0]) if 0 < ARGV.size
-
 def can_show(x, y, z)
   (0...WIDTH).include?(x) && (0...HEIGHT).include?(y) && (0...DEPTH).include?(z)
 end
