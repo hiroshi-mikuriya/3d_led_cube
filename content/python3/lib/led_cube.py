@@ -14,11 +14,3 @@ else:
     raise NotImplementedError('Unsupported OS.')
 
 led = cdll.LoadLibrary(ledlib)
-
-argvs = sys.argv
-argc = len(argvs)
-
-if argc > 1:
-    led.SetUrl(argvs[1])
- 
- 

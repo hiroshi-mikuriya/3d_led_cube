@@ -43,5 +43,3 @@ module LED
   extern 'void Wait(int)'
   extern 'void ShowMotioningText1(char *)'
 end
-
-LED.SetUrl(ARGV[0]) if 0 < ARGV.size
