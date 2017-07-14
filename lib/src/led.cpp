@@ -258,7 +258,7 @@ void ShowMotioningText1(const char * text)
 		int yy = p.y * 15 / LED_HEIGHT;
 		auto cb = [](int r, int g, int b)->int
 		{
-			return 0x1 * r + 0x100 * g + 0x10000 * b;
+			return 0x1 * b + 0x100 * g + 0x10000 * r;
 		};
 		switch (ix % 3) {
 		case 0:  colbase = cb(xx, yy, 15); break;
@@ -351,16 +351,20 @@ __declspec(dllexport)
 #endif
 void SetChar(int x, int y, int z, char c, int rgb)
 {
+    auto u = [](int rgb, int shift){
+        return static_cast<unsigned char>((rgb >> shift) & 0xFF);
+    };
     auto src = makeMat(c);
     for (int y2 = 0; y2 < src.rows; ++y2){
         for (int x2 = 0; x2 < src.cols; ++x2){
             unsigned char c = src.at<unsigned char>(y2, x2);
+            int r = u(rgb, 16) * c / 255;
+            int g = u(rgb, 8) * c / 255;
+            int b = u(rgb, 0) * c / 255;
+            int rgb2 = 0x1 * b + 0x100 * g + 0x10000 * r;
             int xx = x + x2;
             int yy = y + y2;
-            unsigned char r = static_cast<unsigned char>((rgb >> 16) * c / 255);
-            unsigned char g = static_cast<unsigned char>((rgb >> 8) * c / 255);
-            unsigned char b = static_cast<unsigned char>((rgb >> 0) * c / 255);
-            SetLed(xx, yy, z, (r << 16) + (g << 8) + b);
+            SetLed(xx, yy, z, rgb2);
         }
     }
 }
