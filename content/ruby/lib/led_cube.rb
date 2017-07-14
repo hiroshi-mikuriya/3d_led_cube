@@ -42,4 +42,5 @@ module LED
   extern 'void Show()'
   extern 'void Wait(int)'
   extern 'void ShowMotioningText1(char *)'
+  extern 'void SetChar(int, int, int, char, int)'
 end

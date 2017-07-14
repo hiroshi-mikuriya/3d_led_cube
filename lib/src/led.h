@@ -41,15 +41,12 @@ typedef void * Show_t();
 typedef void * Wait_t(int ms);
 
 /*!
+ */
+typedef void * SetChar_t(int x, int y, int z, char c, int rgb);
+
+/*!
  Display characters one by one
  When the motion ends, it returns from the function.
  @param[in] text
 */
 typedef void * ShowMotioningText1_t(const char * text);
-
-/*!
-Show up and down moving text.
-When the motion ends, it returns from the function.
-@param[in] text
-*/
-// typedef void * ShowMotioningText2_t(const char * text);

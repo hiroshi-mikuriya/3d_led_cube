@@ -221,20 +221,24 @@ namespace
 		}
 		return dst;
 	}
-
+    
+    cv::Mat makeMat(char c)
+    {
+        char chr[2] = { c };
+        int thickness = 2;
+        int baseline = 0;
+        auto const s = cv::getTextSize(chr, cv::FONT_HERSHEY_DUPLEX, 1, thickness, &baseline);
+        cv::Mat m = cv::Mat::zeros({ s.width, s.height + baseline }, CV_8UC1);
+        cv::putText(m, chr, { (m.cols - s.width) / 2, (m.rows + s.height) / 2 }, cv::FONT_HERSHEY_DUPLEX, 1, 255, thickness, CV_AA, false);
+        cv::resize(m, m, { LED_WIDTH, LED_HEIGHT });
+        return m;
+    }
+    
 	std::vector<std::string> makeLetters(std::string str)
 	{
 		std::vector<std::string> dst;
 		for (auto it = str.begin(); it != str.end(); ++it){
-			char c[2] = { *it };
-			int thickness = 2;
-			int baseline = 0;
-			auto const s = cv::getTextSize(c, cv::FONT_HERSHEY_DUPLEX, 1, thickness, &baseline);
-			cv::Mat m = cv::Mat::zeros({ s.width, s.height + baseline }, CV_8UC1);
-			// 画像，テキスト，位置（左下），フォント，スケール，色，線太さ，種類
-			cv::putText(m, c, { (m.cols - s.width) / 2, (m.rows + s.height) / 2 }, cv::FONT_HERSHEY_DUPLEX, 1, 255, thickness, CV_AA, false);
-			cv::resize(m, m, { LED_WIDTH, LED_HEIGHT });
-			dst.push_back(toText(m));
+            dst.push_back(toText(makeMat(*it)));
 		}
 		return dst;
 	}
@@ -246,7 +250,6 @@ __declspec(dllexport)
 #endif
 void ShowMotioningText1(const char * text)
 {
-	auto const letters = makeLetters(text);
 	const int N0 = 4 * 2;
 	const int N1 = 4 * 2;
 	auto color = [&](std::string const & a, xyz_t p, int ix)->int {
@@ -323,6 +326,7 @@ void ShowMotioningText1(const char * text)
 		}
 	};
 
+    auto const letters = makeLetters(text);
 	for (size_t ix = 0; ix < letters.size(); ++ix) {
 		if (ix == 0) {
 			fade_in(letters[ix], ix);
@@ -345,7 +349,18 @@ extern "C"
 #ifdef WIN32
 __declspec(dllexport)
 #endif
-void ShowMotioningText2(const char * text)
+void SetChar(int x, int y, int z, char c, int rgb)
 {
-
+    auto src = makeMat(c);
+    for (int y2 = 0; y2 < src.rows; ++y2){
+        for (int x2 = 0; x2 < src.cols; ++x2){
+            unsigned char c = src.at<unsigned char>(y2, x2);
+            int xx = x + x2;
+            int yy = y + y2;
+            unsigned char r = static_cast<unsigned char>((rgb >> 16) * c / 255);
+            unsigned char g = static_cast<unsigned char>((rgb >> 8) * c / 255);
+            unsigned char b = static_cast<unsigned char>((rgb >> 0) * c / 255);
+            SetLed(xx, yy, z, (r << 16) + (g << 8) + b);
+        }
+    }
 }
