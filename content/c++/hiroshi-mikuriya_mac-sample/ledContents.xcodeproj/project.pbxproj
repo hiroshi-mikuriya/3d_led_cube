@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07104D0A1F1246250042507E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07104D091F1246250042507E /* main.cpp */; };
+		2820C2F81F18B9B10082A261 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2820C2F71F18B9B10082A261 /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,10 +24,10 @@
 
 /* Begin PBXFileReference section */
 		070FBB431F1238400062BA53 /* ledContents */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ledContents; sourceTree = BUILT_PRODUCTS_DIR; };
-		07104D091F1246250042507E /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../../../src/main.cpp; sourceTree = "<group>"; };
 		07104D0B1F1246580042507E /* loadLibrary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = loadLibrary.hpp; sourceTree = SOURCE_ROOT; };
 		07104D0C1F125DB30042507E /* led.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = led.h; sourceTree = SOURCE_ROOT; };
 		07781E591F123A48006FBCA8 /* libledLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libledLib.dylib; sourceTree = "<group>"; };
+		2820C2F71F18B9B10082A261 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +62,7 @@
 			isa = PBXGroup;
 			children = (
 				07104D0C1F125DB30042507E /* led.h */,
-				07104D091F1246250042507E /* main.cpp */,
+				2820C2F71F18B9B10082A261 /* main.cpp */,
 				07104D0B1F1246580042507E /* loadLibrary.hpp */,
 			);
 			path = ledContents;
@@ -133,7 +133,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07104D0A1F1246250042507E /* main.cpp in Sources */,
+				2820C2F81F18B9B10082A261 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
