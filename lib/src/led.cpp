@@ -193,20 +193,17 @@ extern "C"
 #ifdef WIN32
 __declspec(dllexport)
 #endif
-int Wait(int ms)
+void Wait(int ms)
 {
 	static auto sLastWaitTime = std::chrono::system_clock::now();
 	auto now = std::chrono::system_clock::now();
 	int diff = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(now - sLastWaitTime).count());
 	ms = std::max(1, ms - diff);
 #ifdef _WIN32
-    int key = -1;
 	Sleep(ms);
 #else
-	int key = cv::waitKey(ms);
 #endif // _WIN32
 	sLastWaitTime = std::chrono::system_clock::now();
-    return key;
 }
 
 namespace

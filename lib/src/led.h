@@ -37,9 +37,8 @@ typedef void * Show_t();
  Wait for the specified time.
  This function stores the time waiting for the previous time,
  taking into consideration the processing delay.
- @return charactor code if anyone input keyboard
 */
-typedef int * Wait_t(int ms);
+typedef void * Wait_t(int ms);
 
 /*!
  Specify the color of each LED for displaying a character.
