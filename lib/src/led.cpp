@@ -193,18 +193,20 @@ extern "C"
 #ifdef WIN32
 __declspec(dllexport)
 #endif
-void Wait(int ms)
+int Wait(int ms)
 {
 	static auto sLastWaitTime = std::chrono::system_clock::now();
 	auto now = std::chrono::system_clock::now();
 	int diff = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(now - sLastWaitTime).count());
 	ms = std::max(1, ms - diff);
 #ifdef _WIN32
+    int key = -1;
 	Sleep(ms);
 #else
-	cv::waitKey(ms);
+	int key = cv::waitKey(ms);
 #endif // _WIN32
 	sLastWaitTime = std::chrono::system_clock::now();
+    return key;
 }
 
 namespace
@@ -351,6 +353,15 @@ __declspec(dllexport)
 #endif
 void SetChar(int x, int y, int z, char c, int rgb)
 {
+    if (x < -LED_WIDTH || LED_WIDTH <= x){
+        return;
+    }
+    if (y < -LED_HEIGHT || LED_HEIGHT <= y){
+        return;
+    }
+    if (z < -LED_DEPTH || LED_DEPTH <= z){
+        return;
+    }
     auto u = [](int rgb, int shift){
         return static_cast<unsigned char>((rgb >> shift) & 0xFF);
     };

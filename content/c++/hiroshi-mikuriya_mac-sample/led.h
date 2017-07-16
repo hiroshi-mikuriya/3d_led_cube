@@ -37,19 +37,24 @@ typedef void * Show_t();
  Wait for the specified time.
  This function stores the time waiting for the previous time,
  taking into consideration the processing delay.
+ @return charactor code if anyone input keyboard
 */
-typedef void * Wait_t(int ms);
+typedef int * Wait_t(int ms);
+
+/*!
+ Specify the color of each LED for displaying a character.
+ Just by calling this function, drawing data is not transferred to 3D LED CUBE.
+ @param[in] x 0 <= x < LED_WIDTH
+ @param[in] y 0 <= y < LED_HEIGHT
+ @param[in] z 0 <= z < LED_DEPTH
+ @param[in] c charactor code
+ @param[in] rgb 0x000000 <= rgb <= 0xFFFFFF
+ */
+typedef void * SetChar_t(int x, int y, int z, char c, int rgb);
 
 /*!
  Display characters one by one
  When the motion ends, it returns from the function.
- @param[in] text
+ @param[in] text displayed charactors
 */
 typedef void * ShowMotioningText1_t(const char * text);
-
-/*!
-Show up and down moving text.
-When the motion ends, it returns from the function.
-@param[in] text
-*/
-// typedef void * ShowMotioningText2_t(const char * text);
