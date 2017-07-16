@@ -57,3 +57,12 @@ typedef void * SetChar_t(int x, int y, int z, char c, int rgb);
  @param[in] text displayed charactors
 */
 typedef void * ShowMotioningText1_t(const char * text);
+
+/*!
+ Display a firework.
+ When the motion ends, it returns from the function.
+ @param[in] x 0 <= x < LED_WIDTH
+ @param[in] y 0 <= y < LED_HEIGHT
+ @param[in] z 0 <= z < LED_DEPTH
+ */
+typedef void * ShowFirework_t(int x, int y, int z);
