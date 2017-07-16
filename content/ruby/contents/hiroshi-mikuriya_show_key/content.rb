@@ -1,3 +1,5 @@
+require 'io/console'
+
 def gem(a)
     return a if a < 1
     return 1 if a < 3
@@ -16,8 +18,9 @@ end
 def execute(led)
   loop do
     led.Show
-    key = led.Wait(100)
-    next if key < 0
+    led.Wait(10)
+    key = STDIN.getch.ord
+    exit 0 if [0x03, 0x1A].any? { |a| a == key }
     led.Clear
     x = rand(3)
     y = rand(3)
