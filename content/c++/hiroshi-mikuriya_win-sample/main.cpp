@@ -878,9 +878,11 @@ int main(int argc, const char* argv[])
     if (1 < argc){
         SetUrl(argv[1]);
     }
-#if defined(WIN32) || defined(WIN64)
-    loadLibrary("ledLib.dll");
-#else if defined(__APPLE__)
+#if defined(WIN32)
+	loadLibrary("ledLib32.dll");
+#elif defined(WIN64)
+    loadLibrary("ledLib64.dll");
+#elif defined(__APPLE__)
     loadLibrary("./libledLib.dylib");
 #endif
     for (;;) {
