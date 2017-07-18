@@ -202,6 +202,7 @@ void Wait(int ms)
 #ifdef _WIN32
     Sleep(ms);
 #else
+    cv::waitKey(ms);
 #endif // _WIN32
     sLastWaitTime = std::chrono::system_clock::now();
 }
