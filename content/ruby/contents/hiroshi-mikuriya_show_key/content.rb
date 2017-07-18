@@ -15,15 +15,16 @@ end
 
 def execute(led)
   key = nil
+  color = nil
   Thread.new do
-    loop { key = STDIN.getch.ord }
+    loop { key = STDIN.getch.ord; color = new_color }
   end
   loop do
     led.Show
     led.Wait(10)
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
     led.Clear
-    x, y, z = Array.new(3) { rand(3) }
-    led.SetChar(x, y, z, key, new_color) unless key.nil?
+    x, y, z = Array.new(3) { rand(5) }
+    led.SetChar(x, y, z, key, color) unless key.nil?
   end
 end
