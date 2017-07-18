@@ -18,6 +18,8 @@ if options.dest != None:
  
 if options.content_dir != None:
     content_path = os.path.join(options.content_dir, "content")
+    content_path = content_path.replace(os.sep, '.')
+    # On MSYS2, os.sep returns back slash even though slash is correct separator.
     content_path = content_path.replace('/', '.')
     content = importlib.import_module(content_path)
     content.execute(led)
