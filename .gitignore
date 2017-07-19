@@ -32,3 +32,11 @@
 
 # python
 *.pyc
+
+
+#C#
+*.user
+.vs
+obj
+*.exe.config
+*.pdb
