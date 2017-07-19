@@ -1,10 +1,9 @@
 #include "led.h"
-#include "base64.hpp"
 #include "show.hpp"
 #include "port.h"
 #include <opencv2/opencv.hpp>
 #include <boost/asio.hpp>
-#include <boost/filesystem.hpp>
+#include <boost/array.hpp>
 #include <mutex>
 #include <chrono>
 #include <random>
@@ -150,24 +149,25 @@ void Clear()
 namespace {
     void send(std::string url, unsigned short port, int(&m)[LED_WIDTH][LED_HEIGHT][LED_DEPTH])
     {
-        namespace asio = boost::asio;
-        namespace ip = asio::ip;
-        asio::io_service io_service;
-        ip::tcp::socket socket(io_service);
-        socket.connect(ip::tcp::endpoint(boost::asio::ip::address_v4::from_string(url), port));
-        std::stringstream src, dst;
+        std::stringstream src;
         for (int x = 0; x < LED_WIDTH; ++x){
             for (int y = 0; y < LED_HEIGHT; ++y){
                 for (int z = 0; z < LED_DEPTH; ++z){
                     int v = m[x][y][z];
-                    char r = static_cast<char>(v >> 16);
-                    char g = static_cast<char>(v >> 8);
-                    char b = static_cast<char>(v >> 0);
-                    src << r << g << b;
+                    char c[2] = { 0 };
+                    c[0] = ((v & 0xF80000) >> 16) + ((v & 0xE000) >> 13);
+                    c[1] = ((v & 0x1C00) >> 5) + ((v & 0xF8) >> 3);
+                    src << c[0] << c[1];
                 }
             }
         }
-        std::cout << asio::write(socket, asio::buffer(makerfaire::fxat::encode(src, dst).str())) << std::endl;
+        namespace asio = boost::asio;
+        namespace ip = asio::ip;
+        boost::asio::io_service io_service;
+        ip::udp::socket socket(io_service);
+        socket.open(ip::udp::v4());
+        ip::udp::endpoint ep(ip::udp::endpoint(ip::address::from_string(url), port));
+        socket.send_to(boost::asio::buffer(src.str()), ep);
     }
 }
 
