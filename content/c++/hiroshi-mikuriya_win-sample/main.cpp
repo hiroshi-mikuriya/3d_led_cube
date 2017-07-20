@@ -876,7 +876,7 @@ int main(int argc, const char* argv[])
     static_cast<void>(argc); // unused
     static_cast<void>(argv); // unused
 #if defined(WIN32)
-	loadLibrary("ledLib.dll");
+	loadLibrary("ledLib32.dll");
 #elif defined(WIN64)
     loadLibrary("ledLib64.dll");
 #elif defined(__APPLE__)
