@@ -22,6 +22,15 @@ namespace
 
 	void SetChar(int x, int y, int z, BitmapLockWrapper * lock)
 	{
+		if (x <= -LED_WIDTH || LED_WIDTH <= x){
+			return;
+		}
+		if (y <= -LED_WIDTH || LED_HEIGHT <= y){
+			return;
+		}
+		if (z < 0 || LED_DEPTH <= z){
+			return;
+		}
 		for (int xx = 0; xx < LED_WIDTH; ++xx){
 			for (int yy = 0; yy < LED_WIDTH; ++yy){
 				int x2 = x + xx;
@@ -46,11 +55,15 @@ namespace
 			}
 			return dst;
 		}();
-		for (size_t i = 0; i < imgs.size(); ++i){
+		int limit = -(LED_WIDTH * imgs.size());
+		for (int y = LED_HEIGHT; limit < y; --y){
 			Clear();
-			SetChar(0, 0, 0, imgs[i].second.get());
+			for (size_t i = 0; i < imgs.size(); ++i){
+				int y2 = y + i * LED_WIDTH;
+				SetChar(0, y2, 0, imgs[i].second.get());
+			}
 			Show();
-			Wait(1000);
+			Wait(30);
 		}
 	}
 }
@@ -65,7 +78,7 @@ int main(int argc, const char* argv[])
 		SetUrl(argv[1]);
 	}
 	for (;;) {
-		CString text(_T("オレの名前は内田だ"));
+		CString text(_T("オレの名前は内田だ！"));
 		ShowText(text);
 		exit(0);
     }
