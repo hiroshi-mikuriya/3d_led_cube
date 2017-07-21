@@ -73,6 +73,8 @@ class Tetris
     sleep(0.3)
   end
 
+  ##
+  # ブロックをフィールドにコピーする
   def copy_block_to_field
     (0...FIELD_WIDTH).each do |x|
       (0...FIELD_HEIGHT).each do |y|
@@ -82,16 +84,22 @@ class Tetris
     end
   end
 
+  ##
+  # ブロックが底もしくは積みブロックにぶつかった判定
   def hit?
     (0...FIELD_HEIGHT).each do |y|
       (0...FIELD_WIDTH).each do |x|
         b = @block[x][y + BLOCK_SIZE]
-        return true if 0 < b && y == FIELD_HEIGHT - 1
+        next if b.zero?
+        return true if y == FIELD_HEIGHT - 1 || 0 < @field[x][y + 1]
       end
     end
     false
   end
 
+  ##
+  # 新しいブロックを追加する
+  # 古いブロックを消す
   def add_new_block
     (0...@block.size).each do |x|
       (0...@block[0].size).each do |y|
