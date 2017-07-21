@@ -12,12 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ShowText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitmapLockWrapper.hpp" />
     <ClInclude Include="GdiplusInitializer.hpp" />
     <ClInclude Include="led.h" />
     <ClInclude Include="loadLibrary.hpp" />
+    <ClInclude Include="ShowText.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C9A61250-3E64-479A-A35A-A3658EB65A28}</ProjectGuid>
