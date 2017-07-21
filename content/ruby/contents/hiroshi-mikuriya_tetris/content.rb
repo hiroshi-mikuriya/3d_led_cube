@@ -18,12 +18,14 @@ def new_color
 end
 
 def show_msg(led, msg, color)
-  (0...((msg.size + 1) * LED_WIDTH)).each do |x|
+  limit = (msg.size + 1) * LED_WIDTH
+  (0...limit).each do |x|
     led.Clear
     msg.chars.each.with_index do |c, i|
       y = rand(2)
       z = rand(4)
       led.SetChar((i + 1) * LED_WIDTH - x, y, z, c.ord, color)
+      led.Show
     end
   end
 end
@@ -39,17 +41,23 @@ class Tetris
 
   def initialize(led)
     @led = led
+    @led.ShowMotioningText1('321')
     @field = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT) { 0 } }
     @block = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT + BLOCK_SIZE) { 0 } }
     @mutex = Mutex.new
+    @game_over = false
     Thread.abort_on_exception = true
-    Thread.new { loop { key_thread } }
-    Thread.new { loop { block_thread } }
+    th = []
+    th.push Thread.new { key_thread until @game_over }
+    th.push Thread.new { block_thread until @game_over }
     add_new_block
-    loop do
+    until @game_over
       @mutex.synchronize { @led.Show }
       @led.Wait(50)
     end
+    puts 'GAME OVER'
+    show_msg(@led, 'GAMEOVER', new_color)
+    th.each(&:join)
   end
 
   ##
@@ -78,6 +86,7 @@ class Tetris
       copy_block_to_field
       erase_completed_rows
       add_new_block
+      @game_over = hit_down?
     else
       shift_down_block
       set_field_and_block
@@ -122,11 +131,12 @@ class Tetris
   ##
   # ブロックが底もしくは積みブロックにぶつかった判定
   def hit_down?
-    (0...FIELD_HEIGHT).each do |y|
+    (0...(FIELD_HEIGHT + BLOCK_SIZE)).each do |y|
       (0...FIELD_WIDTH).each do |x|
-        b = @block[x][y + BLOCK_SIZE]
+        next if y < BLOCK_SIZE - 1
+        b = @block[x][y]
         next if b.zero?
-        return true if y == FIELD_HEIGHT - 1 || 0 < @field[x][y + 1]
+        return true if y == (FIELD_HEIGHT + BLOCK_SIZE) - 1 || 0 < @field[x][y + 1 - BLOCK_SIZE]
       end
     end
     false
@@ -169,8 +179,8 @@ class Tetris
   # 新しいブロックを追加する
   # 古いブロックを消す
   def add_new_block
-    (0...@block.size).each do |x|
-      (0...@block[0].size).each do |y|
+    (0...FIELD_WIDTH).each do |x|
+      (0...(FIELD_HEIGHT + BLOCK_SIZE)).each do |y|
         @block[x][y] = 0
       end
     end
@@ -187,8 +197,8 @@ class Tetris
   ##
   # ブロックを下へずらす
   def shift_down_block
-    (1...@block.first.size).reverse_each do |y|
-      (0...@block.size).each do |x|
+    (1...(FIELD_HEIGHT + BLOCK_SIZE)).reverse_each do |y|
+      (0...FIELD_WIDTH).each do |x|
         @block[x][y] = @block[x][y - 1]
         @block[x][y - 1] = 0
       end
@@ -234,5 +244,7 @@ class Tetris
 end
 
 def execute(led)
-  Tetris.new(led)
+  loop do
+    Tetris.new(led)
+  end
 end
