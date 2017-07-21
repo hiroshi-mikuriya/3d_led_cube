@@ -41,16 +41,11 @@ class Tetris
     @led = led
     @field = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT) { 0 } }
     @block = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT + BLOCK_SIZE) { 0 } }
-    @x = LED_WIDTH / 2
     @mutex = Mutex.new
     Thread.abort_on_exception = true
     Thread.new { loop { key_proc } }
     Thread.new { loop { block_proc } }
-    color = new_color
-    @block[4][0] = color
-    @block[5][0] = color
-    @block[5][1] = color
-    @block[6][0] = color
+    add_new_block
   end
 
   def key_proc
@@ -63,17 +58,54 @@ class Tetris
       puts 'down'
     when 67
       puts 'right'
-      @mutex.synchronize { @x += 1 }
     when 68
       puts 'left'
-      @mutex.synchronize { @x -= 1 }
     end
   end
 
   def block_proc
     shift_block
     set_field_and_block
-    sleep(0.2)
+    if hit?
+      copy_block_to_field
+      add_new_block
+    end
+    sleep(0.3)
+  end
+
+  def copy_block_to_field
+    (0...FIELD_WIDTH).each do |x|
+      (0...FIELD_HEIGHT).each do |y|
+        b = @block[x][y + BLOCK_SIZE]
+        @field[x][y] = b unless b.zero?
+      end
+    end
+  end
+
+  def hit?
+    (0...FIELD_HEIGHT).each do |y|
+      (0...FIELD_WIDTH).each do |x|
+        b = @block[x][y + BLOCK_SIZE]
+        return true if 0 < b && y == FIELD_HEIGHT - 1
+      end
+    end
+    false
+  end
+
+  def add_new_block
+    (0...@block.size).each do |x|
+      (0...@block[0].size).each do |y|
+        @block[x][y] = 0
+      end
+    end
+    color = new_color
+    xb = (FIELD_WIDTH - BLOCK_SIZE) / 2
+    blk = BLOCKS[rand(BLOCKS.size)]
+    blk.chars.map { |a| format('%04b', a) }.each.with_index do |bin, y|
+      (0...bin.size).each do |x|
+        @block[xb + x][y] = bin[x].to_i * color
+      end
+    end
   end
 
   def shift_block
