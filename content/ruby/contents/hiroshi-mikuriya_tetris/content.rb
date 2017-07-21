@@ -28,11 +28,9 @@ def show_msg(led, msg, color)
   end
 end
 
-Blocks = %w(0660 4444 0470 0270).freeze
+Blocks = %w(0660 4444 0470 0170 0270 0630 0360).freeze
 
 def execute(led)
-  sleep(10)
-  
   x = WIDTH / 2
 
   Thread.new do
