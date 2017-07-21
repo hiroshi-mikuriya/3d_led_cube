@@ -29,7 +29,7 @@ def show_msg(led, msg, color)
 end
 
 ##
-# Tetris class
+# テトリスクラス
 class Tetris
   CELL = 2
   FIELD_WIDTH = LED_WIDTH / CELL
@@ -43,12 +43,18 @@ class Tetris
     @block = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT + BLOCK_SIZE) { 0 } }
     @mutex = Mutex.new
     Thread.abort_on_exception = true
-    Thread.new { loop { key_proc } }
-    Thread.new { loop { block_proc } }
+    Thread.new { loop { key_thread } }
+    Thread.new { loop { block_thread } }
     add_new_block
+    loop do
+      @mutex.synchronize { @led.Show }
+      @led.Wait(50)
+    end
   end
 
-  def key_proc
+  ##
+  # キー入力を扱うスレッド
+  def key_thread
     key = STDIN.getch.ord
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
     case key
@@ -58,17 +64,23 @@ class Tetris
       puts 'down'
     when 67
       puts 'right'
+      @mutex.synchronize { shift_right_block unless hit_right? }
     when 68
       puts 'left'
+      @mutex.synchronize { shift_left_block unless hit_left? }
     end
   end
 
-  def block_proc
-    shift_block
-    set_field_and_block
-    if hit?
+  ##
+  # ブロックの落下や列の消去などを行うスレッド
+  def block_thread
+    if hit_down?
       copy_block_to_field
+      # erase_completed_rows
       add_new_block
+    else
+      shift_down_block
+      set_field_and_block
     end
     sleep(0.3)
   end
@@ -86,7 +98,7 @@ class Tetris
 
   ##
   # ブロックが底もしくは積みブロックにぶつかった判定
-  def hit?
+  def hit_down?
     (0...FIELD_HEIGHT).each do |y|
       (0...FIELD_WIDTH).each do |x|
         b = @block[x][y + BLOCK_SIZE]
@@ -97,6 +109,39 @@ class Tetris
     false
   end
 
+  ##
+  # ブロックが左にぶつかった判定
+  def hit_left?
+    (0...(FIELD_HEIGHT + BLOCK_SIZE)).each do |y|
+      (0...FIELD_WIDTH).each do |x|
+        b = @block[x][y]
+        next if b.zero?
+        return true if x.zero?
+        next if y < BLOCK_SIZE
+        f = @field[x - 1][y - BLOCK_SIZE]
+        return true unless f.zero?
+      end
+    end
+    false
+  end
+  
+
+  ##
+  # ブロックが右にぶつかった判定
+  def hit_right?
+    (0...(FIELD_HEIGHT + BLOCK_SIZE)).each do |y|
+      (0...FIELD_WIDTH).each do |x|
+        b = @block[x][y]
+        next if b.zero?
+        return true if x == FIELD_WIDTH - 1
+        next if y < BLOCK_SIZE
+        f = @field[x + 1][y - BLOCK_SIZE]
+        return true unless f.zero?
+      end
+    end
+    false
+  end
+  
   ##
   # 新しいブロックを追加する
   # 古いブロックを消す
@@ -116,8 +161,10 @@ class Tetris
     end
   end
 
-  def shift_block
-    (1...@block[0].size).reverse_each do |y|
+  ##
+  # ブロックを下へずらす
+  def shift_down_block
+    (1...@block.first.size).reverse_each do |y|
       (0...@block.size).each do |x|
         @block[x][y] = @block[x][y - 1]
         @block[x][y - 1] = 0
@@ -125,6 +172,30 @@ class Tetris
     end
   end
 
+  ##
+  # ブロックを左へずらす
+  def shift_left_block
+    (0...(@block.size - 1)).each do |x|
+      (0...@block.first.size).each do |y|
+        @block[x][y] = @block[x + 1][y]
+      end
+    end
+    (0...@block.first.size).each { |y| @block.last[y] = 0 }
+  end
+
+  ##
+  # ブロックを右へずらす
+  def shift_right_block
+    (1...@block.size).reverse_each do |x|
+      (0...@block.first.size).each do |y|
+        @block[x][y] = @block[x - 1][y]
+      end
+    end
+    (0...@block.first.size).each { |y| @block.first[y] = 0 }
+  end
+
+  ##
+  # ブロックとフィールドの色をLEDに設定する
   def set_field_and_block
     @led.Clear
     @mutex.synchronize do
@@ -137,15 +208,8 @@ class Tetris
       end
     end
   end
-
-  def show
-    loop do
-      @mutex.synchronize { @led.Show }
-      @led.Wait(50)
-    end
-  end
 end
 
 def execute(led)
-  Tetris.new(led).show
+  Tetris.new(led)
 end
