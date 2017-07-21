@@ -76,7 +76,7 @@ class Tetris
   def block_thread
     if hit_down?
       copy_block_to_field
-      # erase_completed_rows
+      erase_completed_rows
       add_new_block
     else
       shift_down_block
@@ -93,6 +93,29 @@ class Tetris
         b = @block[x][y + BLOCK_SIZE]
         @field[x][y] = b unless b.zero?
       end
+    end
+  end
+
+  ##
+  # そろった列があれば1列だけ消して下にシフトしてtrueを返す
+  def erase_completed_row
+    a = (0...FIELD_WIDTH).freeze
+    (0...FIELD_HEIGHT).reverse_each do |y|
+      next if a.any? { |x| @field[x][y].zero? }
+      (1..y).reverse_each do |yy|
+        a.each { |x| @field[x][yy] = @field[x][yy - 1] }
+      end
+      a.each { |x| @field[x][0] = 0 }
+      return true
+    end
+    false
+  end
+
+  ##
+  # そろった列を消す
+  def erase_completed_rows
+    loop do
+      return unless erase_completed_row
     end
   end
 
