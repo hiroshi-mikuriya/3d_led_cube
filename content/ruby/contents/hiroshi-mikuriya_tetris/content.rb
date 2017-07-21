@@ -35,15 +35,22 @@ class Tetris
   FIELD_WIDTH = LED_WIDTH / CELL
   FIELD_HEIGHT = LED_HEIGHT / CELL
   BLOCKS = %w(0660 4444 0470 0170 0270 0630 0360).freeze
+  BLOCK_SIZE = 4
 
   def initialize(led)
     @led = led
-    @field = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT) { new_color } }
+    @field = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT) { 0 } }
+    @block = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT + BLOCK_SIZE) { 0 } }
     @x = LED_WIDTH / 2
     @mutex = Mutex.new
+    Thread.abort_on_exception = true
     Thread.new { loop { key_proc } }
     Thread.new { loop { block_proc } }
-    set_blocks
+    color = new_color
+    @block[4][0] = color
+    @block[5][0] = color
+    @block[5][1] = color
+    @block[6][0] = color
   end
 
   def key_proc
@@ -64,28 +71,28 @@ class Tetris
   end
 
   def block_proc
-    blk = BLOCKS[rand(BLOCKS.size)]
-    color = new_color
-    @x = LED_WIDTH / 2 - 2
-    (0...LED_HEIGHT).each do |y|
-      #@led.Clear
-      xx = @x
-      blk.chars.each.with_index(y) do |c, yi|
-        format('%04b', c).chars.each.with_index(xx) do |b, xi|
-          @led.SetLed(xi, yi, 0, b.to_i * color)
-        end
+    shift_block
+    set_field_and_block
+    sleep(0.2)
+  end
+
+  def shift_block
+    (1...@block[0].size).reverse_each do |y|
+      (0...@block.size).each do |x|
+        @block[x][y] = @block[x][y - 1]
+        @block[x][y - 1] = 0
       end
-      sleep(0.2)
     end
   end
 
-  def set_blocks
+  def set_field_and_block
     @led.Clear
     @mutex.synchronize do
-      (0...FIELD_WIDTH).to_a.product((0...FIELD_HEIGHT).to_a).each do |x, y|
-        range = [x, y].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }
-        range[0].product(range[1]).each do |xx, yy|
-          @led.SetLed(xx, yy, 7, @field[x][y])
+      xfr, yfr = [FIELD_WIDTH, FIELD_HEIGHT].map { |xy| (0...xy).to_a }
+      xfr.product(yfr).each do |xf, yf|
+        xr, yr = [xf, yf].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }
+        xr.product(yr).each do |xx, yy|
+          @led.SetLed(xx, yy, 0, @field[xf][yf] + @block[xf][yf + BLOCK_SIZE])
         end
       end
     end
@@ -93,8 +100,8 @@ class Tetris
 
   def show
     loop do
-      @led.Show
-      @led.Wait(100)
+      @mutex.synchronize { @led.Show }
+      @led.Wait(50)
     end
   end
 end
