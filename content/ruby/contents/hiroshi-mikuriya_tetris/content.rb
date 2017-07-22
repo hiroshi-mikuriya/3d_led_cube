@@ -58,7 +58,7 @@ class Tetris
     add_new_block
     th = []
     th.push Thread.new { block_thread until @game_over }
-    sleep(0.1) # 最初のブロック投入前にキー操作したらクラッシュしそうだから
+    sleep(0.1)
     th.push Thread.new { key_thread until @game_over }
     until @game_over
       @mutex.synchronize do
@@ -152,7 +152,7 @@ class Tetris
       y = @pos[:y] + BLOCK_SIZE - i - 1
       bin.chars.each.with_index(@pos[:x]) do |b, x|
         next if b.to_i.zero? || y < -1
-        return true if  (FIELD_HEIGHT - 1) <= y || 0 < @field[x][y + 1]
+        return true if (FIELD_HEIGHT - 1) <= y || 0 < @field[x][y + 1]
       end
     end
     false
@@ -169,22 +169,21 @@ class Tetris
     end
     false
   end
-  
+
   ##
   # ブロックが右にぶつかった判定
   def hit_right?
     @block.each.with_index(@pos[:y]) do |bin, y|
       bin.chars.each.with_index(@pos[:x]) do |b, x|
         next if b.to_i.zero?
-        return true if (FIELD_WIDTH - 1) <= x || 0 < @field[x - 1][y]
+        return true if (FIELD_WIDTH - 1) <= x || 0 < @field[x + 1][y]
       end
     end
     false
   end
-  
+
   ##
   # 新しいブロックを追加する
-  # 古いブロックを消す
   def add_new_block
     @color = new_color
     @pos = { x: (FIELD_WIDTH - BLOCK_SIZE) / 2, y: -BLOCK_SIZE }
@@ -204,11 +203,11 @@ class Tetris
     block.each.with_index(pos[:y]) do |bin, y|
       bin.chars.each.with_index(pos[:x]) do |b, x|
         next if b.to_i.zero?
-        return false unless (0...FIELD_HEIGHT).include?(y) && (0...FIELD_WIDTH).include?(x)
+        return false unless (0...FIELD_HEIGHT).cover?(y) && (0...FIELD_WIDTH).cover?(x)
         return false if 0 < @field[x][y]
       end
     end
-    return true
+    true
   end
 
   ##
@@ -229,10 +228,8 @@ class Tetris
       set_cell_led(x, y, @field[x][y])
     end
     @block.each.with_index(@pos[:y]) do |bin, y|
-      next if y < 0
       bin.chars.each.with_index(@pos[:x]) do |b, x|
-        next if b.to_i.zero?
-        set_cell_led(x, y, @color)
+        set_cell_led(x, y, @color) unless b.to_i.zero?
       end
     end
   end
