@@ -72,13 +72,13 @@ class Tetris
         rotate_block_if_can
       when 66
         puts 'down'
-        @pos[:y] += 1 unless hit_down?(@block)
+        @pos[:y] += 1 unless hit_down?
       when 67
         puts 'right'
-        @pos[:x] += 1 unless hit_right?(@block)
+        @pos[:x] += 1 unless hit_right?
       when 68
         puts 'left'
-        @pos[:x] -= 1 unless hit_left?(@block)
+        @pos[:x] -= 1 unless hit_left?
       end
     end
   end
@@ -87,11 +87,11 @@ class Tetris
   # ブロックの落下や列の消去などを行うスレッド
   def block_thread
     @mutex.synchronize do
-      if hit_down?(@block)
+      if hit_down?
         copy_block_to_field
         erase_completed_rows
         add_new_block
-        @game_over = hit_down?(@block)
+        @game_over = hit_down?
       else
         @pos[:y] += 1
         set_field_and_block
@@ -136,8 +136,8 @@ class Tetris
 
   ##
   # ブロックが底もしくは積みブロックにぶつかった判定
-  def hit_down?(block)
-    block.reverse.each.with_index do |bin, i|
+  def hit_down?
+    @block.reverse.each.with_index do |bin, i|
       y = @pos[:y] + BLOCK_SIZE - i - 1
       bin.chars.each.with_index(@pos[:x]) do |b, x|
         next if b.to_i.zero? || y < 0
@@ -149,8 +149,8 @@ class Tetris
 
   ##
   # ブロックが左にぶつかった判定
-  def hit_left?(block)
-    block.each.with_index(@pos[:y]) do |bin, y|
+  def hit_left?
+    @block.each.with_index(@pos[:y]) do |bin, y|
       bin.chars.each.with_index(@pos[:x]) do |b, x|
         next if b.to_i.zero?
         return true if x <= 0 || 0 < @field[x - 1][y]
@@ -162,8 +162,8 @@ class Tetris
 
   ##
   # ブロックが右にぶつかった判定
-  def hit_right?(block)
-    block.each.with_index(@pos[:y]) do |bin, y|
+  def hit_right?
+    @block.each.with_index(@pos[:y]) do |bin, y|
       bin.chars.each.with_index(@pos[:x]) do |b, x|
         next if b.to_i.zero?
         return true if (FIELD_WIDTH - 1) <= x || 0 < @field[x - 1][y]
@@ -183,14 +183,22 @@ class Tetris
 
   ##
   # 回転可能ならばブロックを回転する
-  # 回転したらtrueを返す
   def rotate_block_if_can
     cand = Array.new(BLOCK_SIZE) { |i| Array.new(BLOCK_SIZE) { |j| @block[j].reverse[i] }.join }
-    unless hit_down?(cand) || hit_left?(cand) || hit_right?(cand) # TODO 条件が間違っている
-      @block = cand
-      return true
+    @block = cand if fit?(cand, @pos)
+  end
+
+  ##
+  # フィールドにブロックが配置可能か調査する
+  def fit?(block, pos)
+    block.each.with_index(pos[:y]) do |bin, y|
+      bin.chars.each.with_index(pos[:x]) do |b, x|
+        next if b.to_i.zero?
+        return false unless (0...FIELD_HEIGHT).include?(y) && (0...FIELD_WIDTH).include?(x)
+        return false if 0 < @field[x][y]
+      end
     end
-    return false
+    return true
   end
 
   ##
