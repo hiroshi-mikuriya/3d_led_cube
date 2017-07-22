@@ -1,45 +1,54 @@
 require 'io/console'
 
-LED_HEIGHT = 32
-LED_WIDTH = 16
-LED_DEPTH = 8
-
-def gem(a)
-  return a if a < 1
-  return 1 if a < 3
-  return 4 - a if a < 4
-  0
-end
-
-def new_color
-  ran = rand * 6
-  r, g, b = Array.new(3) { |a| (255 * gem((a * 2 + ran) % 6)).to_i }
-  r * 0x10000 + g * 0x100 + b
-end
-
-def show_msg(led, msg, color)
-  limit = (msg.size + 1) * LED_WIDTH
-  (0...limit).each do |x|
-    led.Clear
-    msg.chars.each.with_index do |c, i|
-      y = rand(2)
-      z = rand(4)
-      led.SetChar((i + 1) * LED_WIDTH - x, y, z, c.ord, color)
-      led.Show
-    end
-  end
-end
-
 ##
 # テトリスクラス
 class Tetris
-  CELL = 2
-  FIELD_WIDTH = LED_WIDTH / CELL
-  FIELD_HEIGHT = LED_HEIGHT / CELL
-  BLOCKS = %w(0660 4444 0470 0170 0270 0630 0360).freeze
-  BLOCK_SIZE = 4
+  LED_HEIGHT = 32 # 3D LED CUBEのY方向のLED数
+  LED_WIDTH = 16 # 3D LED CUBEのX方向のLED数
+  LED_DEPTH = 8 # 3D LED CUBEのZ方向のLED数
+  CELL = 4 # セルあたりのLED数
+  FIELD_WIDTH = LED_WIDTH / CELL # X方向のLED数をセルサイズで割った値
+  FIELD_HEIGHT = LED_HEIGHT / CELL # Y方向のLED数をセルサイズで割った値
+  BLOCKS = %w(0660 4444 0470 0170 0270 0630 0360).freeze # ブロックの種類（定義したものがランダムで出現する）
+  BLOCK_SIZE = 2 # ブロックの縦横セル数（空白含む）
+  DELAY = 0.3 # 落下速度（小さいほどはやい）
 
+  ##
+  # 彩度の高い色をだすための計算
+  def gem(a)
+    return a if a < 1
+    return 1 if a < 3
+    return 4 - a if a < 4
+    0
+  end
+
+  ##
+  # 新しい彩度の高い色を取得する
+  def new_color
+    ran = rand * 6
+    r, g, b = Array.new(3) { |a| (255 * gem((a * 2 + ran) % 6)).to_i }
+    r * 0x10000 + g * 0x100 + b
+  end
+
+  ##
+  # スクロールメッセージを表示する
+  def show_msg(msg, color)
+    (0...((msg.size + 1) * LED_WIDTH)).each do |x|
+      @led.Clear
+      msg.chars.each.with_index do |c, i|
+        y = rand(2)
+        z = rand(4)
+        @led.SetChar((i + 1) * LED_WIDTH - x, y, z, c.ord, color)
+      end
+      @led.Show
+      @led.Wait(1)
+    end
+  end
+
+  ##
+  # コンストラクタ内でテトリスの全処理を行う（開始からゲームオーバーまで）
   def initialize(led)
+    die if BLOCKS.any? { |b| b.size != BLOCK_SIZE }
     @led = led
     @led.ShowMotioningText1('321')
     @field = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT) { 0 } }
@@ -56,7 +65,7 @@ class Tetris
       @led.Wait(50)
     end
     puts 'GAME OVER'
-    show_msg(@led, 'GAMEOVER', new_color)
+    show_msg('GAMEOVER', new_color)
     th.each(&:join)
   end
 
@@ -69,7 +78,7 @@ class Tetris
       case key
       when 65
         puts 'up'
-        rotate_block_if_can
+        rotate_block_if_fit
       when 66
         puts 'down'
         @pos[:y] += 1 unless hit_down?
@@ -97,7 +106,7 @@ class Tetris
         set_field_and_block
       end
     end
-    sleep(0.3)
+    sleep(DELAY)
   end
 
   ##
@@ -140,7 +149,7 @@ class Tetris
     @block.reverse.each.with_index do |bin, i|
       y = @pos[:y] + BLOCK_SIZE - i - 1
       bin.chars.each.with_index(@pos[:x]) do |b, x|
-        next if b.to_i.zero? || y < 0
+        next if b.to_i.zero? || y < -1
         return true if  (FIELD_HEIGHT - 1) <= y || 0 < @field[x][y + 1]
       end
     end
@@ -183,7 +192,7 @@ class Tetris
 
   ##
   # 回転可能ならばブロックを回転する
-  def rotate_block_if_can
+  def rotate_block_if_fit
     cand = Array.new(BLOCK_SIZE) { |i| Array.new(BLOCK_SIZE) { |j| @block[j].reverse[i] }.join }
     @block = cand if fit?(cand, @pos)
   end
@@ -206,7 +215,7 @@ class Tetris
   def set_cell_led(cx, cy, rgb)
     xr, yr = [cx, cy].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }.freeze
     xr.product(yr).each do |xx, yy|
-      [0, 1].each { |z| @led.SetLed(xx, yy, z, rgb) }
+      (0...CELL).each { |z| @led.SetLed(xx, yy, z, rgb) }
     end
   end
 
