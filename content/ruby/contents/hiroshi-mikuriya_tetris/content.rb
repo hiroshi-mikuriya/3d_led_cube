@@ -43,14 +43,14 @@ class Tetris
     @led = led
     @led.ShowMotioningText1('321')
     @field = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT) { 0 } }
-    @block = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT + BLOCK_SIZE) { 0 } }
     @mutex = Mutex.new
     @game_over = false
     Thread.abort_on_exception = true
-    th = []
-    th.push Thread.new { key_thread until @game_over }
-    th.push Thread.new { block_thread until @game_over }
     add_new_block
+    th = []
+    th.push Thread.new { block_thread until @game_over }
+    sleep(0.1) # 最初のブロック投入前にキー操作したらクラッシュしそうだから
+    th.push Thread.new { key_thread until @game_over }
     until @game_over
       @mutex.synchronize { @led.Show }
       @led.Wait(50)
@@ -65,31 +65,47 @@ class Tetris
   def key_thread
     key = STDIN.getch.ord
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
-    case key
-    when 65
-      puts 'up'
-    when 66
-      puts 'down'
-    when 67
-      puts 'right'
-      @mutex.synchronize { shift_right_block unless hit_right? }
-    when 68
-      puts 'left'
-      @mutex.synchronize { shift_left_block unless hit_left? }
+    @mutex.synchronize do
+      case key
+      when 65
+        puts 'up'
+        update_block if rotate_block_if_can
+      when 66
+        puts 'down'
+        unless hit_down?
+          @block_pos[:y] += 1
+          update_block
+        end
+      when 67
+        puts 'right'
+        unless hit_right?
+          @block_pos[:x] += 1
+          update_block
+        end
+      when 68
+        puts 'left'
+        unless hit_left?
+          @block_pos[:x] -= 1
+          update_block
+        end
+      end
     end
   end
 
   ##
   # ブロックの落下や列の消去などを行うスレッド
   def block_thread
-    if hit_down?
-      copy_block_to_field
-      erase_completed_rows
-      add_new_block
-      @game_over = hit_down?
-    else
-      shift_down_block
-      set_field_and_block
+    @mutex.synchronize do
+      if hit_down?
+        copy_block_to_field
+        erase_completed_rows
+        add_new_block
+        @game_over = hit_down?
+      else
+        @block_pos[:y] += 1
+        update_block
+        set_field_and_block
+      end
     end
     sleep(0.3)
   end
@@ -179,65 +195,44 @@ class Tetris
   # 新しいブロックを追加する
   # 古いブロックを消す
   def add_new_block
-    (0...FIELD_WIDTH).each do |x|
-      (0...(FIELD_HEIGHT + BLOCK_SIZE)).each do |y|
-        @block[x][y] = 0
-      end
+    @color = new_color
+    @block_pos = { x: (FIELD_WIDTH - BLOCK_SIZE) / 2, y: 0 }
+    @currect_block = BLOCKS[rand(BLOCKS.size)].chars.map { |a| format('%04b', a) }
+    update_block
+  end
+
+  ##
+  # 回転可能ならばブロックを回転する
+  # 回転したらtrueを返す
+  def rotate_block_if_can
+    cand = Array.new(BLOCK_SIZE) { |i| Array.new(BLOCK_SIZE) { |j| @currect_block[j].reverse[i] }.join }
+    unless hit_down? || hit_left? || hit_right? # 条件が厳しすぎる
+      @currect_block = cand
+      return true
     end
-    color = new_color
-    xb = (FIELD_WIDTH - BLOCK_SIZE) / 2
-    blk = BLOCKS[rand(BLOCKS.size)]
-    blk.chars.map { |a| format('%04b', a) }.each.with_index do |bin, y|
+    return false
+  end
+
+  ##
+  # ブロック位置を更新する
+  def update_block
+    @block = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT + BLOCK_SIZE) { 0 } }
+    @currect_block.each.with_index(@block_pos[:y]) do |bin, y|
       (0...bin.size).each do |x|
-        @block[xb + x][y] = bin[x].to_i * color
+        @block[@block_pos[:x] + x][y] = bin[x].to_i * @color
       end
     end
-  end
-
-  ##
-  # ブロックを下へずらす
-  def shift_down_block
-    (1...(FIELD_HEIGHT + BLOCK_SIZE)).reverse_each do |y|
-      (0...FIELD_WIDTH).each do |x|
-        @block[x][y] = @block[x][y - 1]
-        @block[x][y - 1] = 0
-      end
-    end
-  end
-
-  ##
-  # ブロックを左へずらす
-  def shift_left_block
-    (0...(@block.size - 1)).each do |x|
-      (0...@block.first.size).each do |y|
-        @block[x][y] = @block[x + 1][y]
-      end
-    end
-    (0...@block.first.size).each { |y| @block.last[y] = 0 }
-  end
-
-  ##
-  # ブロックを右へずらす
-  def shift_right_block
-    (1...@block.size).reverse_each do |x|
-      (0...@block.first.size).each do |y|
-        @block[x][y] = @block[x - 1][y]
-      end
-    end
-    (0...@block.first.size).each { |y| @block.first[y] = 0 }
   end
 
   ##
   # ブロックとフィールドの色をLEDに設定する
   def set_field_and_block
     @led.Clear
-    @mutex.synchronize do
-      xfr, yfr = [FIELD_WIDTH, FIELD_HEIGHT].map { |xy| (0...xy).to_a }
-      xfr.product(yfr).each do |xf, yf|
-        xr, yr = [xf, yf].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }
-        xr.product(yr).each do |xx, yy|
-          @led.SetLed(xx, yy, 0, @field[xf][yf] + @block[xf][yf + BLOCK_SIZE])
-        end
+    xfr, yfr = [FIELD_WIDTH, FIELD_HEIGHT].map { |xy| (0...xy).to_a }
+    xfr.product(yfr).each do |xf, yf|
+      xr, yr = [xf, yf].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }
+      xr.product(yr).each do |xx, yy|
+        @led.SetLed(xx, yy, 0, @field[xf][yf] + @block[xf][yf + BLOCK_SIZE])
       end
     end
   end
