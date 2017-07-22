@@ -116,8 +116,8 @@ class Tetris
   def copy_block_to_field
     @block.each.with_index(@pos[:y]) do |bin, y|
       next if y < 0
-      bin.chars.each.with_index(@pos[:x]) do |b, x|
-        @field[x][y] = @color unless b.to_i.zero?
+      bin.each.with_index(@pos[:x]) do |b, x|
+        @field[x][y] = @color unless b.zero?
       end
     end
   end
@@ -150,8 +150,8 @@ class Tetris
   def hit_down?
     @block.reverse.each.with_index do |bin, i|
       y = @pos[:y] + BLOCK_SIZE - i - 1
-      bin.chars.each.with_index(@pos[:x]) do |b, x|
-        next if b.to_i.zero? || y < -1
+      bin.each.with_index(@pos[:x]) do |b, x|
+        next if b.zero? || y < -1
         return true if (FIELD_HEIGHT - 1) <= y || 0 < @field[x][y + 1]
       end
     end
@@ -162,8 +162,8 @@ class Tetris
   # ブロックが左にぶつかった判定
   def hit_left?
     @block.each.with_index(@pos[:y]) do |bin, y|
-      bin.chars.each.with_index(@pos[:x]) do |b, x|
-        next if b.to_i.zero?
+      bin.each.with_index(@pos[:x]) do |b, x|
+        next if b.zero?
         return true if x <= 0 || 0 < @field[x - 1][y]
       end
     end
@@ -174,8 +174,8 @@ class Tetris
   # ブロックが右にぶつかった判定
   def hit_right?
     @block.each.with_index(@pos[:y]) do |bin, y|
-      bin.chars.each.with_index(@pos[:x]) do |b, x|
-        next if b.to_i.zero?
+      bin.each.with_index(@pos[:x]) do |b, x|
+        next if b.zero?
         return true if (FIELD_WIDTH - 1) <= x || 0 < @field[x + 1][y]
       end
     end
@@ -187,13 +187,13 @@ class Tetris
   def add_new_block
     @color = new_color
     @pos = { x: (FIELD_WIDTH - BLOCK_SIZE) / 2, y: -BLOCK_SIZE }
-    @block = BLOCKS[rand(BLOCKS.size)].chars.map { |a| format('%04b', a) }
+    @block = BLOCKS[rand(BLOCKS.size)].chars.map { |a| format('%04b', a).chars.map(&:to_i) }
   end
 
   ##
   # 回転可能ならばブロックを回転する
   def rotate_block_if_fit
-    cand = Array.new(BLOCK_SIZE) { |i| Array.new(BLOCK_SIZE) { |j| @block[j].reverse[i] }.join }
+    cand = Array.new(BLOCK_SIZE) { |i| Array.new(BLOCK_SIZE) { |j| @block[j].reverse[i] } }
     @block = cand if fit?(cand, @pos)
   end
 
@@ -201,8 +201,8 @@ class Tetris
   # フィールドにブロックが配置可能か調査する
   def fit?(block, pos)
     block.each.with_index(pos[:y]) do |bin, y|
-      bin.chars.each.with_index(pos[:x]) do |b, x|
-        next if b.to_i.zero?
+      bin.each.with_index(pos[:x]) do |b, x|
+        next if b.zero?
         return false unless (0...FIELD_HEIGHT).cover?(y) && (0...FIELD_WIDTH).cover?(x)
         return false if 0 < @field[x][y]
       end
@@ -228,8 +228,8 @@ class Tetris
       set_cell_led(x, y, @field[x][y])
     end
     @block.each.with_index(@pos[:y]) do |bin, y|
-      bin.chars.each.with_index(@pos[:x]) do |b, x|
-        set_cell_led(x, y, @color) unless b.to_i.zero?
+      bin.each.with_index(@pos[:x]) do |b, x|
+        set_cell_led(x, y, @color) unless b.zero?
       end
     end
   end
