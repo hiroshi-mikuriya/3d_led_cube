@@ -123,6 +123,9 @@ class Tetris
     a = (0...FIELD_WIDTH).freeze
     (0...FIELD_HEIGHT).reverse_each do |y|
       next if a.any? { |x| @field[x][y].zero? }
+      a.each { |x| @field[x][y] = 0xFFFFFF }
+      @led.Show
+      @led.Wait(200)
       (1..y).reverse_each do |yy|
         a.each { |x| @field[x][yy] = @field[x][yy - 1] }
       end
