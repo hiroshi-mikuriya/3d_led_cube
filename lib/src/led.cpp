@@ -4,6 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
+#include <thread>
 #include <mutex>
 #include <chrono>
 #include <random>
@@ -199,11 +200,7 @@ void Wait(int ms)
     auto now = std::chrono::system_clock::now();
     int diff = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(now - sLastWaitTime).count());
     ms = std::max(1, ms - diff);
-#ifdef _WIN32
-    Sleep(ms);
-#else
-    cv::waitKey(ms);
-#endif // _WIN32
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
     sLastWaitTime = std::chrono::system_clock::now();
 }
 

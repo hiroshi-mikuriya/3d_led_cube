@@ -11,7 +11,7 @@ class Tetris
   FIELD_HEIGHT = LED_HEIGHT / CELL # Y方向のLED数をセルサイズで割った値
   BLOCKS = %w(0660 4444 0470 0170 0270 0630 0360).freeze # ブロックの種類（定義したものがランダムで出現する）
   BLOCK_SIZE = 4 # ブロックの縦横セル数（空白含む）
-  DELAY = 0.3 # 落下速度（小さいほどはやい）
+  DELAY = 200 # ブロックの落下速度（小さい方がはやい）
 
   ##
   # 彩度の高い色をだすための計算
@@ -56,20 +56,18 @@ class Tetris
     @game_over = false
     Thread.abort_on_exception = true
     add_new_block
-    th = []
-    th.push Thread.new { block_thread until @game_over }
-    sleep(0.1)
-    th.push Thread.new { key_thread until @game_over }
+    th = Thread.new { key_thread until @game_over }
     until @game_over
       @mutex.synchronize do
+        block_thread
         set_field_and_block
-        @led.Show
       end
-      @led.Wait(50)
+      @led.Show
+      @led.Wait(DELAY)
     end
     puts 'GAME OVER'
     show_msg('GAMEOVER', new_color)
-    th.each(&:join)
+    th.join
   end
 
   ##
@@ -98,17 +96,14 @@ class Tetris
   ##
   # ブロックの落下や列の消去などを行うスレッド
   def block_thread
-    @mutex.synchronize do
-      if hit_down?
-        copy_block_to_field
-        erase_completed_rows
-        add_new_block
-        @game_over = hit_down?
-      else
-        @pos[:y] += 1
-      end
+    if hit_down?
+      copy_block_to_field
+      erase_completed_rows
+      add_new_block
+      @game_over = hit_down?
+    else
+      @pos[:y] += 1
     end
-    sleep(DELAY)
   end
 
   ##
