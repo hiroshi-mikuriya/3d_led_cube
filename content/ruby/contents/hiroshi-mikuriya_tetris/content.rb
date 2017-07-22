@@ -69,25 +69,16 @@ class Tetris
       case key
       when 65
         puts 'up'
-        update_block if rotate_block_if_can
+        rotate_block_if_can
       when 66
         puts 'down'
-        unless hit_down?
-          @block_pos[:y] += 1
-          update_block
-        end
+        @block_pos[:y] += 1 unless hit_down?(@currect_block)
       when 67
         puts 'right'
-        unless hit_right?
-          @block_pos[:x] += 1
-          update_block
-        end
+        @block_pos[:x] += 1 unless hit_right?(@currect_block)
       when 68
         puts 'left'
-        unless hit_left?
-          @block_pos[:x] -= 1
-          update_block
-        end
+        @block_pos[:x] -= 1 unless hit_left?(@currect_block)
       end
     end
   end
@@ -96,14 +87,13 @@ class Tetris
   # ブロックの落下や列の消去などを行うスレッド
   def block_thread
     @mutex.synchronize do
-      if hit_down?
+      if hit_down?(@currect_block)
         copy_block_to_field
         erase_completed_rows
         add_new_block
-        @game_over = hit_down?
+        @game_over = hit_down?(@currect_block)
       else
         @block_pos[:y] += 1
-        update_block
         set_field_and_block
       end
     end
@@ -113,10 +103,10 @@ class Tetris
   ##
   # ブロックをフィールドにコピーする
   def copy_block_to_field
-    (0...FIELD_WIDTH).each do |x|
-      (0...FIELD_HEIGHT).each do |y|
-        b = @block[x][y + BLOCK_SIZE]
-        @field[x][y] = b unless b.zero?
+    @currect_block.each.with_index(@block_pos[:y]) do |bin, y|
+      next if y < 0
+      bin.chars.each.with_index(@block_pos[:x]) do |b, x|
+        @field[x][y] = @color unless b.to_i.zero?
       end
     end
   end
@@ -146,13 +136,12 @@ class Tetris
 
   ##
   # ブロックが底もしくは積みブロックにぶつかった判定
-  def hit_down?
-    (0...(FIELD_HEIGHT + BLOCK_SIZE)).each do |y|
-      (0...FIELD_WIDTH).each do |x|
-        next if y < BLOCK_SIZE - 1
-        b = @block[x][y]
-        next if b.zero?
-        return true if y == (FIELD_HEIGHT + BLOCK_SIZE) - 1 || 0 < @field[x][y + 1 - BLOCK_SIZE]
+  def hit_down?(block)
+    block.reverse.each.with_index do |bin, i|
+      y = @block_pos[:y] + BLOCK_SIZE - i - 1
+      bin.chars.each.with_index(@block_pos[:x]) do |b, x|
+        next if b.to_i.zero? || y < 0
+        return true if  (FIELD_HEIGHT - 1) <= y || 0 < @field[x][y + 1]
       end
     end
     false
@@ -160,7 +149,8 @@ class Tetris
 
   ##
   # ブロックが左にぶつかった判定
-  def hit_left?
+  def hit_left?(block)
+    return true
     (0...(FIELD_HEIGHT + BLOCK_SIZE)).each do |y|
       (0...FIELD_WIDTH).each do |x|
         b = @block[x][y]
@@ -177,7 +167,8 @@ class Tetris
 
   ##
   # ブロックが右にぶつかった判定
-  def hit_right?
+  def hit_right?(block)
+    return true
     (0...(FIELD_HEIGHT + BLOCK_SIZE)).each do |y|
       (0...FIELD_WIDTH).each do |x|
         b = @block[x][y]
@@ -196,9 +187,8 @@ class Tetris
   # 古いブロックを消す
   def add_new_block
     @color = new_color
-    @block_pos = { x: (FIELD_WIDTH - BLOCK_SIZE) / 2, y: 0 }
+    @block_pos = { x: (FIELD_WIDTH - BLOCK_SIZE) / 2, y: -BLOCK_SIZE }
     @currect_block = BLOCKS[rand(BLOCKS.size)].chars.map { |a| format('%04b', a) }
-    update_block
   end
 
   ##
@@ -206,7 +196,7 @@ class Tetris
   # 回転したらtrueを返す
   def rotate_block_if_can
     cand = Array.new(BLOCK_SIZE) { |i| Array.new(BLOCK_SIZE) { |j| @currect_block[j].reverse[i] }.join }
-    unless hit_down? || hit_left? || hit_right? # 条件が厳しすぎる
+    unless hit_down?(cand) || hit_left?(cand) || hit_right?(cand) # 条件が厳しすぎる
       @currect_block = cand
       return true
     end
@@ -214,32 +204,29 @@ class Tetris
   end
 
   ##
-  # ブロック位置を更新する
-  def update_block
-    @block = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT + BLOCK_SIZE) { 0 } }
-    @currect_block.each.with_index(@block_pos[:y]) do |bin, y|
-      (0...bin.size).each do |x|
-        @block[@block_pos[:x] + x][y] = bin[x].to_i * @color
-      end
-    end
-  end
-
-  ##
   # ブロックとフィールドの色をLEDに設定する
   def set_field_and_block
     @led.Clear
-    xfr, yfr = [FIELD_WIDTH, FIELD_HEIGHT].map { |xy| (0...xy).to_a }
+    xfr, yfr = [FIELD_WIDTH, FIELD_HEIGHT].map { |xy| (0...xy).to_a }.freeze
     xfr.product(yfr).each do |xf, yf|
-      xr, yr = [xf, yf].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }
+      xr, yr = [xf, yf].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }.freeze
       xr.product(yr).each do |xx, yy|
-        @led.SetLed(xx, yy, 0, @field[xf][yf] + @block[xf][yf + BLOCK_SIZE])
+        @led.SetLed(xx, yy, 0, @field[xf][yf])
+      end
+    end
+    @currect_block.each.with_index(@block_pos[:y]) do |bin, y|
+      next if y < 0
+      bin.chars.each.with_index(@block_pos[:x]) do |b, x|
+        next if b.to_i.zero?
+        xr, yr = [x, y].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }.freeze
+        xr.product(yr).each do |xx, yy|
+          @led.SetLed(xx, yy, 0, @color) 
+        end
       end
     end
   end
 end
 
 def execute(led)
-  loop do
-    Tetris.new(led)
-  end
+  loop { Tetris.new(led) }
 end
