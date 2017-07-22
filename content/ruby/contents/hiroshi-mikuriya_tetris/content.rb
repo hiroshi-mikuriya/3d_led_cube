@@ -6,11 +6,11 @@ class Tetris
   LED_HEIGHT = 32 # 3D LED CUBEのY方向のLED数
   LED_WIDTH = 16 # 3D LED CUBEのX方向のLED数
   LED_DEPTH = 8 # 3D LED CUBEのZ方向のLED数
-  CELL = 4 # セルあたりのLED数
+  CELL = 2 # セルあたりのLED数
   FIELD_WIDTH = LED_WIDTH / CELL # X方向のLED数をセルサイズで割った値
   FIELD_HEIGHT = LED_HEIGHT / CELL # Y方向のLED数をセルサイズで割った値
   BLOCKS = %w(0660 4444 0470 0170 0270 0630 0360).freeze # ブロックの種類（定義したものがランダムで出現する）
-  BLOCK_SIZE = 2 # ブロックの縦横セル数（空白含む）
+  BLOCK_SIZE = 4 # ブロックの縦横セル数（空白含む）
   DELAY = 0.3 # 落下速度（小さいほどはやい）
 
   ##
