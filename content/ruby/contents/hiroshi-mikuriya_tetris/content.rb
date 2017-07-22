@@ -203,10 +203,10 @@ class Tetris
 
   ##
   # フィールド座標からLEDの座標へ変換し、セル単位でLEDの色を設定する
-  def set_cell_led(cx, cy, z, rgb)
+  def set_cell_led(cx, cy, rgb)
     xr, yr = [cx, cy].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }.freeze
     xr.product(yr).each do |xx, yy|
-      @led.SetLed(xx, yy, z, rgb)
+      [0, 1].each { |z| @led.SetLed(xx, yy, z, rgb) }
     end
   end
 
@@ -216,13 +216,13 @@ class Tetris
     @led.Clear
     xr, yr = [FIELD_WIDTH, FIELD_HEIGHT].map { |xy| (0...xy).to_a }.freeze
     xr.product(yr).each do |x, y|
-      set_cell_led(x, y, 0, @field[x][y])
+      set_cell_led(x, y, @field[x][y])
     end
     @block.each.with_index(@pos[:y]) do |bin, y|
       next if y < 0
       bin.chars.each.with_index(@pos[:x]) do |b, x|
         next if b.to_i.zero?
-        set_cell_led(x, y, 0, @color)
+        set_cell_led(x, y, @color)
       end
     end
   end
