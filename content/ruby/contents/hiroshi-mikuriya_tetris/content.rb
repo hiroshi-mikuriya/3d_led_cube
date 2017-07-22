@@ -61,7 +61,10 @@ class Tetris
     sleep(0.1) # 最初のブロック投入前にキー操作したらクラッシュしそうだから
     th.push Thread.new { key_thread until @game_over }
     until @game_over
-      @mutex.synchronize { @led.Show }
+      @mutex.synchronize do
+        set_field_and_block
+        @led.Show
+      end
       @led.Wait(50)
     end
     puts 'GAME OVER'
@@ -103,7 +106,6 @@ class Tetris
         @game_over = hit_down?
       else
         @pos[:y] += 1
-        set_field_and_block
       end
     end
     sleep(DELAY)
@@ -168,7 +170,6 @@ class Tetris
     false
   end
   
-
   ##
   # ブロックが右にぶつかった判定
   def hit_right?
