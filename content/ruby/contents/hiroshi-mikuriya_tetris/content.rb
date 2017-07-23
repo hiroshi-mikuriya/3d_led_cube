@@ -110,7 +110,7 @@ class Tetris
   # ブロックをフィールドにコピーする
   def copy_block_to_field
     @block.each.with_index(@pos[:y]) do |bin, y|
-      next if y < 0
+      next if y.negative?
       bin.each.with_index(@pos[:x]) do |b, x|
         @field[x][y] = @color unless b.zero?
       end
@@ -155,7 +155,7 @@ class Tetris
       y = @pos[:y] + BLOCK_SIZE - i - 1
       bin.each.with_index(@pos[:x]) do |b, x|
         next if b.zero? || y < -1
-        return true if (FIELD_HEIGHT - 1) <= y || 0 < @field[x][y + 1]
+        return true if (FIELD_HEIGHT - 1) <= y || @field[x][y + 1].positive?
       end
     end
     false
@@ -167,7 +167,7 @@ class Tetris
     @block.each.with_index(@pos[:y]) do |bin, y|
       bin.each.with_index(@pos[:x]) do |b, x|
         next if b.zero?
-        return true if x <= 0 || 0 < @field[x - 1][y]
+        return true if x <= 0 || @field[x - 1][y].positive?
       end
     end
     false
@@ -179,7 +179,7 @@ class Tetris
     @block.each.with_index(@pos[:y]) do |bin, y|
       bin.each.with_index(@pos[:x]) do |b, x|
         next if b.zero?
-        return true if (FIELD_WIDTH - 1) <= x || 0 < @field[x + 1][y]
+        return true if (FIELD_WIDTH - 1) <= x || @field[x + 1][y].positive?
       end
     end
     false
@@ -196,8 +196,8 @@ class Tetris
   ##
   # 回転可能ならばブロックを回転する
   def rotate_block_if_fit
-    cand = Array.new(BLOCK_SIZE) { |i| Array.new(BLOCK_SIZE) { |j| @block[j].reverse[i] } }
-    @block = cand if fit?(cand, @pos)
+    rot = Array.new(BLOCK_SIZE) { |i| Array.new(BLOCK_SIZE) { |j| @block[j].reverse[i] } }
+    @block = rot if fit?(rot, @pos)
   end
 
   ##
@@ -207,7 +207,7 @@ class Tetris
       bin.each.with_index(pos[:x]) do |b, x|
         next if b.zero?
         return false unless (0...FIELD_HEIGHT).cover?(y) && (0...FIELD_WIDTH).cover?(x)
-        return false if 0 < @field[x][y]
+        return false if @field[x][y].positive?
       end
     end
     true
