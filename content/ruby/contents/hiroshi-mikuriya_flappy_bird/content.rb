@@ -6,6 +6,7 @@ class FlappyBird
   LED_WIDTH = 16
   LED_HEIGHT = 32
   LED_DEPTH = 8
+  G = 20
   BIRD = [
     [0xFFFF00, 0x000000, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0x000000],
     [0xFFFF00, 0xFFFF00, 0xFFFFFF, 0xFFFFFF, 0x000000, 0xFFFFFF],
@@ -18,9 +19,11 @@ class FlappyBird
     @led.ShowMotioningText1('321')
     @game_over = false
     @blockz = LED_DEPTH - 1
-    @pos = { x: (LED_WIDTH - BIRD.first.size) / 2, y: LED_HEIGHT / 2 }
+    @pos = { x: (LED_WIDTH - BIRD.first.size) / 2, y: (LED_HEIGHT / 2).to_f }
     @ana = new_ana
     @mutex = Mutex.new
+    @v = -10
+    @time = Time.now
     th = []
     th.push Thread.new { key_thread until @game_over }
     th.push Thread.new { block_thread until @game_over }
@@ -30,25 +33,31 @@ class FlappyBird
 
   def main_thread
     @led.Clear
+    now = Time.now
+    t = now - @time
+    @time = now
+    @v += G * t
+    @pos[:y] += @v * t
     set_block
     set_bird
     @led.Show
-    @led.Wait(10)
+    @led.Wait(1)
   end
 
   def key_thread
     key = STDIN.getch.ord
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
+    @v -= 20
   end
 
   def block_thread
     @ana = new_ana if @blockz.zero?
     @blockz = @blockz.zero? ? LED_DEPTH - 1 : @blockz - 1
-    sleep(0.2)
+    sleep(0.3)
   end
 
   def new_ana
-    ana = BIRD.size + 4
+    ana = BIRD.size + 6
     r = rand(LED_HEIGHT - ana)
     (r...(r + ana))
   end
