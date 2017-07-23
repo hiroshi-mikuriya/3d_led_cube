@@ -32,22 +32,37 @@ class FlappyBird
   end
 
   def main_thread
+    @mutex.synchronize do
+      now = Time.now
+      t = now - @time
+      @time = now
+      @v += G * t
+      @pos[:y] += @v * t
+    end
     @led.Clear
-    now = Time.now
-    t = now - @time
-    @time = now
-    @v += G * t
-    @pos[:y] += @v * t
-    set_block
-    set_bird
-    @led.Show
-    @led.Wait(1)
+    if crash?
+      @game_over = true
+      @led.ShowFirework(@pos[:x] + BIRD.first.size / 2, @pos[:y] + BIRD.size / 2, 0)
+    else
+      set_block
+      set_bird
+      @led.Show
+    end
+  end
+
+  def crash?
+    return false unless @blockz.zero?
+    return true if @pos[:y].negative? || LED_HEIGHT <= @pos[:y]
+    kabe = (0...LED_HEIGHT).to_a - @ana.to_a
+    bird = (@pos[:y].to_i...(@pos[:y].to_i + BIRD.size)).to_a
+    return true unless (kabe & bird).empty?
+    false
   end
 
   def key_thread
     key = STDIN.getch.ord
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
-    @v -= 20
+    @mutex.synchronize { @v -= 20 }
   end
 
   def block_thread
@@ -57,7 +72,7 @@ class FlappyBird
   end
 
   def new_ana
-    ana = BIRD.size + 6
+    ana = BIRD.size + 8
     r = rand(LED_HEIGHT - ana)
     (r...(r + ana))
   end
