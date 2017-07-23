@@ -41,7 +41,7 @@ class Tetris
         @led.SetChar((i + 1) * LED_WIDTH - x, y, z, c.ord, color)
       end
       @led.Show
-      @led.Wait(1)
+      @led.Wait(2)
     end
   end
 
@@ -118,29 +118,34 @@ class Tetris
   end
 
   ##
-  # そろった列があれば1列だけ消して下にシフトしてtrueを返す
-  def erase_completed_row
-    a = (0...FIELD_WIDTH).freeze
-    (0...FIELD_HEIGHT).reverse_each do |y|
-      next if a.any? { |x| @field[x][y].zero? }
-      a.each { |x| @field[x][y] = 0xFFFFFF }
-      @led.Show
-      @led.Wait(200)
-      (1..y).reverse_each do |yy|
-        a.each { |x| @field[x][yy] = @field[x][yy - 1] }
+  # 列を削除するエフェクト
+  def erase_effect(y)
+    colors = Array.new(FIELD_WIDTH) { |x| @field[x][y] }
+    zr = (0..LED_DEPTH)
+    zr.each do |z|
+      zr.each do |zz|
+        (0...FIELD_WIDTH).each { |x| set_cell_led(x, y, zz, 0) }
       end
-      a.each { |x| @field[x][0] = 0 }
-      return true
+      colors.each.with_index { |color, x| set_cell_led(x, y, z, color) }
+      @led.Show
+      @led.Wait(50)
     end
-    false
   end
 
   ##
   # そろった列を消す
   def erase_completed_rows
-    loop do
-      return unless erase_completed_row
+    new_field = Array.new(FIELD_WIDTH) { Array.new(FIELD_HEIGHT) { 0 } }
+    ny = FIELD_HEIGHT - 1
+    (0...FIELD_HEIGHT).reverse_each do |fy|
+      if (0...FIELD_WIDTH).any? { |x| @field[x][fy].zero? }
+        (0...FIELD_WIDTH).each { |x| new_field[x][ny] = @field[x][fy] }
+        ny -= 1
+      else
+        erase_effect(fy)
+      end
     end
+    @field = new_field
   end
 
   ##
@@ -210,10 +215,10 @@ class Tetris
 
   ##
   # フィールド座標からLEDの座標へ変換し、セル単位でLEDの色を設定する
-  def set_cell_led(cx, cy, rgb)
+  def set_cell_led(cx, cy, z, rgb)
     xr, yr = [cx, cy].map { |xy| ((xy * CELL)...((xy + 1) * CELL)).to_a }.freeze
     xr.product(yr).each do |xx, yy|
-      (0...CELL).each { |z| @led.SetLed(xx, yy, z, rgb) }
+      (z...(z + CELL)).each { |zz| @led.SetLed(xx, yy, zz, rgb) }
     end
   end
 
@@ -223,11 +228,11 @@ class Tetris
     @led.Clear
     xr, yr = [FIELD_WIDTH, FIELD_HEIGHT].map { |xy| (0...xy).to_a }.freeze
     xr.product(yr).each do |x, y|
-      set_cell_led(x, y, @field[x][y])
+      set_cell_led(x, y, 0, @field[x][y])
     end
     @block.each.with_index(@pos[:y]) do |bin, y|
       bin.each.with_index(@pos[:x]) do |b, x|
-        set_cell_led(x, y, @color) unless b.zero?
+        set_cell_led(x, y, 0, @color) unless b.zero?
       end
     end
   end
