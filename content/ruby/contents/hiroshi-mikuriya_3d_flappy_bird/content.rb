@@ -6,7 +6,7 @@ class FlappyBird
   LED_WIDTH = 16
   LED_HEIGHT = 32
   LED_DEPTH = 8
-  G = 20
+  G = 30
   BIRD = [
     [0xFFFF00, 0x000000, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0x000000],
     [0xFFFF00, 0xFFFF00, 0xFFFFFF, 0xFFFFFF, 0x000000, 0xFFFFFF],
@@ -42,7 +42,10 @@ class FlappyBird
     @led.Clear
     if crash?
       @game_over = true
-      @led.ShowFirework(@pos[:x] + BIRD.first.size / 2, @pos[:y] + BIRD.size / 2, 0)
+      y = @pos[:y] + BIRD.size / 2
+      y = 0 if y.negative?
+      y = LED_HEIGHT - 1 if LED_HEIGHT <= y
+      @led.ShowFirework(@pos[:x] + BIRD.first.size / 2, y, 0)
     else
       set_block
       set_bird
@@ -62,7 +65,7 @@ class FlappyBird
   def key_thread
     key = STDIN.getch.ord
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
-    @mutex.synchronize { @v -= 20 }
+    @mutex.synchronize { @v = -10 }
   end
 
   def block_thread
