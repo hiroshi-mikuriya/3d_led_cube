@@ -28,7 +28,7 @@ class FlappyBird
     th.push Thread.new { key_thread until @game_over }
     th.push Thread.new { block_thread until @game_over }
     main_thread until @game_over
-    th.join
+    th.each(&:join)
   end
 
   def main_thread
@@ -56,8 +56,7 @@ class FlappyBird
     return false unless @blockz.zero?
     kabe = (0...LED_HEIGHT).to_a - @ana.to_a
     bird = (@pos[:y].to_i...(@pos[:y].to_i + BIRD.size)).to_a
-    return true unless (kabe & bird).empty?
-    false
+    (kabe & bird).size.positive?
   end
 
   def key_thread
