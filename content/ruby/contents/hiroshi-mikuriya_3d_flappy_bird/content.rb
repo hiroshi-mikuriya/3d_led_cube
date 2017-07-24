@@ -43,8 +43,6 @@ class FlappyBird
     if crash?
       @game_over = true
       y = @pos[:y] + BIRD.size / 2
-      y = 0 if y.negative?
-      y = LED_HEIGHT - 1 if LED_HEIGHT <= y
       @led.ShowFirework(@pos[:x] + BIRD.first.size / 2, y, 0)
     else
       set_block
@@ -54,8 +52,8 @@ class FlappyBird
   end
 
   def crash?
-    return false unless @blockz.zero?
     return true if @pos[:y].negative? || LED_HEIGHT <= @pos[:y]
+    return false unless @blockz.zero?
     kabe = (0...LED_HEIGHT).to_a - @ana.to_a
     bird = (@pos[:y].to_i...(@pos[:y].to_i + BIRD.size)).to_a
     return true unless (kabe & bird).empty?
@@ -65,7 +63,7 @@ class FlappyBird
   def key_thread
     key = STDIN.getch.ord
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
-    @mutex.synchronize { @v = -10 }
+    @mutex.synchronize { @v = -15 }
   end
 
   def block_thread
