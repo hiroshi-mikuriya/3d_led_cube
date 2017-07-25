@@ -43,7 +43,7 @@ namespace LEDLIB
             }
 
             canvas.SetLed(this.x, this.y, this.z, this.Color);
-            this.Color -= 20;
+            this.Color -= 10;
         }
     }
 }
