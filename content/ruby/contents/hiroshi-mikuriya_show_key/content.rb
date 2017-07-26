@@ -1,30 +1,30 @@
 require 'io/console'
 
 def gem(a)
-    return a if a < 1
-    return 1 if a < 3
-    return 4 - a if a < 4
-    0
+  return a if a < 1
+  return 1 if a < 3
+  return 4 - a if a < 4
+  0
 end
 
-def new_color()
-    ran = rand() * 6
-    r = (255 * gem((0 + ran) % 6)).to_i
-    g = (255 * gem((2 + ran) % 6)).to_i
-    b = (255 * gem((4 + ran) % 6)).to_i
-    r * 0x10000 + g * 0x100 + b
+def new_color
+  ran = rand * 6
+  r, g, b = Array.new(3) { |a| (255 * gem((a * 2 + ran) % 6)).to_i }
+  r * 0x10000 + g * 0x100 + b
 end
 
 def execute(led)
+  key = nil
+  color = nil
+  Thread.new do
+    loop { key = STDIN.getch.ord; color = new_color }
+  end
   loop do
     led.Show
     led.Wait(10)
-    key = STDIN.getch.ord
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
     led.Clear
-    x = rand(3)
-    y = rand(3)
-    z = rand(3)
-    led.SetChar(x, y, z, key, new_color)
+    x, y, z = Array.new(3) { rand(5) }
+    led.SetChar(x, y, z, key, color) unless key.nil?
   end
 end
