@@ -97,6 +97,9 @@
       <HintPath Condition="'$(Platform)' == 'x64'">$(RSSDK_DIR)\bin\x64\Intel.RealSense.cs.dll</HintPath>
       <HintPath Condition="'$(Platform)' == 'x86'">$(RSSDK_DIR)\bin\win32\Intel.RealSense.cs.dll</HintPath>
     </Reference>
+    <Reference Include="MathNet.Numerics, Version=3.20.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -109,18 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FixedSizeQueue.cs" />
-    <Compile Include="LEDLIB\DrawUtility.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="LEDLIB\LED.cs" />
-    <Compile Include="LEDLIB\LED3DCanvas.cs" />
-    <Compile Include="LEDLIB\LED3DCircle.cs" />
-    <Compile Include="LEDLIB\LED3DEphemeralDot.cs" />
-    <Compile Include="LEDLIB\LED3DDot.cs" />
-    <Compile Include="LEDLIB\LED3DObject.cs" />
     <Compile Include="HandsRecognition.cs" />
-    <Compile Include="LEDLIB\LED3DRectangle.cs" />
-    <Compile Include="LEDLIB\LED3DRipple.cs" />
-    <Compile Include="LEDLIB\RGB.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -183,6 +175,12 @@
   <ItemGroup>
     <Folder Include="res\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\tatsuo98se_ledlib\tatsuo98se_ledlib\tatsuo98se_ledlib.csproj">
+      <Project>{2329ebf6-c411-42dd-a5ec-2b273d8c59c3}</Project>
+      <Name>tatsuo98se_ledlib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
@@ -191,16 +189,4 @@
     <PostBuildEvent>if "$(Platform)" == "x86" ( copy /y "$(RSSDK_DIR)\bin\win32\libpxccpp2c.dll" "$(TargetDir)" ) else ( copy /y "$(RSSDK_DIR)\bin\x64\libpxccpp2c.dll" "$(TargetDir)" )</PostBuildEvent>
   </PropertyGroup>
   <UsingTask TaskName="ILMerge.MSBuild.Tasks.ILMerge" AssemblyFile="$(SolutionDir)\packages\ILMerge.MSBuild.Tasks.1.0.0.3\tools\ILMerge.MSBuild.Tasks.dll" />
-  <Target Name="AfterBuild">
-    <ItemGroup>
-      <MergeAsm Include="$(OutputPath)$(TargetFileName)" />
-      <MergeAsm Include="$(OutputPath)Intel.RealSense.cs.dll" />
-      <MergeAsm Include="$(OutputPath)Intel.RealSense.Hand.cs.dll" />
-    </ItemGroup>
-    <PropertyGroup>
-      <MergedAssembly>$(TargetDir)$(TargetName)_all$(TargetExt)</MergedAssembly>
-    </PropertyGroup>
-    <Message Text="ILMerge @(MergeAsm) -&gt; $(MergedAssembly)" Importance="high" />
-    <ILMerge InputAssemblies="@(MergeAsm)" OutputFile="$(MergedAssembly)" TargetKind="SameAsPrimaryAssembly" />
-  </Target>
 </Project>

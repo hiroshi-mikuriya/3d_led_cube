@@ -680,7 +680,7 @@ namespace hands_viewer.cs
                                             {
                                                 if (j == 9)
                                                 {
-                                                    HandsRecognition.addObject(new LED3DRipple(ledX, ledY, RGB.fromColor(currnetPen.Color), LED.Direction.Front, 3));
+                                                    HandsRecognition.addObjectOnWave(new LED3DRipple(ledX, ledY, RGB.randamBG(), LED.Direction.Front, 3));
 
                                                 }
                                             }
