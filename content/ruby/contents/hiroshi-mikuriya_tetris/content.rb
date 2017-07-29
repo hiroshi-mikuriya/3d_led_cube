@@ -77,17 +77,13 @@ class Tetris
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
     @mutex.synchronize do
       case key
-      when 65
-        puts 'up'
+      when 65, 97, 98, 120, 121
         rotate_block_if_fit
       when 66
-        puts 'down'
         @pos[:y] += 1 unless hit_down?
       when 67
-        puts 'right'
         @pos[:x] += 1 unless hit_right?
       when 68
-        puts 'left'
         @pos[:x] -= 1 unless hit_left?
       end
     end
