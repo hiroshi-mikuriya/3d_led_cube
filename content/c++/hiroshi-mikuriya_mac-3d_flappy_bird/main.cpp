@@ -147,7 +147,7 @@ private:
     {
         for(int x = 0; x < 6; ++x){
             for(int y = 0; y < 4; ++y){
-                SetLed(x + birdp_.x, y + birdp_.y, 0, BIRD[x][y]);
+                SetLed(x + birdp_.x, y + birdp_.y, 0, BIRD[y][x]);
             }
         }
     }
