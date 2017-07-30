@@ -2,7 +2,6 @@
 #include <thread>
 #include <mutex>
 #include <vector>
-#include <curses.h>
 
 namespace {
     class synchronizer
@@ -29,7 +28,7 @@ namespace {
 
 class flappy_bird
 {
-    static const int ana_size = 7;
+    static const int ana_size = 9;
     static const int G = 30;
     static const int V = -15;
     const int BIRD[4][6] = {
@@ -86,23 +85,11 @@ private:
     }
     void key_thread(){
         while(!game_over_){
-            int ch = getch();
-            std::cout << ch << std::endl;
-            if(ch < 0){
-                std::this_thread::sleep_for(std::chrono::milliseconds(5));
-                continue;
-            }
-            switch(ch){
-            case 0x03: // Ctrl + c
-            case 0x1A: // Ctrl + z
-                exit(0);
-                break;
-            default: // other keys
+            std::string input;
+            std::cin >> input;
             {
                 synchronizer sync(mutex_);
                 v_ = V;
-                break;
-            }
             }
         }
     }
@@ -151,10 +138,9 @@ private:
         }
         for(auto y : kabe_){
             if(birdp_.y <= y && y < birdp_.y + 4){
-                return 
+                return true;
             }
         }
-        // TODO
         return false;
     }
     void set_bird()
