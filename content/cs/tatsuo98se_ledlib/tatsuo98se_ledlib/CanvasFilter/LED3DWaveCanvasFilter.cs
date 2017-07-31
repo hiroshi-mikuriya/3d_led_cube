@@ -9,7 +9,7 @@ namespace LEDLIB
     {
         DateTime bornAt;
 
-        public LED3DWaveCanvasFilter(LED3DCanvas canvas)
+        public LED3DWaveCanvasFilter(ILED3DCanvas canvas)
             :base(canvas)
         {
             bornAt = DateTime.Now;

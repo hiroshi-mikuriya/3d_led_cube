@@ -20,8 +20,8 @@ namespace LEDLIB
         }
         public LED3DCircle(double x, double y, double w, double h, RGB color, TimeSpan lifeTime) : base(color, lifeTime)
         {
-            this.x = x + w / 2;
-            this.y = y + h / 2;
+            this.x = x;
+            this.y = y;
             this.w = w;
             this.h = h;
         }

@@ -11,10 +11,10 @@ namespace LEDLIB
     {
         public static Rectangle ToRectangle(this RectangleF rect)
         {
-            return new Rectangle(Convert.ToInt32(rect.X),
-                Convert.ToInt32(rect.Y),
-                Convert.ToInt32(rect.Width),
-                Convert.ToInt32(rect.Height));
+            return new Rectangle(Util.Round(rect.X),
+                Util.Round(rect.Y),
+                Util.Round(rect.Width),
+                Util.Round(rect.Height));
         }
     }
 }

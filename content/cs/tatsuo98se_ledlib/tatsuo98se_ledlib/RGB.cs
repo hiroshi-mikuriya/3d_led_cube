@@ -11,6 +11,7 @@ namespace LEDLIB
         private int r;
         private int g;
         private int b;
+        private int a = 0xff;
 
         private static Random rand = null;
 
@@ -33,7 +34,23 @@ namespace LEDLIB
 
         public static RGB fromColor(Color color)
         {
-            return new RGB(color.R, color.G, color.B);
+            return new RGB(
+                color.R,
+                color.G,
+                color.B,
+                color.A);
+        }
+
+        public RGB(int r, int g, int b, int a)
+            :this(r, g, b)
+        {
+            this.a = a;
+        }
+
+        public RGB(float r, float g, float b)
+            :this(Util.Round(0xff*r), Util.Round(0xff*g), Util.Round(0xff*b))
+        {
+
         }
 
         public RGB(int r, int g, int b)
@@ -68,6 +85,34 @@ namespace LEDLIB
             }
         }
 
+        public float Rf
+        {
+            get
+            {
+                return this.r / 255f;
+            }
+        }
+        public float Gf
+        {
+            get
+            {
+                return this.g / 255f;
+            }
+        }
+        public float Bf
+        {
+            get
+            {
+                return this.b / 255f;
+            }
+        }
+        public float Af
+        {
+            get
+            {
+                return this.a / 255f;
+            }
+        }
         public int R
         {
             get
@@ -89,17 +134,25 @@ namespace LEDLIB
                 return this.b;
             }
         }
+        public int A
+        {
+            get
+            {
+                return this.a;
+            }
+        }
 
         public static RGB operator -(RGB lhs, int rhs)
         {
-            return new RGB(lhs.r - rhs, lhs.g - rhs, lhs.b - rhs);
+            return new RGB(lhs.r - rhs, lhs.g - rhs, lhs.b - rhs, lhs.a);
         }
 
         public static RGB operator -(RGB lhs, double rhs)
         {
-            return new RGB(Convert.ToInt32(lhs.r - rhs), 
-                Convert.ToInt32(lhs.g - rhs),
-                Convert.ToInt32(lhs.b - rhs));
+            return new RGB(Util.Round(lhs.r - rhs),
+                Util.Round(lhs.g - rhs),
+                Util.Round(lhs.b - rhs),
+                lhs.a);
         }
 
         public static RGB operator -(RGB lhs, RGB rhs)
@@ -126,7 +179,7 @@ namespace LEDLIB
 
         public Color ToColor()
         {
-            return Color.FromArgb(this.r, this.g, this.b);
+            return Color.FromArgb(this.a, this.r, this.g, this.b);
         }
 
         public bool isBlack()

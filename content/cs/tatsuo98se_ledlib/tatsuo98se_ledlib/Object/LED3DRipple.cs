@@ -56,7 +56,7 @@ namespace LEDLIB
 
                 foreach(var dot in dots)
                 {
-                    canvas.SetLed(dot.X, dot.Y, Convert.ToInt32(r)%2, dot.RGB);
+                    canvas.SetLed(dot.X, dot.Y, 0, dot.RGB);
                 }    
     
 

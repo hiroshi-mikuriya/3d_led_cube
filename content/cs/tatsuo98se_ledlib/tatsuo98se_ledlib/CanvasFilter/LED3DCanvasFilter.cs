@@ -43,5 +43,17 @@ namespace LEDLIB
         {
             this.canvas.AddObject(obj, filter);
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        virtual public List<LED3DObjectSet> GetObjects()
+        {
+            return this.canvas.GetObjects();
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        virtual public void RemoveObject(LED3DObjectSet obj)
+        {
+            this.canvas.RemoveObject(obj);
+        }
     }
 }

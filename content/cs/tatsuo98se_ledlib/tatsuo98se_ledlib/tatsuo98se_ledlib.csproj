@@ -42,21 +42,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CanvasFilter\LEDSurfaceCanvasFilter.cs" />
     <Compile Include="DrawUtility.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ILED3DCanvas.cs" />
     <Compile Include="LED.cs" />
     <Compile Include="LED3DCanvas.cs" />
-    <Compile Include="LED3DCanvasFilter.cs" />
-    <Compile Include="LED3DCircle.cs" />
-    <Compile Include="LED3DDot.cs" />
-    <Compile Include="LED3DEphemeralDot.cs" />
-    <Compile Include="LED3DObject.cs" />
-    <Compile Include="LED3DRectangle.cs" />
-    <Compile Include="LED3DRipple.cs" />
-    <Compile Include="LED3DWaveCanvasFilter.cs" />
+    <Compile Include="CanvasFilter\LED3DCanvasFilter.cs" />
+    <Compile Include="LED3DObjectSet.cs" />
+    <Compile Include="Object\LED3DAtField.cs" />
+    <Compile Include="Object\LED3DCircle.cs" />
+    <Compile Include="Object\LED3DDot.cs" />
+    <Compile Include="Object\LED3DEphemeralDot.cs" />
+    <Compile Include="Object\LED3DObject.cs" />
+    <Compile Include="Object\LED3DRectangle.cs" />
+    <Compile Include="Object\LED3DRipple.cs" />
+    <Compile Include="CanvasFilter\LED3DWaveCanvasFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RGB.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

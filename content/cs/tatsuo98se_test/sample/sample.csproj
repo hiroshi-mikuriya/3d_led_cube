@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,21 +47,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DrawUtility.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="LED.cs" />
-    <Compile Include="LED3DCanvas.cs" />
-    <Compile Include="LED3DCircle.cs" />
-    <Compile Include="LED3DDot.cs" />
-    <Compile Include="LED3DObject.cs" />
-    <Compile Include="LED3DRectangle.cs" />
-    <Compile Include="LED3DRipple.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RGB.cs" />
+    <Compile Include="ShowCase\AtFieldOnCube.cs" />
+    <Compile Include="ShowCase\RippleOnCube.cs" />
+    <Compile Include="ShowCase\IShowCase.cs" />
+    <Compile Include="ShowCase\CircleOnCube.cs" />
+    <Compile Include="ShowCase\RectangleOnCube.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\tatsuo98se_ledlib\tatsuo98se_ledlib\tatsuo98se_ledlib.csproj">
+      <Project>{2329ebf6-c411-42dd-a5ec-2b273d8c59c3}</Project>
+      <Name>tatsuo98se_ledlib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
