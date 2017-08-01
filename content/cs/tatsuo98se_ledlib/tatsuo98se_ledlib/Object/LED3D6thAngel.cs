@@ -17,6 +17,31 @@ namespace LEDLIB
 
         }
 
+        const int triangle_height = 10;
+        const int triangle_helf_width = 6;
+        public double getXAngle()
+        {
+            return Math.Atan2(triangle_helf_width, triangle_height);
+        }
+
+        public double getUnderOffset()
+        {
+            return Math.Cos(getXAngle()) * triangle_height;
+        }
+
+        public Dot[] GetTriangle(RGB color)
+        {
+            PointF[] pts = new PointF[] {
+                new PointF(0, 0),
+                new PointF(-triangle_helf_width, triangle_height),
+                new PointF(triangle_helf_width, triangle_height)
+            };
+
+            return DrawUtility.FillPolygon(pts, color);
+
+
+        }
+
         public DenseMatrix GetOffsetMatrix(Dot offset)
         {
             return DenseMatrix.OfArray(new double[,] {
@@ -92,7 +117,7 @@ namespace LEDLIB
         {
             var yangle = (GetElapsedAt().TotalMilliseconds / 15) * (Math.PI / 180);
 
-            var newDots = Get6thAngel(yangle, new Dot(8, 13, 7));
+            var newDots = Get6thAngel(yangle, new Dot(8, 4, 7));
 
             foreach (var dot in newDots)
             {
@@ -105,11 +130,11 @@ namespace LEDLIB
             var newDots = new List<Dot>();
 
             var under = Get6thAngelHelf(Math.PI, yangle);
-            var forUnder = GetOffsetMatrix(new Dot(0, 4, 0));
+            var forUnder = GetOffsetMatrix(new Dot(0, getUnderOffset()*2, 0));
             newDots.AddRange(appryMatrix(under, forUnder));
 
             var upper = Get6thAngelHelf(0, yangle);
-            var forUpper = GetOffsetMatrix(new Dot(0, -4, 0));
+            var forUpper = GetOffsetMatrix(new Dot(0, 0, 0));
             newDots.AddRange(appryMatrix(upper, forUpper));
 
             return appryMatrix(newDots.ToArray(), GetYAxisRotateMatrix(yangle, offset)).ToArray();
@@ -157,9 +182,9 @@ namespace LEDLIB
             }
         }
 
-        public Dot[] Get6thAngelBseTriangle(double xangle, double yangle)
+        public Dot[] Get6thAngelBaseTriangle(double xangle, double yangle)
         {
-            var M = GetXAxisRotateMatrix(-Math.PI / 4);
+            var M = GetXAxisRotateMatrix(getXAngle());
             return appryMatrix(GetTriangle(GetTriangleColor(xangle, yangle)), M);
 
         }
@@ -168,16 +193,16 @@ namespace LEDLIB
         {
             var newDots = new List<Dot>();
 
-            Dot[] t1 = Get6thAngelBseTriangle(xangle, yangle);
+            Dot[] t1 = Get6thAngelBaseTriangle(xangle, yangle);
 
             var for2 = GetYAxisRotateMatrix(Math.PI / 2);
-            Dot[] t2 = appryMatrix(Get6thAngelBseTriangle(xangle, yangle + (Math.PI / 2)), for2);
+            Dot[] t2 = appryMatrix(Get6thAngelBaseTriangle(xangle, yangle + (Math.PI / 2)), for2);
 
             var for3 = GetYAxisRotateMatrix(Math.PI);
-            Dot[] t3 = appryMatrix(Get6thAngelBseTriangle(xangle, yangle + Math.PI), for3);
+            Dot[] t3 = appryMatrix(Get6thAngelBaseTriangle(xangle, yangle + Math.PI), for3);
 
             var for4 = GetYAxisRotateMatrix(- Math.PI / 2);
-            Dot[] t4 = appryMatrix(Get6thAngelBseTriangle(xangle, yangle - (Math.PI / 2)), for4);
+            Dot[] t4 = appryMatrix(Get6thAngelBaseTriangle(xangle, yangle - (Math.PI / 2)), for4);
 
 
             newDots.AddRange(t1);
@@ -189,18 +214,6 @@ namespace LEDLIB
             return appryMatrix(newDots.ToArray(), xaxis).ToArray();
         }
 
-        public Dot[] GetTriangle(RGB color)
-        {
-            PointF[] pts = new PointF[] {
-                new PointF(0, 0),
-                new PointF(-6, 6),
-                new PointF(6, 6)
-            };
-
-            return DrawUtility.FillPolygon(pts, color);
-
-
-        }
 
     }
 }
