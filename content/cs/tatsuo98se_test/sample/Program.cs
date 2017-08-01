@@ -27,15 +27,18 @@ namespace sample
 
             var canvas = new LED3DCanvas();
             //            var filter = new LED3DWaveCanvasFilter(canvas);
-            var filter = new LED3DSurfaceCanvasFilter(canvas);
+                        var filter = new LED3DSurfaceCanvasFilter(canvas);
 
-            int testcase = 3;
+            filter = null;
+
+            int testcase = 4;
             var showCases = new List<IShowCase>();
 
             showCases.Add(new CircleOnCube());
             showCases.Add(new RectangleOnCube());
             showCases.Add(new RippleOnCube());
             showCases.Add(new AtFieldOnCube());
+            showCases.Add(new AngleOnCube());
 
             showCases[testcase].SetUp(canvas, filter);
             showCases[testcase].Run(canvas, filter);

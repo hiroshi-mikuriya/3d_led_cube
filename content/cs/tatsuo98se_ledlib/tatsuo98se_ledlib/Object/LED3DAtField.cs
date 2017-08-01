@@ -22,7 +22,7 @@ namespace LEDLIB
         float DISTANCE = 3;
 
         public LED3DAtField(double x, double y, int size)
-            :base(new RGB(0xff, 0x65, 0), TimeSpan.FromSeconds(3))
+            :base(null)
         {
             this.x = x;
             this.y = y;
@@ -40,8 +40,8 @@ namespace LEDLIB
 
         public override bool IsExpired()
         {
-            //            return this.GetElapsedAt().Subtract(this.lastUpdateAt).Milliseconds > 100;
-            return false;
+            return this.GetElapsedAt().Subtract(this.lastUpdateAt).TotalMilliseconds > 2000;
+            
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]

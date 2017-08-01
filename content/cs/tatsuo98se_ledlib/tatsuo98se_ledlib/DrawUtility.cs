@@ -14,11 +14,25 @@ namespace LEDLIB
         {
             public double X;
             public double Y;
+            public double Z;
             public RGB RGB;
+
+            public Dot(double x, double y, double z)
+                :this(x, y, z, new RGB(0xff, 0xff, 0xff))
+            {
+
+            }
+
             public Dot(double x, double y, RGB rgb)
+                :this(x, y, 0, rgb)
+            {
+
+            }
+            public Dot(double x, double y, double z, RGB rgb)
             {
                 this.X = x;
                 this.Y = y;
+                this.Z = z;
                 this.RGB = rgb;
             }
         }
@@ -51,6 +65,70 @@ namespace LEDLIB
             return null;
         }
 
+        static public PointF getMin(PointF[] pts)
+        {
+            var minPt = new PointF(float.MaxValue, float.MaxValue);
+            foreach(var pt in pts)
+            {
+                if (pt.X < minPt.X)
+                {
+                    minPt.X = pt.X;
+                }
+                if (pt.Y < minPt.Y)
+                {
+                    minPt.Y = pt.Y;
+                }
+            }
+            return minPt;
+        }
+        static public PointF getMax(PointF[] pts)
+        {
+            var maxPt = new PointF(float.MinValue, float.MinValue);
+            foreach (var pt in pts)
+            {
+                if (pt.X > maxPt.X)
+                {
+                    maxPt.X = pt.X;
+                }
+                if (pt.Y > maxPt.Y)
+                {
+                    maxPt.Y = pt.Y;
+                }
+            }
+            return maxPt;
+        }
+
+        static public Dot[] FillPolygon(PointF[] pts, RGB rgb)
+        {
+            PointF minPt, maxPt;
+            minPt = getMin(pts);
+            maxPt = getMax(pts);
+
+            float width = maxPt.X - minPt.X;
+            float height = maxPt.Y - minPt.Y;
+
+            using (var bmp = createBitmap(width, height))
+            {
+                var gc = Graphics.FromImage(bmp);
+                gc.SmoothingMode = SmoothingMode.AntiAlias;
+                using (gc)
+                {
+                    
+                    var brush = new SolidBrush(rgb.ToColor());
+
+                    var newPts = new List<PointF>();
+                    foreach(var pt in pts)
+                    {
+                        newPts.Add(new PointF(pt.X - minPt.X, pt.Y - minPt.Y));
+                    }
+
+                    gc.FillPolygon(brush, newPts.ToArray());
+
+                }
+                return GetPixel(bmp, minPt);
+            }
+        }
+
         static public Dot[] Line(PointF pt1, PointF pt2, RGB rgb, float penwidth)
         {
             float x, y, width, height;
@@ -60,7 +138,7 @@ namespace LEDLIB
             height = Math.Max(pt1.Y, pt2.Y) - y;
 
 
-            using(var bmp = createBitmap(width + penwidth, height+penwidth))
+            using (var bmp = createBitmap(width + penwidth, height + penwidth))
             {
                 var gc = Graphics.FromImage(bmp);
                 gc.SmoothingMode = SmoothingMode.AntiAlias;

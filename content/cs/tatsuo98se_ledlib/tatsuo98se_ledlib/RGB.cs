@@ -155,6 +155,18 @@ namespace LEDLIB
                 lhs.a);
         }
 
+        public static RGB operator +(RGB lhs, int rhs)
+        {
+            return new RGB(lhs.r + rhs, lhs.g + rhs, lhs.b + rhs, lhs.a);
+        }
+
+        public static RGB operator +(RGB lhs, double rhs)
+        {
+            return new RGB(Util.Round(lhs.r + rhs),
+                Util.Round(lhs.g + rhs),
+                Util.Round(lhs.b + rhs),
+                lhs.a);
+        }
         public static RGB operator -(RGB lhs, RGB rhs)
         {
             return new RGB(lhs.r - rhs.r, lhs.g - rhs.g, lhs.b - rhs.b);
