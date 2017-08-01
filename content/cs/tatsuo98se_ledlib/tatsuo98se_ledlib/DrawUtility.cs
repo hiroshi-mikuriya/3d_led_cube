@@ -9,6 +9,7 @@ namespace LEDLIB
     public delegate void SetPixel(double x, double y, RGB color);
     public class DrawUtility
     {
+        private static float DENCITY = 2f;
 
         public struct Dot
         {
@@ -53,8 +54,8 @@ namespace LEDLIB
 
         static Bitmap createBitmap(double w, double h)
         {
-            Bitmap bitmap = new Bitmap(1 + Util.Round(w * 1.5f),
-                                           1 + Util.Round(h * 1.5f),
+            Bitmap bitmap = new Bitmap(1 + Util.Round(w * 1.5f * DENCITY),
+                                           1 + Util.Round(h * 1.5f * DENCITY),
                                            PixelFormat.Format32bppArgb);
             bitmap.MakeTransparent();
             return bitmap;
@@ -98,6 +99,14 @@ namespace LEDLIB
             return maxPt;
         }
 
+        static Graphics craeteGraphics(Bitmap bmp, SmoothingMode mode)
+        {
+            var gc = Graphics.FromImage(bmp);
+            gc.SmoothingMode = mode;
+            gc.ScaleTransform(DENCITY, DENCITY);
+            return gc;
+        }
+
         static public Dot[] FillPolygon(PointF[] pts, RGB rgb)
         {
             PointF minPt, maxPt;
@@ -109,19 +118,15 @@ namespace LEDLIB
 
             using (var bmp = createBitmap(width, height))
             {
-                var gc = Graphics.FromImage(bmp);
-                gc.SmoothingMode = SmoothingMode.AntiAlias;
-                using (gc)
+                using (var gc = craeteGraphics(bmp, SmoothingMode.AntiAlias))
                 {
-                    
                     var brush = new SolidBrush(rgb.ToColor());
 
                     var newPts = new List<PointF>();
-                    foreach(var pt in pts)
+                    foreach (var pt in pts)
                     {
                         newPts.Add(new PointF(pt.X - minPt.X, pt.Y - minPt.Y));
                     }
-
                     gc.FillPolygon(brush, newPts.ToArray());
 
                 }
@@ -140,9 +145,7 @@ namespace LEDLIB
 
             using (var bmp = createBitmap(width + penwidth, height + penwidth))
             {
-                var gc = Graphics.FromImage(bmp);
-                gc.SmoothingMode = SmoothingMode.AntiAlias;
-                using (gc)
+                using (var gc = craeteGraphics(bmp, SmoothingMode.AntiAlias))
                 {
                     var pen = new Pen(rgb.ToColor(), penwidth);
                     gc.DrawLine(pen, pt1.X - x + penwidth /2, 
@@ -161,8 +164,7 @@ namespace LEDLIB
         {
             using (var bmp = createBitmap(rect.Width, rect.Height))
             {
-                var gc = Graphics.FromImage(bmp);
-                using (gc)
+                using (var gc = craeteGraphics(bmp, SmoothingMode.None))
                 {
                     var pen = new Pen(rgb.ToColor());
                     gc.DrawRectangle(pen, 0f, 0f, rect.Width, rect.Height);
@@ -178,9 +180,7 @@ namespace LEDLIB
             using (var bmp = createBitmap(w, h))
             {
 
-                var gc = Graphics.FromImage(bmp);
-                gc.SmoothingMode = SmoothingMode.HighSpeed;
-                using (gc)
+                using (var gc = craeteGraphics(bmp, SmoothingMode.HighSpeed))
                 {
                     var pen = new Pen(rgb.ToColor(), 1f);
                     gc.DrawEllipse(pen, 0f, 0f, (float)w, (float)h);
@@ -194,9 +194,7 @@ namespace LEDLIB
         {
             using (var bmp = createBitmap(w, h))
             {
-                var gc = Graphics.FromImage(bmp);
-                gc.SmoothingMode = SmoothingMode.AntiAlias;
-                using (gc)
+                using (var gc = craeteGraphics(bmp, SmoothingMode.AntiAlias))
                 {
                     var pen = new Pen(rgb.ToColor(), 1f);
                     gc.DrawEllipse(pen, 0f, 0f, (float)w, (float)h);
@@ -230,7 +228,10 @@ namespace LEDLIB
                 {
                     if (bmp.GetPixel(x, y).A != 0)
                     {
-                        points.Add(new Dot(x + offset.X, y + offset.Y, RGB.fromColor(bmp.GetPixel(x, y))));
+                        points.Add(new Dot(
+                            (x / DENCITY + offset.X), 
+                            (y / DENCITY + offset.Y),
+                            RGB.fromColor(bmp.GetPixel(x, y))));
                     }
                 }
             }
