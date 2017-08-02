@@ -681,9 +681,9 @@ namespace hands_viewer.cs
                                             {
                                                 if (j == 9)
                                                 {
-                                                    if (nodes[i][j].positionWorld.z < 0.4)
+//                                                    if (nodes[i][j].positionWorld.z < 0.4)
                                                     {
-                                                        HandsRecognition.UpdateAtField(ledX, ledY);
+                                                        HandsRecognition.UpdateAtField(ledX, ledY, nodes[i][j].positionWorld.z);
                                                     }
 //                                                    HandsRecognition.addObjectOnWave(new LED3DRipple(ledX, ledY, RGB.randamBG(), LED.Direction.Front, 3));
 

@@ -23,7 +23,7 @@ namespace sample.ShowCase
                 {
                     var x = rand.Next() % LED.WIDTH;
                     var y = rand.Next() % LED.HEIGHT;
-                    canvas.AddObject(new LED3DAtField(x, y, 4)
+                    canvas.AddObject(new LED3DAtField(x, y, 0, 4)
                         , filter
                         );
                 }

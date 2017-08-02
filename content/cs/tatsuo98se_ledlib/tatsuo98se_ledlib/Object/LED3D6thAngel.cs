@@ -17,7 +17,7 @@ namespace LEDLIB
 
         }
 
-        const int triangle_height = 10;
+        const int triangle_height = 8;
         const int triangle_helf_width = 6;
         public double getXAngle()
         {

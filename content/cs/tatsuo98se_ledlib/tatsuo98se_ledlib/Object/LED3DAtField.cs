@@ -12,20 +12,27 @@ namespace LEDLIB
     {
         private double x;
         private double y;
+        private double z;
         private List<float> rs = new List<float>();
         private TimeSpan lastUpdateAt;
         private int size;
-        private int callCount = 0;
+        private bool longTimeNoSee = true;
         private Random rand = new Random();
 
         float FIRST_R = 2.0f;
         float DISTANCE = 3;
 
-        public LED3DAtField(double x, double y, int size)
+        float NEAR_BORDER = 0.35f;
+
+        /*
+         *  z :  0(near) ～ 1(far)
+         *  */
+        public LED3DAtField(double x, double y, double z, int size)
             :base(null)
         {
             this.x = x;
             this.y = y;
+            this.z = z;
 
             float r = FIRST_R;
             for(int i=0; i<size; i++)
@@ -45,10 +52,18 @@ namespace LEDLIB
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void SetPos(double x, double y)
+        public void SetPos(double x, double y, double z)
         {
             this.x = x;
             this.y = y;
+            this.z = z;
+
+            var updateSpan = this.GetElapsedAt().Subtract(this.lastUpdateAt).TotalMilliseconds;
+            if (updateSpan > 1000)
+            {
+                this.longTimeNoSee = true;
+            }
+
             this.lastUpdateAt = this.GetElapsedAt();
         }
 
@@ -56,41 +71,67 @@ namespace LEDLIB
         public override void Draw(ILED3DCanvas canvas)
         {
             bool isNeedUpdate = false;
-            if(this.GetElapsedAt().Subtract(this.lastUpdateAt).TotalMilliseconds < 100)
+            var updateSpan = this.GetElapsedAt().Subtract(this.lastUpdateAt).TotalMilliseconds;
+            if (updateSpan < 100 )
             {
                 isNeedUpdate = true;
             }
 
-            callCount++;
-
-            if(callCount == 1)
+            if (this.longTimeNoSee == true && this.z < NEAR_BORDER)
             {
                 this.SetFlashEffect(canvas);
+                this.longTimeNoSee = false;
             }
-
-            float vibe = this.GetVibe();
-            RGB color = this.GetAtFieldColor();
 
             if (isNeedUpdate)
             {
-                if (color == null)
+                if(this.z < NEAR_BORDER)
                 {
-                    this.SetFlashEffect(canvas);
+                    this.NearEffect(canvas);
                 }
                 else
                 {
-                    foreach (var r in this.rs)
-                    {
-                        DrawOctagon(canvas, (float)this.x, (float)this.y, r + vibe, color);
-                    }
+                    this.FarEffect(canvas);
                 }
+
             }
             else
             {
                 foreach (var r in this.rs)
                 {
                     var dcline = this.GetElapsedAt().Subtract(this.lastUpdateAt).TotalMilliseconds;
-                    DrawOctagon(canvas, (float)this.x, (float)this.y, r + vibe, new RGB(0xff, 0x65, 0x00) - dcline * 0.8);
+                    DrawOctagon(canvas, (float)this.x, (float)this.y, r + this.GetVibe(), new RGB(0xff, 0x65, 0x00) - dcline * 0.8);
+                }
+            }
+
+        }
+
+        private void FarEffect(ILED3DCanvas canvas)
+        {
+
+            RGB color = this.GetAtFieldColor(3);
+
+            int count = 1;
+            foreach (var r in this.rs)
+            {
+                DrawOctagon(canvas, (float)this.x, (float)this.y, r, color - this.z * 200f - count * 20f);
+                count++;
+            }
+        }
+
+        private void NearEffect(ILED3DCanvas canvas)
+        {
+            RGB color = this.GetAtFieldColor();
+            if (color == null)
+            {
+                this.SetFlashEffect(canvas);
+            }
+            else
+            {
+                int count = 1;
+                foreach (var r in this.rs)
+                {
+                    DrawOctagon(canvas, (float)this.x, (float)this.y, r + GetVibe(), color - count * 20);
                 }
             }
         }
@@ -103,7 +144,12 @@ namespace LEDLIB
         private RGB GetAtFieldColor()
         {
             int colorType = this.rand.Next(0, 4);
-            switch (colorType)
+            return GetAtFieldColor(colorType);
+        }
+
+        private RGB GetAtFieldColor(int type)
+        {
+            switch (type)
             {
                 case 0:
                     return new RGB(0xff, 0xff, 0xff);

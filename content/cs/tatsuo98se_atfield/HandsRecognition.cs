@@ -45,7 +45,7 @@ namespace hands_viewer.cs
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void UpdateAtField(float x, float y)
+        public static void UpdateAtField(float x, float y, float z)
         {
             bool isExist = false;
             LED3DAtField atfield = null;
@@ -59,13 +59,13 @@ namespace hands_viewer.cs
             }
             if (isExist)
             {
-                atfield.SetPos(x, y);
+                atfield.SetPos(x, y, z);
             }
             else
             {
-                //                canvas.AddObject(new LED3DAtField(x, y, 5), new LED3DSurfaceCanvasFilter(canvas));
-                                canvas.AddObject(new LED3DAtField(x, y, 5), new LED3DWaveCanvasFilter(canvas));
-                //                canvas.AddObject(new LED3DAtField(x, y, 5));
+                //                canvas.AddObject(new LED3DAtField(x, y, z, 5), new LED3DSurfaceCanvasFilter(canvas));
+//                                canvas.AddObject(new LED3DAtField(x, y, z, 5), new LED3DWaveCanvasFilter(canvas));
+                                canvas.AddObject(new LED3DAtField(x, y, z, 5));
             }
 
         }
@@ -90,6 +90,9 @@ namespace hands_viewer.cs
             this._form = form;
             _lut = Enumerable.Repeat((byte)0, 256).ToArray();
             _lut[255] = 1;
+
+            canvas.AddObject(new LED3D6thAngel());
+            canvas.AddObject(new LED3DSheet(new RGB(0xff, 0xff, 0xff)));
 
         }
 

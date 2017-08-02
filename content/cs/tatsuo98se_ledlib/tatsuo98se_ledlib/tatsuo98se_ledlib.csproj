@@ -55,6 +55,7 @@
     <Compile Include="Object\LED3D6thAngel.cs" />
     <Compile Include="Object\LED3DAtField.cs" />
     <Compile Include="Object\LED3DCircle.cs" />
+    <Compile Include="Object\LED3DSheet.cs" />
     <Compile Include="Object\LED3DDot.cs" />
     <Compile Include="Object\LED3DEphemeralDot.cs" />
     <Compile Include="Object\LED3DObject.cs" />
