@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShowCase\AngleOnCube.cs" />
+    <Compile Include="ShowCase\AngelOnCube.cs" />
     <Compile Include="ShowCase\AtFieldOnCube.cs" />
     <Compile Include="ShowCase\RippleOnWaveOnCube.cs" />
     <Compile Include="ShowCase\RippleOnCube.cs" />

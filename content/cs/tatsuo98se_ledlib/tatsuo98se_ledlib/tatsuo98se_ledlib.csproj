@@ -54,7 +54,7 @@
     <Compile Include="LED3DCanvas.cs" />
     <Compile Include="CanvasFilter\LED3DCanvasFilter.cs" />
     <Compile Include="LED3DObjectSet.cs" />
-    <Compile Include="Object\LED3D6thAngel.cs" />
+    <Compile Include="Object\LED3D5thAngel.cs" />
     <Compile Include="Object\LED3DAtField.cs" />
     <Compile Include="Object\LED3DCircle.cs" />
     <Compile Include="Object\LED3DSheet.cs" />

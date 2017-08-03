@@ -9,11 +9,11 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace LEDLIB
 {
-    public class LED3D6thAngel : LED3DObject
+    public class LED3D5thAngel : LED3DObject
     {
         DrawUtility drawUtility = new DrawUtility(2f);
 
-        public LED3D6thAngel()
+        public LED3D5thAngel()
             : base(null)
         {
 

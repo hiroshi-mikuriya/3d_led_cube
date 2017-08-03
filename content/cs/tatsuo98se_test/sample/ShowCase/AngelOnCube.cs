@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace sample.ShowCase
 {
-    class AngleOnCube : IShowCase
+    class AngelOnCube : IShowCase
     {
         public void SetUp(ILED3DCanvas canvas, LED3DCanvasFilter filter)
         {
-            canvas.AddObject(new LED3D6thAngel(), filter);
+            canvas.AddObject(new LED3D5thAngel(), filter);
         }
 
         public void Run(ILED3DCanvas canvas, LED3DCanvasFilter filter)

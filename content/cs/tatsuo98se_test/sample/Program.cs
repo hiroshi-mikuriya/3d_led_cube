@@ -39,7 +39,7 @@ namespace sample
             showCases.Add(new RectangleOnCube());
             showCases.Add(new RippleOnCube());
             showCases.Add(new AtFieldOnCube());
-            showCases.Add(new AngleOnCube());
+            showCases.Add(new AngelOnCube());
             showCases.Add(new RippleOnWaveCube());
 
             showCases[testcase].SetUp(canvas, filter);
