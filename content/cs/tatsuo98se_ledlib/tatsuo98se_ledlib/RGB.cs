@@ -42,22 +42,11 @@ namespace LEDLIB
         }
 
         public RGB(int r, int g, int b, int a)
-            :this(r, g, b)
-        {
-            this.a = a;
-        }
-
-        public RGB(float r, float g, float b)
-            :this(Util.Round(0xff*r), Util.Round(0xff*g), Util.Round(0xff*b))
-        {
-
-        }
-
-        public RGB(int r, int g, int b)
         {
             this.r = r;
             this.g = g;
             this.b = b;
+            this.a = a;
 
             if (this.r < 0)
             {
@@ -71,6 +60,10 @@ namespace LEDLIB
             {
                 this.b = 0;
             }
+            if (this.a < 0)
+            {
+                this.a = 0;
+            }
             if (this.r > 0xff)
             {
                 this.r = 0xff;
@@ -83,6 +76,22 @@ namespace LEDLIB
             {
                 this.b = 0xff;
             }
+            if (this.a > 0xff)
+            {
+                this.a = 0xff;
+            }
+        }
+
+        public RGB(float r, float g, float b)
+            :this(Util.Round(0xff*r), Util.Round(0xff*g), Util.Round(0xff*b))
+        {
+
+        }
+
+        public RGB(int r, int g, int b)
+            :this(r,g,b,0xff)
+        {
+ 
         }
 
         public float Rf

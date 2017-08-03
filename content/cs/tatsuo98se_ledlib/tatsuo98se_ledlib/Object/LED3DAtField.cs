@@ -13,6 +13,7 @@ namespace LEDLIB
         private double x;
         private double y;
         private double z;
+        private double width;
         private List<float> rs = new List<float>();
         private TimeSpan lastUpdateAt;
         private int size;
@@ -27,12 +28,13 @@ namespace LEDLIB
         /*
          *  z :  0(near) ～ 1(far)
          *  */
-        public LED3DAtField(double x, double y, double z, int size)
+        public LED3DAtField(double x, double y, double z, int size, double width)
             :base(null)
         {
             this.x = x;
             this.y = y;
             this.z = z;
+            this.width = width;
 
             float r = FIRST_R;
             for(int i=0; i<size; i++)
@@ -52,11 +54,12 @@ namespace LEDLIB
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void SetPos(double x, double y, double z)
+        public void SetPos(double x, double y, double z, double width)
         {
             this.x = x;
             this.y = y;
             this.z = z;
+            this.width = width;
 
             var updateSpan = this.GetElapsedAt().Subtract(this.lastUpdateAt).TotalMilliseconds;
             if (updateSpan > 1000)
@@ -100,7 +103,7 @@ namespace LEDLIB
                 foreach (var r in this.rs)
                 {
                     var dcline = this.GetElapsedAt().Subtract(this.lastUpdateAt).TotalMilliseconds;
-                    DrawOctagon(canvas, (float)this.x, (float)this.y, r + this.GetVibe(), new RGB(0xff, 0x65, 0x00) - dcline * 0.8);
+                    DrawOctagon(canvas, (float)this.x, (float)this.y, r + this.GetVibe(), new RGB(0xff, 0x65, 0x00, (int)(0xff - dcline * 0.8) ) );
                 }
             }
 
@@ -114,7 +117,7 @@ namespace LEDLIB
             int count = 1;
             foreach (var r in this.rs)
             {
-                DrawOctagon(canvas, (float)this.x, (float)this.y, r, color - this.z * 200f - count * 20f);
+                DrawOctagon(canvas, (float)this.x, (float)this.y, r, new RGB(color.R, color.G, color.B, (int)(0xff - this.z * 300f - count * 20f)));
                 count++;
             }
         }
@@ -131,7 +134,7 @@ namespace LEDLIB
                 int count = 1;
                 foreach (var r in this.rs)
                 {
-                    DrawOctagon(canvas, (float)this.x, (float)this.y, r + GetVibe(), color - count * 20);
+                    DrawOctagon(canvas, (float)this.x, (float)this.y, r + GetVibe(), new RGB(color.R, color.G, color.B, (int)(0xff - count * 20)));
                 }
             }
         }
@@ -182,18 +185,19 @@ namespace LEDLIB
             float d = r * (float)Math.Tan(Math.PI / 8f);
 
             var pts = new List<PointF>();
+            var dx = (float)Math.Max(0, width * 0.5);
 
-            pts.Add(new PointF(r + x, d + y));
-            pts.Add(new PointF(r + x, -d + y));
+            pts.Add(new PointF(r + x + dx, d + y)); // 右上
+            pts.Add(new PointF(r + x + dx, -d + y));// 右下
 
-            pts.Add(new PointF(d + x, -r + y));
-            pts.Add(new PointF(-d + x, -r + y));
-            pts.Add(new PointF(-r + x, -d + y));
-            pts.Add(new PointF(-r + x, d + y));
-            pts.Add(new PointF(-d + x, r + y));
-            pts.Add(new PointF(d + x, r + y));
-            pts.Add(new PointF(r + x, d + y)); // 1番目と同じ
-            
+            pts.Add(new PointF(d + x + dx, -r + y)); // 下右
+            pts.Add(new PointF(-d + x - dx, -r + y));// 下左
+            pts.Add(new PointF(-r + x - dx, -d + y));// 左下
+            pts.Add(new PointF(-r + x - dx, d + y));// 左上
+            pts.Add(new PointF(-d + x - dx, r + y));// 上左
+            pts.Add(new PointF(d + x + dx, r + y)); // 上右
+            pts.Add(new PointF(r + x + dx, d + y)); // 1番目と同じ
+
 
             for (int i = 0; i < pts.Count - 1; i++)
             {

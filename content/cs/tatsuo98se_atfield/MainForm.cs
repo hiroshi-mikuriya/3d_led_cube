@@ -683,19 +683,32 @@ namespace hands_viewer.cs
                                                 {
 //                                                    if (nodes[i][j].positionWorld.z < 0.4)
                                                     {
-                                                        HandsRecognition.UpdateAtField(ledX, ledY, nodes[i][j].positionWorld.z);
+                                                        float width = 1;
+
+                                                        if(nodes[0][9] != null && nodes[1][9] != null)
+                                                        {
+                                                            int leftx = (int)nodes[0][9].positionImage.x / scaleFactor;
+                                                            int rightx = (int)nodes[1][9].positionImage.x / scaleFactor;
+                                                            float left_ledX = LED.WIDTH - ((float)LED.WIDTH / bitmap.Width) * leftx;
+                                                            float right_ledX = LED.WIDTH - ((float)LED.WIDTH / bitmap.Width) * rightx;
+                                                            width = Math.Abs(left_ledX - right_ledX);
+                                                            ledX = Math.Min(left_ledX, right_ledX) + width / 2;
+
+                                                        }
+
+                                                        HandsRecognition.UpdateAtField(ledX, ledY, nodes[i][j].positionWorld.z, width);
+                                                        Debug.WriteLine("positionWorld x:" + nodes[i][j].positionWorld.x + " y:" + nodes[i][j].positionWorld.y + " z:" + nodes[i][j].positionWorld.z + " w:" + width);
                                                     }
-//                                                    HandsRecognition.addObjectOnWave(new LED3DRipple(ledX, ledY, RGB.randamBG(), LED.Direction.Front, 3));
+                                                    //                                                    HandsRecognition.addObjectOnWave(new LED3DRipple(ledX, ledY, RGB.randamBG(), LED.Direction.Front, 3));
 
                                                 }
                                             }
 
                                             if (j == 9)
                                             {
-                                                float w = 1 - nodes[i][j].positionWorld.z;
-                                                var color = new RGB(w, w, w);
-                                                Debug.WriteLine("positionWorld x:" + nodes[i][j].positionWorld.x + " y:" + nodes[i][j].positionWorld.y + " z:" + nodes[i][j].positionWorld.z);
-                                                HandsRecognition.addObject(new LED3DEphemeralDot(ledX, ledY, 0, color));
+//                                                float w = 1 - nodes[i][j].positionWorld.z;
+//                                                var color = new RGB(w, w, w);
+//                                                HandsRecognition.addObject(new LED3DEphemeralDot(ledX, ledY, 0, color));
                                             }
 
                                             sz += 4;

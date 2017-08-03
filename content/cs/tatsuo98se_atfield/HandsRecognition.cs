@@ -45,7 +45,7 @@ namespace hands_viewer.cs
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void UpdateAtField(float x, float y, float z)
+        public static void UpdateAtField(float x, float y, float z, float width)
         {
             bool isExist = false;
             LED3DAtField atfield = null;
@@ -59,13 +59,13 @@ namespace hands_viewer.cs
             }
             if (isExist)
             {
-                atfield.SetPos(x, y, z);
+                atfield.SetPos(x, y, z, width);
             }
             else
             {
                 //                canvas.AddObject(new LED3DAtField(x, y, z, 5), new LED3DSurfaceCanvasFilter(canvas));
 //                                canvas.AddObject(new LED3DAtField(x, y, z, 5), new LED3DWaveCanvasFilter(canvas));
-                                canvas.AddObject(new LED3DAtField(x, y, z, 5));
+                                canvas.AddObject(new LED3DAtField(x, y, z, 5, width));
             }
 
         }
