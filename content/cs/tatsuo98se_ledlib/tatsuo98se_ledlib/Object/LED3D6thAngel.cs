@@ -11,6 +11,8 @@ namespace LEDLIB
 {
     public class LED3D6thAngel : LED3DObject
     {
+        DrawUtility drawUtility = new DrawUtility(2f);
+
         public LED3D6thAngel()
             : base(null)
         {
@@ -37,7 +39,7 @@ namespace LEDLIB
                 new PointF(triangle_helf_width, triangle_height)
             };
 
-            return DrawUtility.FillPolygon(pts, color);
+            return drawUtility.FillPolygon(pts, color);
 
 
         }

@@ -25,6 +25,7 @@ namespace LEDLIB
 
         float NEAR_BORDER = 0.35f;
 
+        DrawUtility drawUtility = new DrawUtility(2f);
         /*
          *  z :  0(near) ～ 1(far)
          *  */
@@ -203,7 +204,7 @@ namespace LEDLIB
             {
                 var pt1 = pts[i];
                 var pt2 = pts[i + 1];
-                Dot[] dots = DrawUtility.Line(pt1, pt2, color, 2f);
+                Dot[] dots = drawUtility.Line(pt1, pt2, color, 2f);
                 foreach (var dot in dots)
                 {
                     canvas.SetLed(dot.X, dot.Y, 0, dot.RGB);

@@ -15,8 +15,11 @@ namespace LEDLIB
         private List<float> rs = new List<float>();
         private TimeSpan lastUpdateAt;
         private int size;
+        private int produced = 0;
 
         float FIRST_R = 2.0f;
+
+        DrawUtility drawUtility = new DrawUtility(1.5f);
 
         public LED3DRipple(double x, double y, RGB color, LED.Direction direction, int size)
             :base(color, TimeSpan.Zero)
@@ -31,7 +34,7 @@ namespace LEDLIB
 
         public override bool IsExpired()
         {
-            return this.rs.Min() > 32;
+            return (this.produced != 0 && this.rs.Count == 0);
         }
 
         public override void Draw(ILED3DCanvas canvas)
@@ -43,21 +46,31 @@ namespace LEDLIB
                 isNeedUpdate = true;
             }
             
-            if( this.rs.Min() - 2 >= FIRST_R && this.rs.Count < this.size)
+            if( this.rs.Min() - 4 >= FIRST_R && this.produced < this.size)
             {
                 this.rs.Add(FIRST_R);
+                produced++;
             }
 
             var newRs = new List<float>();
 
+
             foreach(var r in this.rs)
             {
-                var dots = DrawUtility.CircleCenterAt(x, y, r * 2, r * 2, this.Color - r * 15);
-
-                foreach(var dot in dots)
+                if (r * 20 >= 0xff)
                 {
-                    canvas.SetLed(dot.X, dot.Y, 0, dot.RGB);
-                }    
+                    continue;
+                }
+                else
+                {
+                    var dots = drawUtility.CircleCenterAt(x, y, r * 2, r * 2, new RGB(this.Color.R, this.Color.G, this.Color.B, (int)(this.Color.A - r * 20)));
+
+                    foreach (var dot in dots)
+                    {
+                        canvas.SetLed(dot.X, dot.Y, 0, dot.RGB);
+                    }
+
+                }
     
 
                 if (isNeedUpdate)

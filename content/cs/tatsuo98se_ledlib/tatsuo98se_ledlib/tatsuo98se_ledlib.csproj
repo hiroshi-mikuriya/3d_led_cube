@@ -44,9 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CanvasFilter\LED3DHsvColorFilter.cs" />
     <Compile Include="CanvasFilter\LEDSurfaceCanvasFilter.cs" />
     <Compile Include="DrawUtility.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="HSV.cs" />
     <Compile Include="ILED3DCanvas.cs" />
     <Compile Include="LED.cs" />
     <Compile Include="LED3DCanvas.cs" />

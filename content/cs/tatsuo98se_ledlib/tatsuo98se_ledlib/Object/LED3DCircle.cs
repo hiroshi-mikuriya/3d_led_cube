@@ -15,6 +15,8 @@ namespace LEDLIB
         private double w;
         private double h;
 
+        DrawUtility drawUtility = new DrawUtility(1.5f);
+
         public LED3DCircle(double x, double y, double w, double h, RGB color) : this(x, y, w, h, color, TimeSpan.Zero)
         {
         }
@@ -28,7 +30,7 @@ namespace LEDLIB
 
         public override void Draw(ILED3DCanvas canvas)
         {
-            var dots = DrawUtility.Circle(this.x, this.y, this.w, this.h, this.Color);
+            var dots = drawUtility.Circle(this.x, this.y, this.w, this.h, this.Color);
             foreach(var dot in dots)
             {
                 canvas.SetLed(dot.X, dot.Y, 0, dot.RGB);

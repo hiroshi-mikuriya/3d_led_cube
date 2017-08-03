@@ -41,45 +41,28 @@ namespace LEDLIB
                 color.A);
         }
 
+        private static int GetNormalized(int value)
+        {
+            var normalized = value;
+            if (value > 0xff)
+            {
+                normalized = 0xff;
+            }
+            if (value < 0)
+            {
+                normalized = 0;
+            }
+            return normalized;
+
+        }
+
         public RGB(int r, int g, int b, int a)
         {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = a;
+            this.r = GetNormalized(r);
+            this.g = GetNormalized(g);
+            this.b = GetNormalized(b);
+            this.a = GetNormalized(a);
 
-            if (this.r < 0)
-            {
-                this.r = 0;
-            }
-            if (this.g < 0)
-            {
-                this.g = 0;
-            }
-            if (this.b < 0)
-            {
-                this.b = 0;
-            }
-            if (this.a < 0)
-            {
-                this.a = 0;
-            }
-            if (this.r > 0xff)
-            {
-                this.r = 0xff;
-            }
-            if (this.g > 0xff)
-            {
-                this.g = 0xff;
-            }
-            if (this.b > 0xff)
-            {
-                this.b = 0xff;
-            }
-            if (this.a > 0xff)
-            {
-                this.a = 0xff;
-            }
         }
 
         public RGB(float r, float g, float b)
@@ -128,12 +111,20 @@ namespace LEDLIB
             {
                 return this.r;
             }
+            set
+            {
+                this.r = GetNormalized(value);
+            }
         }
         public int G
         {
             get
             {
                 return this.g;
+            }
+            set
+            {
+                this.g = GetNormalized(value);
             }
         }
         public int B
@@ -142,12 +133,20 @@ namespace LEDLIB
             {
                 return this.b;
             }
+            set
+            {
+                this.b = GetNormalized(value);
+            }
         }
         public int A
         {
             get
             {
                 return this.a;
+            }
+            set
+            {
+                this.a = GetNormalized(value);
             }
         }
 
@@ -207,5 +206,6 @@ namespace LEDLIB
         {
             return ToInt() == 0;
         }
+
     }
 }

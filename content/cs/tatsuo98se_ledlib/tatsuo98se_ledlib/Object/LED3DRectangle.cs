@@ -11,6 +11,8 @@ namespace LEDLIB
     public class LED3DRectangle : LED3DObject
     {
         private Rectangle rect;
+        DrawUtility drawUtility = new DrawUtility(1f);
+
         public LED3DRectangle(Rectangle rect, RGB color) : this(rect, color, TimeSpan.Zero)
         {
         }
@@ -21,7 +23,7 @@ namespace LEDLIB
 
         public override void Draw(ILED3DCanvas canvas)
         {
-            var dots = DrawUtility.Rectangle(rect, this.Color);
+            var dots = drawUtility.Rectangle(rect, this.Color);
             foreach(var dot in dots)
             {
                 canvas.SetLed(dot.X, dot.Y, 0, dot.RGB);

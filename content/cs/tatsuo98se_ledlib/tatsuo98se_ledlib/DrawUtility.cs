@@ -9,7 +9,17 @@ namespace LEDLIB
     public delegate void SetPixel(double x, double y, RGB color);
     public class DrawUtility
     {
-        private static float DENCITY = 2f;
+        private float DENSITY = 2f;
+
+        public DrawUtility()
+            :this(1f)
+        {
+
+        }
+        public DrawUtility(float density)
+        {
+            DENSITY = density;
+        }
 
         public struct Dot
         {
@@ -37,34 +47,16 @@ namespace LEDLIB
                 this.RGB = rgb;
             }
         }
-        public struct XYZDot
-        {
-            public double X;
-            public double Y;
-            public double Z;
-            public RGB RGB;
-            public XYZDot(double x, double y, double z, RGB rgb)
-            {
-                this.X = x;
-                this.Y = y;
-                this.Z = z;
-                this.RGB = rgb;
-            }
-        }
 
-        static Bitmap createBitmap(double w, double h)
+        Bitmap createBitmap(double w, double h)
         {
-            Bitmap bitmap = new Bitmap(1 + Util.Round(w * 1.5f * DENCITY),
-                                           1 + Util.Round(h * 1.5f * DENCITY),
+            Bitmap bitmap = new Bitmap(1 + Util.Round(w * 1.5f * DENSITY),
+                                           1 + Util.Round(h * 1.5f * DENSITY),
                                            PixelFormat.Format32bppArgb);
             bitmap.MakeTransparent();
             return bitmap;
         }
 
-        static public XYZDot[] Line(XYZDot pt1, XYZDot pt2)
-        {
-            return null;
-        }
 
         static public PointF getMin(PointF[] pts)
         {
@@ -99,15 +91,15 @@ namespace LEDLIB
             return maxPt;
         }
 
-        static Graphics craeteGraphics(Bitmap bmp, SmoothingMode mode)
+        Graphics craeteGraphics(Bitmap bmp, SmoothingMode mode)
         {
             var gc = Graphics.FromImage(bmp);
             gc.SmoothingMode = mode;
-            gc.ScaleTransform(DENCITY, DENCITY);
+            gc.ScaleTransform(DENSITY, DENSITY);
             return gc;
         }
 
-        static public Dot[] FillPolygon(PointF[] pts, RGB rgb)
+        public Dot[] FillPolygon(PointF[] pts, RGB rgb)
         {
             PointF minPt, maxPt;
             minPt = getMin(pts);
@@ -134,7 +126,7 @@ namespace LEDLIB
             }
         }
 
-        static public Dot[] Line(PointF pt1, PointF pt2, RGB rgb, float penwidth)
+        public Dot[] Line(PointF pt1, PointF pt2, RGB rgb, float penwidth)
         {
             float x, y, width, height;
             x = Math.Min(pt1.X, pt2.X);
@@ -160,7 +152,7 @@ namespace LEDLIB
             }
         }
 
-        static public Dot[] Rectangle(RectangleF rect, RGB rgb)
+        public Dot[] Rectangle(RectangleF rect, RGB rgb)
         {
             using (var bmp = createBitmap(rect.Width, rect.Height))
             {
@@ -175,7 +167,7 @@ namespace LEDLIB
             }
         }
 
-        static public Dot[] Circle(double x, double y, double w, double h, RGB rgb)
+        public Dot[] Circle(double x, double y, double w, double h, RGB rgb)
         {
             using (var bmp = createBitmap(w, h))
             {
@@ -190,7 +182,8 @@ namespace LEDLIB
                 return GetPixel(bmp, new PointF((float)x, (float)y));
             }
         }
-        static public Dot[] CircleCenterAt(double x, double y, double w, double h, RGB rgb)
+
+        public Dot[] CircleCenterAt(double x, double y, double w, double h, RGB rgb)
         {
             using (var bmp = createBitmap(w, h))
             {
@@ -205,7 +198,8 @@ namespace LEDLIB
                 return GetPixel(bmp, new PointF((float)(x - w / 2), (float)(y - h / 2)));
             }
         }
-        static private void SetPixel(Bitmap bmp, SetPixel setPixel)
+
+        private void SetPixel(Bitmap bmp, SetPixel setPixel)
         {
             for (int x = 0; x < LED.WIDTH; x++)
             {
@@ -219,7 +213,8 @@ namespace LEDLIB
                 }
             }
         }
-        static private Dot[] GetPixel(Bitmap bmp, PointF offset)
+
+        private Dot[] GetPixel(Bitmap bmp, PointF offset)
         {
             List<Dot> points = new List<Dot>();
             for (int x = 0; x < bmp.Width; x++)
@@ -229,8 +224,8 @@ namespace LEDLIB
                     if (bmp.GetPixel(x, y).A != 0)
                     {
                         points.Add(new Dot(
-                            (x / DENCITY + offset.X), 
-                            (y / DENCITY + offset.Y),
+                            (x / DENSITY + offset.X), 
+                            (y / DENSITY + offset.Y),
                             RGB.fromColor(bmp.GetPixel(x, y))));
                     }
                 }

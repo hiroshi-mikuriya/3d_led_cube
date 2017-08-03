@@ -1,15 +1,15 @@
 ﻿using LEDLIB;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace sample.ShowCase
 {
-    class AtFieldOnCube : IShowCase
+    class RippleOnWaveCube : IShowCase
     {
+
         public void SetUp(ILED3DCanvas canvas, LED3DCanvasFilter filter)
         {
         }
@@ -19,11 +19,11 @@ namespace sample.ShowCase
             var rand = new Random();
             while (true)
             {
-                if (canvas.GetObjectCount() < 1)
+                if (canvas.GetObjectCount() < 2)
                 {
                     var x = rand.Next() % LED.WIDTH;
                     var y = rand.Next() % LED.HEIGHT;
-                    canvas.AddObject(new LED3DAtField(x, y, 0, 4, 0)
+                    canvas.AddObject(new LED3DRipple(x, y, new RGB(0xff, 0x00, 0xff), LED.Direction.Front, 6)
                         , filter
                         );
                 }

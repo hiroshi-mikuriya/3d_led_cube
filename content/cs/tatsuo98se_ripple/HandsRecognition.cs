@@ -32,7 +32,8 @@ namespace hands_viewer.cs
         private const int CURSOR_FACTOR_Y_UP = 120;
         private const int CURSOR_FACTOR_Y_DOWN = 40;
         private static LED3DCanvas canvas = new LED3DCanvas();
-        private static LED3DWaveCanvasFilter waveFilter = new LED3DWaveCanvasFilter(canvas);
+                private static LED3DWaveCanvasFilter waveFilter = new LED3DWaveCanvasFilter(new LED3DHsvColorFilter(canvas));
+//        private static LED3DWaveCanvasFilter waveFilter = new LED3DWaveCanvasFilter(canvas);
 
         public static void addObject(LED3DObject obj)
         {
