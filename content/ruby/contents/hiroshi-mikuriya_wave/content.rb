@@ -28,7 +28,7 @@ class Wave
       @mutex.synchronize do
         (WIDTH / dd).to_i.times do |i|
           x = i * dd
-          transport = Math.sin((x + d) * 2 / WIDTH * Math::PI)
+          transport = Math.sin((x + d) * 4 / WIDTH * Math::PI)
           (0...DEPTH).each do |z|
             color = rgb.map { |v| [v - z * 20, 0].max }.inject { |a, e| a * 0x100 + e }
             @led.SetLed(x, y + transport * @wave - z, z, color)
@@ -44,13 +44,13 @@ class Wave
     loop do
       key = STDIN.getch.ord
       exit 0 if [0x03, 0x1A].any? { |a| a == key }
-      @mutex.synchronize { @wave = 15 }
+      @mutex.synchronize { @wave = [15, @wave + 5].min }
     end
   end
 
   def wave_thread
     loop do
-      @mutex.synchronize { @wave = [0, @wave - 1].max }
+      @mutex.synchronize { @wave = [2, @wave - 1].max }
       sleep(0.5)
     end
   end
