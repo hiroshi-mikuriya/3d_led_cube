@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CanvasFilter\LED3DHsvColorFilter.cs" />
+    <Compile Include="CanvasFilter\LED3DWaveCanvasFilter2.cs" />
     <Compile Include="CanvasFilter\LEDSurfaceCanvasFilter.cs" />
     <Compile Include="DrawUtility.cs" />
     <Compile Include="Extensions.cs" />
@@ -56,6 +57,8 @@
     <Compile Include="LED3DObjectSet.cs" />
     <Compile Include="Object\LED3D5thAngel.cs" />
     <Compile Include="Object\LED3DAtField.cs" />
+    <Compile Include="Object\LED3DBall.cs" />
+    <Compile Include="Object\LED3DBitmap.cs" />
     <Compile Include="Object\LED3DCircle.cs" />
     <Compile Include="Object\LED3DSheet.cs" />
     <Compile Include="Object\LED3DDot.cs" />

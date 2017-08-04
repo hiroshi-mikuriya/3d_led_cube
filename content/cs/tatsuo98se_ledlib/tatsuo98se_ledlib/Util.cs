@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static LEDLIB.DrawUtility;
+using MathNet.Numerics.LinearAlgebra.Double;
+
 
 namespace LEDLIB
 {
@@ -96,5 +99,82 @@ namespace LEDLIB
 
             return rgb;
         }
+
+        public static DenseMatrix GetOffsetMatrix(Dot offset)
+        {
+            return DenseMatrix.OfArray(new double[,] {
+                { 1, 0, 0, offset.X },
+                { 0, 1, 0, offset.Y },
+                { 0, 0, 1, offset.Z },
+                { 0, 0, 0, 1 } });
+        }
+
+        public static DenseMatrix GetXAxisRotateMatrix(double rad)
+        {
+            return GetXAxisRotateMatrix(rad, new Dot(0, 0, 0));
+        }
+
+        public static DenseMatrix GetXAxisRotateMatrix(double rad, Dot offset)
+        {
+            return DenseMatrix.OfArray(new double[,] {
+                { 1, 0, 0, offset.X },
+                { 0, Math.Cos(rad), -Math.Sin(rad), offset.Y },
+                { 0, Math.Sin(rad), Math.Cos(rad), offset.Z },
+                { 0, 0, 0, 1 } });
+        }
+
+        public static DenseMatrix GetYAxisRotateMatrix(double rad)
+        {
+            return GetYAxisRotateMatrix(rad, new Dot(0, 0, 0));
+        }
+
+        public static DenseMatrix GetYAxisRotateMatrix(double rad, Dot offset)
+        {
+            return DenseMatrix.OfArray(new double[,] {
+                { Math.Cos(rad), 0, Math.Sin(rad), offset.X },
+                { 0, 1, 0, offset.Y },
+                { -Math.Sin(rad),0, Math.Cos(rad), offset.Z },
+                { 0, 0, 0, 1 } });
+        }
+        public static DenseMatrix GetZAxisRotateMatrix(double rad)
+        {
+            return GetZAxisRotateMatrix(0, new Dot(0, 0, 0));
+        }
+
+        public static DenseMatrix GetZAxisRotateMatrix(double rad, Dot offset)
+        {
+            return DenseMatrix.OfArray(new double[,]{
+                { Math.Cos(rad), -Math.Sin(rad), 0, offset.X },
+                { Math.Sin(rad), Math.Cos(rad), 0, offset.Y },
+                { 0, 0, 1, offset.Z },
+                { 0, 0, 0, 1 } });
+        }
+
+        public static DenseMatrix fromXYZ(double x, double y, double z)
+        {
+            return DenseMatrix.OfArray(new double[,] {
+                { x },
+                { y },
+                { z },
+                { 1 } });
+        }
+
+        public static Dot[] appryMatrix(Dot[] src, DenseMatrix matrix)
+        {
+
+            var newdot = new List<Dot>();
+            foreach (var pt in src)
+            {
+                var s = fromXYZ(pt.X, pt.Y, pt.Z);
+                var result = matrix.Multiply(s);
+                newdot.Add(new Dot(
+                    result[0, 0],
+                    result[1, 0],
+                    result[2, 0],
+                    pt.RGB));
+            }
+            return newdot.ToArray();
+        }
+
     }
 }

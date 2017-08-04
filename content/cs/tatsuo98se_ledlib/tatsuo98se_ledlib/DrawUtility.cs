@@ -99,6 +99,24 @@ namespace LEDLIB
             return gc;
         }
 
+        public Dot[] Bitmap(Bitmap bitmap)
+        {
+            float x, y;
+            float scale = Math.Max((float)bitmap.Width / LED.WIDTH, (float)bitmap.Height / LED.HEIGHT);
+            float newWidth = bitmap.Height * ((float)LED.WIDTH / LED.HEIGHT);
+
+            using (var bmp = createBitmap(LED.WIDTH, LED.HEIGHT))
+            {
+                using (var gc = craeteGraphics(bmp, SmoothingMode.AntiAlias))
+                {
+                    gc.DrawImage(bitmap, new RectangleF(0, 0, LED.WIDTH, LED.HEIGHT), new RectangleF(bitmap.Width/2f - newWidth/2f, 0, newWidth, bitmap.Height), GraphicsUnit.Pixel);
+                       
+                }
+                return GetPixel(bmp, new Point(0, 0));
+            }
+        }
+
+
         public Dot[] FillPolygon(PointF[] pts, RGB rgb)
         {
             PointF minPt, maxPt;
@@ -205,7 +223,9 @@ namespace LEDLIB
             {
                 for (int y = 0; y < LED.HEIGHT; y++)
                 {
-                    if (bmp.GetPixel(x, y).A != 0)
+                    Color pixel = bmp.GetPixel(x, y);
+                    if (pixel.A != 0
+                       && pixel.ToArgb() != Color.Black.ToArgb())
                     {
                         Console.WriteLine("x:" + x + " y:" + y);
                         setPixel(x, y, RGB.fromColor(bmp.GetPixel(x, y)));
@@ -221,7 +241,9 @@ namespace LEDLIB
             {
                 for (int y = 0; y < bmp.Height; y++)
                 {
-                    if (bmp.GetPixel(x, y).A != 0)
+                    Color pixel = bmp.GetPixel(x, y);
+                    if (pixel.A != 0
+                       && pixel.ToArgb() != Color.Black.ToArgb() )
                     {
                         points.Add(new Dot(
                             (x / DENSITY + offset.X), 
