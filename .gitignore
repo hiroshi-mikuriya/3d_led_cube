@@ -38,5 +38,4 @@
 *.user
 .vs
 obj
-*.exe.config
 *.pdb
