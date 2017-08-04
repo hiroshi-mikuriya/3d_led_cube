@@ -14,7 +14,7 @@ parser.add_option("-d", "--dest",
 (options, args) = parser.parse_args()
 
 if options.dest != None:
-    led.SetUrl(options.dest)
+    led.SetUrl(options.dest.encode('utf-8'))
  
 if options.content_dir != None:
     content_path = os.path.join(options.content_dir, "content")

@@ -11,7 +11,7 @@ class Tetris
   FIELD_HEIGHT = LED_HEIGHT / CELL # Y方向のLED数をセルサイズで割った値
   BLOCKS = %w(0660 4444 0470 0170 0270 0630 0360).freeze # ブロックの種類（定義したものがランダムで出現する）
   BLOCK_SIZE = 4 # ブロックの縦横セル数（空白含む）
-  DELAY = 200 # ブロックの落下速度（小さい方がはやい）
+  DELAY = 400 # ブロックの落下速度（小さい方がはやい）
 
   ##
   # 彩度の高い色をだすための計算
@@ -36,8 +36,8 @@ class Tetris
     (0...((msg.size + 1) * LED_WIDTH)).each do |x|
       @led.Clear
       msg.chars.each.with_index do |c, i|
-        y = rand(2)
-        z = rand(4)
+        y = 0 # rand(2)
+        z = 0 # rand(4)
         @led.SetChar((i + 1) * LED_WIDTH - x, y, z, c.ord, color)
       end
       @led.Show
@@ -59,10 +59,15 @@ class Tetris
     th = Thread.new { key_thread until @game_over }
     until @game_over
       @mutex.synchronize do
+        @firework = false
         block_thread
         set_field_and_block
       end
       @led.Show
+      if @firework
+        @led.ShowFirework(LED_WIDTH / 2, LED_HEIGHT / 2, LED_DEPTH - 1)
+        @firework = false
+      end
       @led.Wait(DELAY)
     end
     puts 'GAME OVER'
@@ -77,7 +82,7 @@ class Tetris
     exit 0 if [0x03, 0x1A].any? { |a| a == key }
     @mutex.synchronize do
       case key
-      when 65, 97, 98, 120, 121
+      when 97, 98, 120, 121
         rotate_block_if_fit
       when 66
         @pos[:y] += 1 unless hit_down?
@@ -139,6 +144,7 @@ class Tetris
         ny -= 1
       else
         erase_effect(fy)
+        @firework = true
       end
     end
     @field = new_field
