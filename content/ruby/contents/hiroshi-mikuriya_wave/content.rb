@@ -19,7 +19,7 @@ class Wave
     loop do
       now = Time.now
       d = (now - now.to_i).to_f * WIDTH
-      y = HEIGHT / 2
+      y = HEIGHT * 3 / 5
       @led.Clear
       dd = 0.2
       @wave = 10
@@ -27,10 +27,10 @@ class Wave
       @mutex.synchronize do
         (WIDTH / dd).to_i.times do |i|
           x = i * dd
-          a = Math.sin((x + d) * 2 / WIDTH * Math::PI)
+          transport = Math.sin((x + d) * 2 / WIDTH * Math::PI)
           (0...DEPTH).each do |z|
-            color = rgb[0] * 0x10000 + rgb[1] * 0x100 + rgb[2]
-            @led.SetLed(x, y + a * @wave - z, z, color)
+            color = rgb.map { |v| [v - z * 20, 0].max }.inject { |a, e| a * 0x100 + e }
+            @led.SetLed(x, y + transport * @wave - z, z, color)
           end
         end
       end
