@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    colorable (0.2.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  colorable
+
+BUNDLED WITH
+   1.15.3
