@@ -1,4 +1,6 @@
 require 'io/console'
+require 'Colorable'
+include Colorable
 
 class Wave
   WIDTH = 16
@@ -13,6 +15,7 @@ class Wave
   end
 
   def main_thread
+    h = 0
     loop do
       now = Time.now
       d = (now - now.to_i).to_f * WIDTH
@@ -20,18 +23,20 @@ class Wave
       @led.Clear
       dd = 0.2
       @wave = 10
+      rgb = HSB.new(h, 100, 100).to_rgb
       @mutex.synchronize do
         (WIDTH / dd).to_i.times do |i|
           x = i * dd
           a = Math.sin((x + d) * 2 / WIDTH * Math::PI)
           (0...DEPTH).each do |z|
-            color = 0xFF - z * 16
-            @led.SetLed(x, y + a * @wave - z, z, color << 8)
+            color = rgb[0] * 0x10000 + rgb[1] * 0x100 + rgb[2]
+            @led.SetLed(x, y + a * @wave - z, z, color)
           end
         end
       end
       @led.Show
       sleep(0.01)
+      h = (h + 5) % 360
     end
   end
 
