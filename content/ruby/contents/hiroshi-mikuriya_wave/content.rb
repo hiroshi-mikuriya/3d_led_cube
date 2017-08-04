@@ -10,7 +10,9 @@ class Wave
   def initialize(led)
     @led = led
     @mutex = Mutex.new
+    @wave = 10
     Thread.new { key_thread }
+    Thread.new { wave_thread }
     main_thread
   end
 
@@ -22,7 +24,6 @@ class Wave
       y = HEIGHT * 3 / 5
       @led.Clear
       dd = 0.2
-      @wave = 10
       rgb = HSB.new(h, 100, 100).to_rgb
       @mutex.synchronize do
         (WIDTH / dd).to_i.times do |i|
@@ -35,7 +36,6 @@ class Wave
         end
       end
       @led.Show
-      sleep(0.01)
       h = (h + 5) % 360
     end
   end
@@ -43,9 +43,15 @@ class Wave
   def key_thread
     loop do
       key = STDIN.getch.ord
-      puts key
       exit 0 if [0x03, 0x1A].any? { |a| a == key }
-      @mutex.synchronize { @wave += 1 }
+      @mutex.synchronize { @wave = 15 }
+    end
+  end
+
+  def wave_thread
+    loop do
+      @mutex.synchronize { @wave = [0, @wave - 1].max }
+      sleep(0.5)
     end
   end
 end
