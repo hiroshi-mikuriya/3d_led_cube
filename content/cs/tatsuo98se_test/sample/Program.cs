@@ -2,6 +2,7 @@
 using sample.ShowCase;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -25,6 +26,13 @@ namespace sample
             var libDir = Directory.GetParent(test).Parent.Parent.Parent.Parent;
             SetDllDirectory(Path.Combine(libDir.FullName,"00_lib"));
 
+            var cmds = Environment.GetCommandLineArgs();
+            if (cmds.Length > 1)
+            {
+                Debug.WriteLine("Target IP: " + cmds[1]);
+                LEDLIB.LED.SetUrl(cmds[1]);
+            }
+
             var canvas = new LED3DCanvas();
             //            var filter = new LED3DWaveCanvasFilter(canvas);
 //            var filter = new LED3DSurfaceCanvasFilter(canvas);
@@ -32,7 +40,7 @@ namespace sample
 
 //            LED3DCanvasFilter filter = null;
 
-            int testcase = 3;
+            int testcase = 5;
             var showCases = new List<IShowCase>();
 
             showCases.Add(new CircleOnCube());

@@ -456,7 +456,6 @@ namespace hands_viewer.cs
                     {
                         e.Graphics.DrawImageUnscaled(bitmapNew, 0, 0);
                     }
-                    HandsRecognition.SetBitmap(bitmapNew);
                 }              
                 finally
                 {
@@ -678,7 +677,7 @@ namespace hands_viewer.cs
 
                                         if (j == 5 || j == 9 || j == 13 || j == 17 || j == 21)
                                         {
-                                            if (target != null && isHandDistanceGreaterThan(target, 50))
+                                            if (target != null /*&& isHandDistanceGreaterThan(target, 50)*/)
                                             {
                                                 if (j == 9)
                                                 {
@@ -697,11 +696,10 @@ namespace hands_viewer.cs
 
                                                         }
 
-                                                        //                                                        HandsRecognition.UpdateAtField(ledX, ledY, nodes[i][j].positionWorld.z, width);
-//                                                        HandsRecognition.Wave();
+                                                        HandsRecognition.UpdateAtField(ledX, ledY, nodes[i][j].positionWorld.z, width);
                                                         Debug.WriteLine("positionWorld x:" + nodes[i][j].positionWorld.x + " y:" + nodes[i][j].positionWorld.y + " z:" + nodes[i][j].positionWorld.z + " w:" + width);
                                                     }
- //                                                   HandsRecognition.addObjectOnWave(new LED3DRipple(ledX, ledY, RGB.randamBG(), LED.Direction.Front, 3));
+                                                    //                                                    HandsRecognition.addObjectOnWave(new LED3DRipple(ledX, ledY, RGB.randamBG(), LED.Direction.Front, 3));
 
                                                 }
                                             }

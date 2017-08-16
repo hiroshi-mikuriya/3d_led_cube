@@ -33,16 +33,8 @@ namespace hands_viewer.cs
         private const int CURSOR_FACTOR_Y_UP = 120;
         private const int CURSOR_FACTOR_Y_DOWN = 40;
         private static LED3DCanvas canvas = new LED3DCanvas();
-        private static LED3DWaveCanvasFilter2 waveFilter = new LED3DWaveCanvasFilter2(new LED3DHsvColorFilter(canvas));
-//        private static LED3DWaveCanvasFilter2 waveFilter = new LED3DWaveCanvasFilter2(canvas);
-        private static LED3DBitmap bitmapOnCube  = new LED3DBitmap(new RGB(0xff, 0xff, 0xff));
+        private static LED3DWaveCanvasFilter waveFilter = new LED3DWaveCanvasFilter(canvas);
 
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void Wave()
-        {
-            waveFilter.SetMaxWaveDepth();
-        }
         public static void addObject(LED3DObject obj)
         {
             canvas.AddObject(obj);
@@ -52,19 +44,37 @@ namespace hands_viewer.cs
             canvas.AddObject(obj, waveFilter);
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void UpdateAtField(float x, float y, float z, float width)
+        {
+            bool isExist = false;
+            LED3DAtField atfield = null;
+            foreach(var obj in canvas.GetObjects())
+            {
+                if(obj.obj is LED3DAtField)
+                {
+                    isExist = true;
+                    atfield = (LED3DAtField)(obj.obj);
+                }
+            }
+            if (isExist)
+            {
+                atfield.SetPos(x, y, z, width);
+            }
+            else
+            {
+                //                canvas.AddObject(new LED3DAtField(x, y, z, 5), new LED3DSurfaceCanvasFilter(canvas));
+                                canvas.AddObject(new LED3DAtField(x, y, z, 5, width), new LED3DWaveCanvasFilter(canvas));
+                //                canvas.AddObject(new LED3DAtField(x, y, z, 5, width));
+            }
+
+        }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Show()
         {
             canvas.Show();
         }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void SetBitmap(System.Drawing.Bitmap bitmap)
-        {
-            bitmapOnCube.SetBitmap(bitmap);
-        }
-
 
         public HandsRecognition(MainForm form)
         {
@@ -81,8 +91,7 @@ namespace hands_viewer.cs
             _lut = Enumerable.Repeat((byte)0, 256).ToArray();
             _lut[255] = 1;
 
-            //            canvas.AddObject(new LED3D5thAngel());
-            canvas.AddObject(bitmapOnCube);
+            canvas.AddObject(new LED3D5thAngel());
 //            canvas.AddObject(new LED3DSheet(new RGB(0xff, 0xff, 0xff)));
 
         }
@@ -334,7 +343,6 @@ namespace hands_viewer.cs
                             }
 
                             _form.DisplayBitmap(depthBitmap);
- //                           bitmapOnCube.SetBitmap(depthBitmap);
                             image3.ReleaseAccess(data3);
                         }
                         depthBitmap.Dispose();

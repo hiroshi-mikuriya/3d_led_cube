@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtField", "AtField.csproj", "{5ACB1EBF-9468-46A7-A304-A45AEFD8980D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HandsViewer.cs_vs2012-15", "HandsViewer.cs_vs2012-15.csproj", "{5ACB1EBF-9468-46A7-A304-A45AEFD8980D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tatsuo98se_ledlib", "..\tatsuo98se_ledlib\tatsuo98se_ledlib\tatsuo98se_ledlib.csproj", "{2329EBF6-C411-42DD-A5EC-2B273D8C59C3}"
 EndProject
