@@ -696,7 +696,7 @@ void wave()
 			}
 		}
 		Show();
-		Wait(50);
+		Wait(30);
 	}
 }
 
@@ -705,10 +705,10 @@ struct yz_t
 	double y, z;
 };
 
-void letters2()
+void thanks()
 {
 	std::vector<std::string> letters{
-#include "letters2.hxx"
+#include "letters.hxx"
 	};
 	std::vector<yz_t> positions{
 		{ 0, 7 }, { 0, 6 }, { 0, 5 }, { 0, 4 }, { 1, 4 }, { 1, 3 }, { 2, 3 },
@@ -746,110 +746,19 @@ void letters2()
 				}
 			}
 		}
-		Show();
+        const int yama[LED_HEIGHT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x1818, 0x3C3C, 0x7E7E, 0xFFFF };
+        for(int y = 0; y < LED_HEIGHT; ++y){
+            for(int x = 0; x < LED_WIDTH; ++x){
+                int shift = LED_WIDTH - x - 1;
+                if(yama[y] & (1 << shift)){
+                    SetLed(x, y, 0, 0x00FF00);
+                }
+            }
+        }
+        Show();
 		Wait(50);
 	}
 }
-
-void letters()
-{
-	std::vector<std::string> letters{
-#include "letters.hxx"
-	};
-	const int N0 = 4 * 2;
-	const int N1 = 4 * 2;
-	auto color = [&](std::string const & a, xyz_t p, int ix)->int {
-		int colbase;
-		int xx = p.x * 15 / LED_WIDTH;
-		int yy = p.y * 15 / LED_HEIGHT;
-		auto cb = [](int r, int g, int b)->int
-		{
-			return 0x1 * r + 0x100 * g + 0x10000 * b;
-		};
-		switch (ix % 3) {
-		case 0:  colbase = cb(xx, yy, 15); break;
-		case 1:  colbase = cb(15, 15 - xx, yy); break;
-		case 2:  colbase = cb(15 - yy, 15, xx); break;
-		default:
-			throw "DEATH!";
-		}
-		return (a[p.x + p.y*LED_WIDTH] - 'A') * colbase;
-	};
-	auto show = [&](std::string const & a, std::string const & b, double move, double light, int ix) {
-		struct pp_t{
-			xyz_t p[2];
-		};
-		std::mt19937 rng(1);
-		std::vector<pp_t> pps;
-		while (pps.size()<2000) {
-			xyz_t p0{
-				static_cast<double>(rng() % LED_WIDTH),
-				static_cast<double>(rng() % LED_HEIGHT),
-				static_cast<double>(rng() % LED_DEPTH) };
-			xyz_t p1{
-				static_cast<double>(rng() % LED_WIDTH),
-				static_cast<double>(rng() % LED_HEIGHT),
-				static_cast<double>(rng() % LED_DEPTH) };
-			if (color(a, p0, ix) && color(b, p1, ix + 1)) {
-				pps.push_back({ { p0, p1 } });
-			}
-		}
-		Clear();
-		for (auto const & pp : pps) {
-			xyz_t p = pp.p[0] * (1 - move) + pp.p[1] * move;
-			int c0 = color(a, pp.p[0], ix);
-			int c1 = color(b, pp.p[1], ix + 1);
-			auto mean = [&](int mask, double d) {
-				int v = ((c0 & mask)*(1 - move) + (c1 & mask)*move)*d;
-				return v & mask;
-			};
-			int col = mean(0xff0000, light) + mean(0xff00, light) + mean(0xff, light);
-			if (can_show(p)) {
-				SetLed(p.x, p.y, p.z, col);
-			}
-		}
-		Show();
-		Wait(50);
-	};
-	auto fade_in = [&](std::string const & c, int letter_index) {
-		for (int ix = 0; ix < N0; ++ix) {
-			show(c, c, 0, ix*1.0 / N0, letter_index);
-		}
-	};
-	auto fade_out = [&](std::string const & c, int letter_index) {
-		for (int ix = 0; ix < N0; ++ix) {
-			show(c, c, 0, 1 - ix*1.0 / N0, letter_index);
-		}
-	};
-	auto stop = [&](std::string const &  c, int letter_index) {
-		for (int ix = 0; ix < N0; ++ix) {
-			show(c, c, 0, 1, letter_index);
-		}
-	};
-	auto move = [&](std::string const & a, std::string const & b, int letter_index) {
-		for (int ix = 0; ix < N1; ++ix) {
-			show(a, b, ix*1.0 / N1, 1, letter_index);
-		}
-	};
-
-	for (size_t ix = 0; ix < letters.size(); ++ix) {
-		if (ix == 0) {
-			fade_in(letters[ix], ix);
-			stop(letters[ix], ix);
-		}
-		else if (ix == letters.size() - 1) {
-			stop(letters[ix], ix);
-			fade_out(letters[ix], ix);
-		}
-		else {
-			stop(letters[ix], ix);
-		}
-		if (ix < letters.size() - 1) {
-			move(letters[ix], letters[ix + 1], ix);
-		}
-	}
-}
-
 
 int main(int argc, const char* argv[])
 {
@@ -864,7 +773,11 @@ int main(int argc, const char* argv[])
 		SetUrl(argv[1]);
 	}
 	for (;;) {
-		letters2();
-		letters();
+		thanks();
+        wave();
+        thanks();
+        balls();
+        thanks();
+        cube();
 	}
 }
