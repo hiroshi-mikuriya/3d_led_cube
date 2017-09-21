@@ -875,9 +875,6 @@ int main(int argc, const char* argv[])
 {
     static_cast<void>(argc); // unused
     static_cast<void>(argv); // unused
-    if (1 < argc){
-        SetUrl(argv[1]);
-    }
 #if defined(WIN32)
 	loadLibrary("ledLib32.dll");
 #elif defined(WIN64)
@@ -885,7 +882,10 @@ int main(int argc, const char* argv[])
 #elif defined(__APPLE__)
     loadLibrary("./libledLib.dylib");
 #endif
-    for (;;) {
+	if (1 < argc){
+		SetUrl(argv[1]);
+	}
+	for (;;) {
 		ShowMotioningText1("HelloWorld");
         // letters2();
         wave();
