@@ -4,8 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using static LEDLIB.DrawUtility;
-using MathNet.Numerics.LinearAlgebra.Double;
-
 
 namespace LEDLIB
 {
@@ -44,77 +42,6 @@ namespace LEDLIB
 
         }
 
-        public DenseMatrix GetOffsetMatrix(Dot offset)
-        {
-            return DenseMatrix.OfArray(new double[,] {
-                { 1, 0, 0, offset.X },
-                { 0, 1, 0, offset.Y },
-                { 0, 0, 1, offset.Z },
-                { 0, 0, 0, 1 } });
-        }
-
-        public DenseMatrix GetXAxisRotateMatrix(double rad)
-        {
-            return GetXAxisRotateMatrix(rad, new Dot(0, 0, 0));
-        }
-        public DenseMatrix GetXAxisRotateMatrix(double rad, Dot offset)
-        {
-            return DenseMatrix.OfArray(new double[,] { 
-                { 1, 0, 0, offset.X }, 
-                { 0, Math.Cos(rad), -Math.Sin(rad), offset.Y },
-                { 0, Math.Sin(rad), Math.Cos(rad), offset.Z },
-                { 0, 0, 0, 1 } });
-        }
-        public DenseMatrix GetYAxisRotateMatrix(double rad)
-        {
-            return GetYAxisRotateMatrix(rad, new Dot(0, 0, 0));
-        }
-        public DenseMatrix GetYAxisRotateMatrix(double rad, Dot offset)
-        {
-            return DenseMatrix.OfArray(new double[,] {
-                { Math.Cos(rad), 0, Math.Sin(rad), offset.X },
-                { 0, 1, 0, offset.Y },
-                { -Math.Sin(rad),0, Math.Cos(rad), offset.Z },
-                { 0, 0, 0, 1 } });
-        }
-        public DenseMatrix GetZAxisRotateMatrix(double rad)
-        {
-            return GetZAxisRotateMatrix(0, new Dot(0, 0, 0));
-        }
-        public DenseMatrix GetZAxisRotateMatrix(double rad, Dot offset)
-        {
-            return DenseMatrix.OfArray(new double[,]{
-                { Math.Cos(rad), -Math.Sin(rad), 0, offset.X },
-                { Math.Sin(rad), Math.Cos(rad), 0, offset.Y },
-                { 0, 0, 1, offset.Z },
-                { 0, 0, 0, 1 } });
-        }
-        public DenseMatrix fromXYZ(double x, double y, double z)
-        {
-            return DenseMatrix.OfArray(new double[,] {
-                { x },
-                { y },
-                { z },
-                { 1 } });
-        }
-
-        public Dot[] appryMatrix(Dot[] src, DenseMatrix matrix)
-        {
-
-            var newdot = new List<Dot>();
-            foreach(var pt in src)
-            {
-                var s = fromXYZ(pt.X, pt.Y, pt.Z);
-                var result = matrix.Multiply(s);
-                newdot.Add(new Dot(
-                    result[0,0],
-                    result[1,0],
-                    result[2,0],
-                    pt.RGB));
-            }
-            return newdot.ToArray();
-        }
-
         public override void Draw(ILED3DCanvas canvas)
         {
             var yangle = (GetElapsedAt().TotalMilliseconds / 15) * (Math.PI / 180);
@@ -132,14 +59,15 @@ namespace LEDLIB
             var newDots = new List<Dot>();
 
             var under = Get6thAngelHelf(Math.PI, yangle);
-            var forUnder = GetOffsetMatrix(new Dot(0, getUnderOffset()*2, 0));
-            newDots.AddRange(appryMatrix(under, forUnder));
+            var forUnder = Util.GetOffsetMatrix(new Dot(0, getUnderOffset()*2, 0));
+            newDots.AddRange(Util.appryMatrix(under, forUnder));
 
             var upper = Get6thAngelHelf(0, yangle);
-            var forUpper = GetOffsetMatrix(new Dot(0, 0, 0));
-            newDots.AddRange(appryMatrix(upper, forUpper));
+            var forUpper = Util.GetOffsetMatrix(new Dot(0, 0, 0));
+            newDots.AddRange(Util.appryMatrix(upper, forUpper));
 
-            return appryMatrix(newDots.ToArray(), GetYAxisRotateMatrix(yangle, offset)).ToArray();
+            return Util.appryMatrix(newDots.ToArray(),
+                Util.GetYAxisRotateMatrix(yangle, offset)).ToArray();
 
         }
 
@@ -159,12 +87,12 @@ namespace LEDLIB
 
         public RGB GetTriangleColor( double xangle, double yangle)
         {
-            var shift = Math.PI / 2;
+            var shift = Math.PI / 3;
             var xanglen = Normlize(xangle);
             var yanglen = Normlize(yangle + shift);
 
-            var brightColor = new RGB(0xcc, 0xcc, 0xff);
-            var darkColor = new RGB(0x33, 0x33, 0xff);
+            var brightColor = new RGB(0xff, 0xff, 0xff);
+            var darkColor = new RGB(0x22, 0x22, 0xbb);
 
             var distance = Math.Abs(Math.PI - yanglen);
 
@@ -175,7 +103,7 @@ namespace LEDLIB
             }
             else
             {
-                var offsetColor = (int)Math.Round(204f * (1 - distance / Math.PI));
+                var offsetColor = (int)Math.Round(222f * (1 - distance / Math.PI));
                 return new RGB(
                     0xcc - offsetColor,
                     0xcc - offsetColor,
@@ -186,8 +114,8 @@ namespace LEDLIB
 
         public Dot[] Get6thAngelBaseTriangle(double xangle, double yangle)
         {
-            var M = GetXAxisRotateMatrix(getXAngle());
-            return appryMatrix(GetTriangle(GetTriangleColor(xangle, yangle)), M);
+            var M = Util.GetXAxisRotateMatrix(getXAngle());
+            return Util.appryMatrix(GetTriangle(GetTriangleColor(xangle, yangle)), M);
 
         }
 
@@ -197,14 +125,14 @@ namespace LEDLIB
 
             Dot[] t1 = Get6thAngelBaseTriangle(xangle, yangle);
 
-            var for2 = GetYAxisRotateMatrix(Math.PI / 2);
-            Dot[] t2 = appryMatrix(Get6thAngelBaseTriangle(xangle, yangle + (Math.PI / 2)), for2);
+            var for2 = Util.GetYAxisRotateMatrix(Math.PI / 2);
+            Dot[] t2 = Util.appryMatrix(Get6thAngelBaseTriangle(xangle, yangle + (Math.PI / 2)), for2);
 
-            var for3 = GetYAxisRotateMatrix(Math.PI);
-            Dot[] t3 = appryMatrix(Get6thAngelBaseTriangle(xangle, yangle + Math.PI), for3);
+            var for3 = Util.GetYAxisRotateMatrix(Math.PI);
+            Dot[] t3 = Util.appryMatrix(Get6thAngelBaseTriangle(xangle, yangle + Math.PI), for3);
 
-            var for4 = GetYAxisRotateMatrix(- Math.PI / 2);
-            Dot[] t4 = appryMatrix(Get6thAngelBaseTriangle(xangle, yangle - (Math.PI / 2)), for4);
+            var for4 = Util.GetYAxisRotateMatrix(- Math.PI / 2);
+            Dot[] t4 = Util.appryMatrix(Get6thAngelBaseTriangle(xangle, yangle - (Math.PI / 2)), for4);
 
 
             newDots.AddRange(t1);
@@ -212,8 +140,8 @@ namespace LEDLIB
             newDots.AddRange(t3);
             newDots.AddRange(t4);
 
-            var xaxis = GetXAxisRotateMatrix(xangle);
-            return appryMatrix(newDots.ToArray(), xaxis).ToArray();
+            var xaxis = Util.GetXAxisRotateMatrix(xangle);
+            return Util.appryMatrix(newDots.ToArray(), xaxis).ToArray();
         }
 
 

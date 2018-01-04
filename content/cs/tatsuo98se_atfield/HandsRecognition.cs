@@ -92,7 +92,7 @@ namespace hands_viewer.cs
             _lut[255] = 1;
 
             canvas.AddObject(new LED3D5thAngel());
-            canvas.AddObject(new LED3DSheet(new RGB(0xff, 0xff, 0xff)));
+//            canvas.AddObject(new LED3DSheet(new RGB(0xff, 0xff, 0xff)));
 
         }
 

@@ -91,7 +91,7 @@ class DrawUtility
     DIRECTION_SIDE = 3
     
     def self.circle(canvas, x, y, z, color, r, direction=DIRECTION_FRONT)
-        dth = 0.02*Math::PI
+        dth = (2.0*Math::PI)/(4*r*Math::PI)
         0.step(2.0*Math::PI, dth) do |th|
             c1=r*Math.cos(th)
             c2=r*Math.sin(th)
@@ -142,7 +142,7 @@ class IncrementalCircle < Dot
     end
 
     def draw(canvas)
-        @r += 1
+        @r += (elasped/1000).to_i
         DrawUtility.circle(canvas, @x, @y, @z, @color-@r*20, @r, @direction)
     end
 end
@@ -153,9 +153,9 @@ class IncrementalMultipleCircle < Dot
         super(x, y, z, color, -1)
         @first_r = r
         @rs = [r]
-        @times = 0
         @direction = direction
         @size = size
+        @lastupdate = elasped
     end
 
     def expired?
@@ -163,14 +163,23 @@ class IncrementalMultipleCircle < Dot
     end
 
     def draw(canvas)
-        @times += 1
+        need_update = false
+        if elasped - @lastupdate > 20 then
+            @lastupdate = elasped
+            need_update = true
+        end
+
         if @rs.min - 3 == @first_r  && @rs.size < @size then
             @rs << @first_r
         end
 
         @rs = @rs.each_with_object([]) do |r, arr|
             DrawUtility.circle(canvas, @x, @y, @z, @color-r*20, r, @direction)
-            arr << r + 1
+            if need_update then
+                arr << r + 1 
+            else
+                arr << r
+            end
         end
     end
 end
@@ -267,7 +276,6 @@ class EphemeralDot < Dot
     def draw(canvas)
         canvas.set_led(@x, @y, @z, @color-decay)
     end
-
 end
 
 class Canvas

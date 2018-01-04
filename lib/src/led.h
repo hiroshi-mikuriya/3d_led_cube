@@ -41,6 +41,13 @@ typedef void * Show_t();
 typedef void * Wait_t(int ms);
 
 /*!
+ Enable or Disable a Simulator Window.
+ Default setting is Enable.
+ @param[in] 
+ */
+typedef void * EnableSimulator_t(bool isEnable);
+
+/*!
  Specify the color of each LED for displaying a character.
  Just by calling this function, drawing data is not transferred to 3D LED CUBE.
  @param[in] x 0 <= x < LED_WIDTH

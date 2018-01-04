@@ -20,8 +20,8 @@ namespace LEDLIB
         private bool longTimeNoSee = true;
         private Random rand = new Random();
 
-        float FIRST_R = 2.0f;
-        float DISTANCE = 3;
+        float FIRST_R = 3.0f;
+        float DISTANCE = 4;
 
         float NEAR_BORDER = 0.35f;
 
@@ -113,7 +113,7 @@ namespace LEDLIB
         private void FarEffect(ILED3DCanvas canvas)
         {
 
-            RGB color = this.GetAtFieldColor(3);
+            RGB color = this.GetAtFieldColor(1);
 
             int count = 1;
             foreach (var r in this.rs)
@@ -147,7 +147,7 @@ namespace LEDLIB
 
         private RGB GetAtFieldColor()
         {
-            int colorType = this.rand.Next(0, 4);
+            int colorType = this.rand.Next(0, 10);
             return GetAtFieldColor(colorType);
         }
 
@@ -156,14 +156,9 @@ namespace LEDLIB
             switch (type)
             {
                 case 0:
-                    return new RGB(0xff, 0xff, 0xff);
-                case 1:
-                    return new RGB(0xff, 0xc0, 0x00);
-                case 2:
-                case 3:
                     return new RGB(0xff, 0x65, 0x00);
                 default:
-                    return null; // flush
+                    return new RGB(0xff, 0x00, 0x00);
             }
 
         }

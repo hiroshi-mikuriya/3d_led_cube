@@ -15,6 +15,7 @@ using System.Text;
 using Intel.RealSense;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace hands_viewer.cs
 {
@@ -32,6 +33,14 @@ namespace hands_viewer.cs
             var test = AppDomain.CurrentDomain.BaseDirectory;
             var libDir = Directory.GetParent(test).Parent.Parent.Parent.Parent;
             SetDllDirectory(Path.Combine(libDir.FullName, "00_lib"));
+
+            var cmds = Environment.GetCommandLineArgs();
+            if (cmds.Length > 1)
+            {
+                Debug.WriteLine("Target IP: " + cmds[1]);
+                LEDLIB.LED.SetUrl(cmds[1]);
+            }
+
             try
             {
                 Application.EnableVisualStyles();
