@@ -14,6 +14,7 @@ namespace
     std::mutex sMutex;
     int m[LED_WIDTH][LED_HEIGHT][LED_DEPTH];
     std::string sUrl;
+    bool sIsEnableSimulator = true;
     
     class MutexLocker
     {
@@ -183,7 +184,9 @@ void Show()
         if (!sUrl.empty()){
             send(sUrl, makerfaire::fxat::Port, m);
         }
-        ShowWindow("Sender", m);
+        if (sIsEnableSimulator){
+            ShowWindow("Sender", m);
+        }
     }
     catch (std::exception const & e){
         std::cerr << e.what() << std::endl;
@@ -202,6 +205,15 @@ void Wait(int ms)
     ms = std::max(1, ms - diff);
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
     sLastWaitTime = std::chrono::system_clock::now();
+}
+
+extern "C"
+#ifdef WIN32
+__declspec(dllexport)
+#endif
+void EnableSimulator(bool isEnable)
+{
+    sIsEnableSimulator = isEnable;
 }
 
 namespace
