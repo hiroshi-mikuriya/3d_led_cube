@@ -32,6 +32,12 @@ module LED
     else
       dlload dirname + '/ledLib64.dll'
     end
+  when :linux
+    if `uname -m`.strip == 'armv7l' then
+      dlload dirname + '/ledLibarmv7l.so'  # for Raspberry PI3
+    else
+      raise RuntimeError
+    end
   else
     raise RuntimeError
   end

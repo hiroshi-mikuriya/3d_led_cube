@@ -4,7 +4,8 @@ UNAME := ${shell uname}
 CXX       := g++
 CXXFLAGS  := -Wall -std=c++0x -v $(CXXDEFS)
 
-TARGET    :=  ledLib.so
+ARCH      := $(shell uname -m)
+TARGET    :=  ledLib$(ARCH).so
 PROJ_ROOT := $(realpath ..)
 VPATH     := $(PROJ_ROOT)/src
 INCLUDES  := `pkg-config opencv --cflags` \
@@ -33,7 +34,7 @@ $(TARGET): $(OBJS)
 
 .PHONY: clean
 clean:
-	$(RM) -f $(TARGET) *.o
+	$(RM) -f *so *.o
 
 .cpp.o:
 	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $<

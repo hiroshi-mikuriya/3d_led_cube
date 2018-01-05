@@ -43,7 +43,7 @@ typedef void * Wait_t(int ms);
 /*!
  Enable or Disable a Simulator Window.
  Default setting is Enable.
- @param[in] 
+ @param[in] isEnable true: Show Simulator Window, false: Hide
  */
 typedef void * EnableSimulator_t(bool isEnable);
 

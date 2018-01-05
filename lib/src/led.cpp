@@ -9,6 +9,14 @@
 #include <chrono>
 #include <random>
 
+#if defined(WIN32)
+#define EXPORT __declspec(dllexport)
+#elif defined(MAC)
+#define EXPORT __attribute__((visibility("default")))
+#else
+#define EXPORT
+#endif
+
 namespace
 {
     std::mutex sMutex;
@@ -105,9 +113,7 @@ namespace
 
 
 extern "C"
-#ifdef WIN32
-__declspec(dllexport)
-#endif
+EXPORT
 void SetUrl(char const * url)
 {
     sUrl = url;
@@ -116,6 +122,9 @@ void SetUrl(char const * url)
 extern "C"
 #ifdef WIN32
 __declspec(dllexport)
+#endif
+#ifdef MAC
+__attribute__((visibility("default")))
 #endif
 void SetLed(int x, int y, int z, int rgb)
 {
@@ -133,9 +142,7 @@ void SetLed(int x, int y, int z, int rgb)
 }
 
 extern "C"
-#ifdef WIN32
-__declspec(dllexport)
-#endif
+EXPORT
 void Clear()
 {
     MutexLocker locker(sMutex);
@@ -174,9 +181,7 @@ namespace {
 }
 
 extern "C"
-#ifdef WIN32
-__declspec(dllexport)
-#endif
+EXPORT
 void Show()
 {
     MutexLocker locker(sMutex);
@@ -194,9 +199,7 @@ void Show()
 }
 
 extern "C"
-#ifdef WIN32
-__declspec(dllexport)
-#endif
+EXPORT
 void Wait(int ms)
 {
     static auto sLastWaitTime = std::chrono::system_clock::now();
@@ -208,9 +211,7 @@ void Wait(int ms)
 }
 
 extern "C"
-#ifdef WIN32
-__declspec(dllexport)
-#endif
+EXPORT
 void EnableSimulator(bool isEnable)
 {
     sIsEnableSimulator = isEnable;
@@ -254,9 +255,7 @@ namespace
 }
 
 extern "C"
-#ifdef WIN32
-__declspec(dllexport)
-#endif
+EXPORT
 void ShowMotioningText1(const char * text)
 {
     const int N0 = 4 * 2;
@@ -355,9 +354,7 @@ void ShowMotioningText1(const char * text)
 }
 
 extern "C"
-#ifdef WIN32
-__declspec(dllexport)
-#endif
+EXPORT
 void SetChar(int x, int y, int z, char c, int rgb)
 {
     if (x < -LED_WIDTH || LED_WIDTH <= x){
@@ -388,9 +385,7 @@ void SetChar(int x, int y, int z, char c, int rgb)
 }
 
 extern "C"
-#ifdef WIN32
-__declspec(dllexport)
-#endif
+EXPORT
 void ShowFirework(int x, int y, int z)
 {
     const int N = 39;
