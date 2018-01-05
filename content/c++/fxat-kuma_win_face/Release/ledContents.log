@@ -1,0 +1,39 @@
+﻿  main.cpp
+main.cpp(164): warning C4459: 'N' を宣言すると、グローバル宣言が隠蔽されます
+  main.cpp(37): note: 'N' の宣言を確認してください
+main.cpp(168): warning C4244: 'return': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(220): warning C4244: '引数': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(230): warning C4459: 'N' を宣言すると、グローバル宣言が隠蔽されます
+  main.cpp(37): note: 'N' の宣言を確認してください
+main.cpp(246): warning C4244: '初期化中': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(272): warning C4244: '引数': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(301): warning C4459: 'N' を宣言すると、グローバル宣言が隠蔽されます
+  main.cpp(37): note: 'N' の宣言を確認してください
+main.cpp(315): warning C4244: '引数': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(337): warning C4244: 'return': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(342): warning C4459: 'N' を宣言すると、グローバル宣言が隠蔽されます
+  main.cpp(37): note: 'N' の宣言を確認してください
+main.cpp(361): warning C4244: '引数': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(417): warning C4456: 'i' を宣言すると、以前のローカル宣言が隠蔽されます
+  main.cpp(415): note: 'i' の宣言を確認してください
+main.cpp(444): warning C4100: 't': 引数は関数の本体部で 1 度も参照されません。
+main.cpp(451): warning C4100: 't': 引数は関数の本体部で 1 度も参照されません。
+main.cpp(494): warning C4459: 'N' を宣言すると、グローバル宣言が隠蔽されます
+  main.cpp(37): note: 'N' の宣言を確認してください
+main.cpp(518): warning C4244: '引数': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(540): warning C4459: 'N' を宣言すると、グローバル宣言が隠蔽されます
+  main.cpp(37): note: 'N' の宣言を確認してください
+main.cpp(566): warning C4244: '引数': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(623): warning C4244: '引数': 'const double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(651): warning C4244: '初期化中': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(656): warning C4244: '引数': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(713): warning C4244: '引数': 'double' から 'int' への変換です。データが失われる可能性があります。
+main.cpp(927): warning C4189: 'side': ローカル変数が初期化されましたが、参照されていません
+main.cpp(925): warning C4189: 'z': ローカル変数が初期化されましたが、参照されていません
+main.cpp(925): warning C4189: 'y': ローカル変数が初期化されましたが、参照されていません
+main.cpp(925): warning C4189: 'x': ローカル変数が初期化されましたが、参照されていません
+  コード生成しています。
+  All 63 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  コード生成が終了しました。
+  ledContents.vcxproj -> C:\Users\kondo\Desktop\git_maker2017\3d_led_cube\content\c++\fxat-kuma_win_face\Release\ledContents.exe
+  ledContents.vcxproj -> C:\Users\kondo\Desktop\git_maker2017\3d_led_cube\content\c++\fxat-kuma_win_face\Release\ledContents.pdb (Full PDB)

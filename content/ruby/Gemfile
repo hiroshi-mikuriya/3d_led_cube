@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+source "https://rubygems.org"
+
+git_source(:github) {|repo_name| "https://github.com/hiroshi-mikuriya/3d_led_cube" }
+
+ruby '>2.4'
+
+# gem "rails"
+
+gem 'colorable'
+gem 'timers'
