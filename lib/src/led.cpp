@@ -1,6 +1,5 @@
 #include "led.h"
 #include "show.hpp"
-#include "port.h"
 #include <opencv2/opencv.hpp>
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
@@ -22,6 +21,7 @@ namespace
     std::mutex sMutex;
     int m[LED_WIDTH][LED_HEIGHT][LED_DEPTH];
     std::string sUrl;
+    uint16_t sPort = 9001;
     bool sIsEnableSimulator = true;
     
     class MutexLocker
@@ -120,6 +120,13 @@ void SetUrl(char const * url)
 }
 
 extern "C"
+EXPORT
+void SetPort(unsigned short port)
+{
+    sPort = port;
+}
+
+extern "C"
 #ifdef WIN32
 __declspec(dllexport)
 #endif
@@ -164,8 +171,8 @@ namespace {
                 for (int z = 0; z < LED_DEPTH; ++z){
                     int v = m[x][y][z];
                     char c[2] = { 0 };
-                    c[0] = ((v & 0xF80000) >> 16) + ((v & 0xE000) >> 13);
-                    c[1] = ((v & 0x1C00) >> 5) + ((v & 0xF8) >> 3);
+                    c[0] = static_cast<char>((v & 0xF80000) >> 16) + ((v & 0xE000) >> 13);
+                    c[1] = static_cast<char>((v & 0x1C00) >> 5) + ((v & 0xF8) >> 3);
                     src << c[0] << c[1];
                 }
             }
@@ -187,7 +194,7 @@ void Show()
     MutexLocker locker(sMutex);
     try{
         if (!sUrl.empty()){
-            send(sUrl, makerfaire::fxat::Port, m);
+            send(sUrl, sPort, m);
         }
         if (sIsEnableSimulator){
             ShowWindow("Sender", m);
@@ -262,8 +269,8 @@ void ShowMotioningText1(const char * text)
     const int N1 = 4 * 2;
     auto color = [&](std::string const & a, xyz_t p, int ix)->int {
         int colbase;
-        int xx = p.x * 15 / LED_WIDTH;
-        int yy = p.y * 15 / LED_HEIGHT;
+        int xx = static_cast<int>(p.x * 15 / LED_WIDTH);
+        int yy = static_cast<int>(p.y * 15 / LED_HEIGHT);
         auto cb = [](int r, int g, int b)->int
         {
             return 0x1 * b + 0x100 * g + 0x10000 * r;
@@ -275,7 +282,7 @@ void ShowMotioningText1(const char * text)
             default:
                 throw "DEATH!";
         }
-        return (a[p.x + p.y*LED_WIDTH] - 'A') * colbase;
+        return (a[static_cast<int>(p.x + p.y*LED_WIDTH)] - 'A') * colbase;
     };
     auto show = [&](std::string const & a, std::string const & b, double move, double light, int ix) {
         struct pp_t{
@@ -302,12 +309,12 @@ void ShowMotioningText1(const char * text)
             int c0 = color(a, pp.p[0], ix);
             int c1 = color(b, pp.p[1], ix + 1);
             auto mean = [&](int mask, double d) {
-                int v = ((c0 & mask)*(1 - move) + (c1 & mask)*move)*d;
+                int v = static_cast<int>(((c0 & mask)*(1 - move) + (c1 & mask)*move)*d);
                 return v & mask;
             };
             int col = mean(0xff0000, light) + mean(0xff00, light) + mean(0xff, light);
             if (can_show(p)) {
-                SetLed(p.x, p.y, p.z, col);
+                SetLed(static_cast<int>(p.x), static_cast<int>(p.y), static_cast<int>(p.z), col);
             }
         }
         Show();
@@ -404,7 +411,7 @@ void ShowFirework(int x, int y, int z)
             }
             return 0;
         };
-        int n = std::floor(x * 1 * 90);
+        int n = static_cast<int>(std::floor(x * 1 * 90));
         return red(n) * 0x10000 + red(n+30) * 0x100 + red(n+60) * 0x1;
     };
     auto darken = [](int x)->int
@@ -430,7 +437,7 @@ void ShowFirework(int x, int y, int z)
             auto & p = poss[i];
             auto & v = vs[i];
             if (can_show(p.p)) {
-                SetLed(p.p.x, p.p.y, p.p.z, p.color);
+                SetLed(static_cast<int>(p.p.x), static_cast<int>(p.p.y), static_cast<int>(p.p.z), p.color);
             }
             p.p += v;
             p.color = darken(p.color);

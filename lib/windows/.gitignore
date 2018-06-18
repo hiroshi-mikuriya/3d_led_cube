@@ -1,0 +1,9 @@
+Debug
+Release
+*.exe
+*.ilk
+*.log
+*.tlog
+*.suo
+*.sdf
+*.idb

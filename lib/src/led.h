@@ -12,6 +12,13 @@
 typedef void * SetUrl_t(char const * url);
 
 /*!
+Specify the PORT of 3D LED CUBE.
+If you specify a URL, the drawing data is transferred each time you call the Show function.
+@param[in] port 3D LED CUBE PORT
+*/
+typedef void * SetPort_t(unsigned short port);
+
+/*!
  Specify the color of each LED.
  Just by calling this function, drawing data is not transferred to 3D LED CUBE.
  @param[in] x 0 <= x < LED_WIDTH

@@ -7,9 +7,6 @@
     <ClInclude Include="..\src\led.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\port.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\show.hpp">
       <Filter>src</Filter>
     </ClInclude>
