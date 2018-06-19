@@ -885,6 +885,9 @@ int main(int argc, const char* argv[])
 	if (1 < argc){
 		SetUrl(argv[1]);
 	}
+    if(2 < argc){
+        SetPort(atoi(argv[2]));
+    }
 	for (;;) {
 		ShowMotioningText1("HelloWorld");
         // letters2();

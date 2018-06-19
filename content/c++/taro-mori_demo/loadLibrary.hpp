@@ -6,6 +6,7 @@
 #include <iostream>
 
 SetUrl_t * SetUrl;
+SetPort_t * SetPort;
 SetLed_t * SetLed;
 Clear_t * Clear;
 Show_t * Show;
@@ -21,6 +22,7 @@ inline void loadLibrary(const char * lib)
         throw std::runtime_error(dlerror());
     }
     SetUrl = (SetUrl_t*)dlsym(dylib, "SetUrl");
+    SetPort = (SetPort_t*)dlsym(dylib, "SetPort");
     SetLed = (SetLed_t*)dlsym(dylib, "SetLed");
     Clear = (Clear_t*)dlsym(dylib, "Clear");
     Show = (Show_t*)dlsym(dylib, "Show");
