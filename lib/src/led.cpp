@@ -127,12 +127,7 @@ void SetPort(unsigned short port)
 }
 
 extern "C"
-#ifdef WIN32
-__declspec(dllexport)
-#endif
-#ifdef MAC
-__attribute__((visibility("default")))
-#endif
+EXPORT
 void SetLed(int x, int y, int z, int rgb)
 {
     MutexLocker locker(sMutex);

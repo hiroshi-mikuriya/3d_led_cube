@@ -148,7 +148,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\base64.hpp" />
     <ClInclude Include="..\src\led.h" />
     <ClInclude Include="..\src\show.hpp" />
   </ItemGroup>
