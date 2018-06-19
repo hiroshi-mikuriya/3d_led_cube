@@ -2,7 +2,6 @@
 #include "show.hpp"
 #include <opencv2/opencv.hpp>
 #include <boost/asio.hpp>
-#include <boost/array.hpp>
 #include <thread>
 #include <mutex>
 #include <chrono>
