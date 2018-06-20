@@ -7,23 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		077B3A171F1236B300FBB8FF /* base64.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 077B3A121F1236B300FBB8FF /* base64.hpp */; };
 		077B3A181F1236B300FBB8FF /* led.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 077B3A131F1236B300FBB8FF /* led.cpp */; };
 		077B3A191F1236B300FBB8FF /* led.h in Headers */ = {isa = PBXBuildFile; fileRef = 077B3A141F1236B300FBB8FF /* led.h */; };
-		077B3A1A1F1236B300FBB8FF /* port.h in Headers */ = {isa = PBXBuildFile; fileRef = 077B3A151F1236B300FBB8FF /* port.h */; };
 		077B3A1B1F1236B300FBB8FF /* show.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 077B3A161F1236B300FBB8FF /* show.hpp */; };
-		682A81981F10CEBD005D9E3B /* libopencv_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 682A81951F10CEBD005D9E3B /* libopencv_core.dylib */; };
-		682A81991F10CEBD005D9E3B /* libopencv_highgui.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 682A81961F10CEBD005D9E3B /* libopencv_highgui.dylib */; };
-		682A819A1F10CEBD005D9E3B /* libopencv_imgproc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 682A81971F10CEBD005D9E3B /* libopencv_imgproc.dylib */; };
+		28C6574820D9EC7D00368606 /* libopencv_imgproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C6574520D9EC7D00368606 /* libopencv_imgproc.a */; };
+		28C6574920D9EC7D00368606 /* libopencv_highgui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C6574620D9EC7D00368606 /* libopencv_highgui.a */; };
+		28C6574A20D9EC7D00368606 /* libopencv_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C6574720D9EC7D00368606 /* libopencv_core.a */; };
 		682A819C1F10CF12005D9E3B /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 682A819B1F10CF12005D9E3B /* libboost_system.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		077B3A121F1236B300FBB8FF /* base64.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = base64.hpp; path = ../src/base64.hpp; sourceTree = "<group>"; };
 		077B3A131F1236B300FBB8FF /* led.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = led.cpp; path = ../src/led.cpp; sourceTree = "<group>"; };
 		077B3A141F1236B300FBB8FF /* led.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = led.h; path = ../src/led.h; sourceTree = "<group>"; };
-		077B3A151F1236B300FBB8FF /* port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = port.h; path = ../src/port.h; sourceTree = "<group>"; };
 		077B3A161F1236B300FBB8FF /* show.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = show.hpp; path = ../src/show.hpp; sourceTree = "<group>"; };
+		28C6574520D9EC7D00368606 /* libopencv_imgproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_imgproc.a; path = ../../../../../../usr/local/lib/libopencv_imgproc.a; sourceTree = "<group>"; };
+		28C6574620D9EC7D00368606 /* libopencv_highgui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_highgui.a; path = ../../../../../../usr/local/lib/libopencv_highgui.a; sourceTree = "<group>"; };
+		28C6574720D9EC7D00368606 /* libopencv_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_core.a; path = ../../../../../../usr/local/lib/libopencv_core.a; sourceTree = "<group>"; };
 		682A81691F10BD91005D9E3B /* libledLib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libledLib.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		682A81871F10BEA7005D9E3B /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = ../../../../../../../usr/local/Cellar/boost/1.64.0_1/lib/libboost_system.a; sourceTree = "<group>"; };
 		682A81891F10BEBE005D9E3B /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = ../../../../../../../usr/local/Cellar/opencv/2.4.13/lib/libopencv_core.dylib; sourceTree = "<group>"; };
@@ -44,9 +43,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				682A819C1F10CF12005D9E3B /* libboost_system.a in Frameworks */,
-				682A81981F10CEBD005D9E3B /* libopencv_core.dylib in Frameworks */,
-				682A81991F10CEBD005D9E3B /* libopencv_highgui.dylib in Frameworks */,
-				682A819A1F10CEBD005D9E3B /* libopencv_imgproc.dylib in Frameworks */,
+				28C6574820D9EC7D00368606 /* libopencv_imgproc.a in Frameworks */,
+				28C6574920D9EC7D00368606 /* libopencv_highgui.a in Frameworks */,
+				28C6574A20D9EC7D00368606 /* libopencv_core.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,10 +72,8 @@
 		682A81771F10BDA5005D9E3B /* src */ = {
 			isa = PBXGroup;
 			children = (
-				077B3A121F1236B300FBB8FF /* base64.hpp */,
 				077B3A131F1236B300FBB8FF /* led.cpp */,
 				077B3A141F1236B300FBB8FF /* led.h */,
-				077B3A151F1236B300FBB8FF /* port.h */,
 				077B3A161F1236B300FBB8FF /* show.hpp */,
 			);
 			name = src;
@@ -85,6 +82,9 @@
 		682A81861F10BEA7005D9E3B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				28C6574720D9EC7D00368606 /* libopencv_core.a */,
+				28C6574620D9EC7D00368606 /* libopencv_highgui.a */,
+				28C6574520D9EC7D00368606 /* libopencv_imgproc.a */,
 				682A819B1F10CF12005D9E3B /* libboost_system.a */,
 				682A81951F10CEBD005D9E3B /* libopencv_core.dylib */,
 				682A81961F10CEBD005D9E3B /* libopencv_highgui.dylib */,
@@ -108,8 +108,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				077B3A191F1236B300FBB8FF /* led.h in Headers */,
-				077B3A1A1F1236B300FBB8FF /* port.h in Headers */,
-				077B3A171F1236B300FBB8FF /* base64.hpp in Headers */,
 				077B3A1B1F1236B300FBB8FF /* show.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
