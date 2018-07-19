@@ -1,34 +1,6 @@
 #include "loadLibrary.hpp"
 #include <cstdlib>
 #include <cmath>
-
-#if  0 // random
-
-int main()
-{
-    using namespace makerfaire::fxat;
-    Led led;
-    for (int i = 0;; ++i) {
-        if (0 == (i % 128)) {
-            Clear();
-        } else {
-            int x = rand() % LED_WIDTH;
-            int y = rand() % LED_HEIGHT;
-            int z = rand() % LED_DEPTH;
-            int r = rand() & 0xFF;
-            int g = rand() & 0xFF;
-            int b = rand() & 0xFF;
-            int rgb = (r << 16) + (g << 8) + b;
-            SetLed(x, y, z, rgb);
-        }
-        Show();
-        Wait(50);
-    }
-    return 0;
-}
-
-#else // circle and square
-
 #include<deque>
 #include<vector>
 #include <random>
@@ -725,152 +697,6 @@ struct yz_t
     double y, z;
 };
 
-/*
- void letters2()
- {
- std::vector<std::string> letters{
- #include "letters2.hxx"
- };
- std::vector<yz_t> positions{
- { 0, 7 }, { 0, 6 }, { 0, 5 }, { 0, 4 }, { 1, 4 }, { 1, 3 }, { 2, 3 },
- { 2, 2 }, { 3, 2 }, { 4, 2 }, { 4, 1 }, { 5, 1 }, { 6, 1 }, { 7, 1 },
- { 8, 0 }, { 9, 0 }, { 10, 0 }, { 11, 0 }, { 12, 0 }, { 13, 0 },
- { 14, 0 }, { 15, 1 }, { 16, 1 }, { 17, 1 }, { 18, 1 }, { 19, 2 },
- { 20, 2 }, { 21, 2 }, { 22, 3 }, { 23, 3 }, { 24, 4 }, { 25, 4 },
- { 26, 5 }, { 27, 5 }, { 28, 6 }, { 29, 6 }, { 30, 7 }, { 31, 7 },
- };
- const int LH = 16;
- for (int i = 0; i < letters.size()*LH + positions.size(); ++i) {
- Clear();
- for (size_t pi = 0; pi < positions.size(); ++pi ){
- int pi0 = i + pi -int(positions.size());
- int c = (pi0 + LH * 10) / LH - 10;
- if (c<0 || letters.size() <= c) {
- continue;
- }
- auto color = [&](int col)->int {
- double t0 = 3.1416 * 2 / 3;
- double t = 3.1416*3*(c*LH - i + int(positions.size()) + 16.0) / positions.size();
- auto c = [t0, col](double x)->int {
- double v = (std::sin(x) + 0.5) / 1.5;
- return v < 0 || col==0 ? 0 : v * 127*col/15 + 128;
- };
- return c(t) + c(t + t0) * 256 + c(t + t0 * 2) * 65536;
- };
- for (int x = 0; x < LED_WIDTH; ++x) {
- int y_in_c = pi0 % LH;
- int col = letters.at(c).at(y_in_c * LED_WIDTH + x) - 'A';
- auto yz = positions.at(pi);
- SetLed(x, yz.y, yz.z, color(col));
- if (yz.z < 7) {
- SetLed(x, yz.y, yz.z + 1, color(col));
- }
- }
- }
- Show();
- Wait(50);
- }
- }
- 
- void letters()
- {
- std::vector<std::string> letters{
- #include "letters.hxx"
- };
- const int N0 = 4*2;
- const int N1 = 4*2;
- auto color = [&](std::string const & a, xyz_t p, int ix)->int {
- int colbase;
- int xx = p.x * 15 / LED_WIDTH;
- int yy = p.y * 15 / LED_HEIGHT;
- auto cb=[](int r, int g, int b)->int
- {
- return 0x1 * r + 0x100 * g + 0x10000* b;
- };
- switch (ix % 3) {
- case 0:  colbase = cb(xx, yy, 15); break;
- case 1:  colbase = cb(15, 15-xx, yy); break;
- case 2:  colbase = cb(15-yy, 15, xx); break;
- default:
- throw "DEATH!";
- }
- return (a[p.x + p.y*LED_WIDTH] - 'A' ) * colbase;
- };
- auto show = [&](std::string const & a, std::string const & b, double move, double light, int ix) {
- struct pp_t{
- xyz_t p[2];
- };
- std::mt19937 rng(1);
- std::vector<pp_t> pps;
- while (pps.size()<2000) {
- xyz_t p0{
- static_cast<double>(rng() % LED_WIDTH),
- static_cast<double>(rng() % LED_HEIGHT),
- static_cast<double>(rng() % LED_DEPTH) };
- xyz_t p1{
- static_cast<double>(rng() % LED_WIDTH),
- static_cast<double>(rng() % LED_HEIGHT),
- static_cast<double>(rng() % LED_DEPTH) };
- if (color(a, p0,ix) && color(b, p1,ix+1)) {
- pps.push_back({ { p0, p1 } });
- }
- }
- Clear();
- for (auto const & pp : pps) {
- xyz_t p = pp.p[0] * (1 - move) + pp.p[1] * move;
- int c0 = color(a, pp.p[0],ix);
- int c1 = color(b, pp.p[1],ix+1);
- auto mean = [&](int mask, double d) {
- int v = ((c0 & mask)*(1 - move) + (c1 & mask)*move)*d;
- return v & mask;
- };
- int col = mean(0xff0000, light) + mean(0xff00, light) + mean(0xff, light);
- if (can_show(p)) {
- SetLed(p.x, p.y, p.z, col);
- }
- }
- Show();
- Wait(50);
- };
- auto fade_in = [&](std::string const & c, int letter_index) {
- for (int ix = 0; ix < N0; ++ix) {
- show(c, c, 0, ix*1.0 / N0, letter_index);
- }
- };
- auto fade_out = [&](std::string const & c, int letter_index) {
- for (int ix = 0; ix < N0; ++ix) {
- show(c, c, 0, 1 - ix*1.0 / N0, letter_index);
- }
- };
- auto stop = [&](std::string const &  c, int letter_index) {
- for (int ix = 0; ix < N0; ++ix) {
- show(c, c, 0, 1, letter_index);
- }
- };
- auto move = [&](std::string const & a, std::string const & b, int letter_index) {
- for (int ix = 0; ix < N1; ++ix) {
- show(a, b, ix*1.0 / N1, 1, letter_index);
- }
- };
- 
- for (size_t ix = 0; ix < letters.size(); ++ix) {
- if (ix == 0) {
- fade_in(letters[ix],ix);
- stop(letters[ix], ix);
- } else if (ix == letters.size() - 1) {
- stop(letters[ix], ix);
- fade_out(letters[ix], ix);
- } else {
- stop(letters[ix], ix);
- }
- if (ix < letters.size() - 1) {
- move(letters[ix], letters[ix + 1], ix);
- }
- }
- }
- */
-
-
 int main(int argc, const char* argv[])
 {
     static_cast<void>(argc); // unused
@@ -889,10 +715,8 @@ int main(int argc, const char* argv[])
         SetPort(atoi(argv[2]));
     }
 	for (;;) {
-		ShowMotioningText1("HelloWorld");
-        // letters2();
+		ShowMotioningText1("MAKERFAIRE2018");
         wave();
-        // letters();
         balls();
         gala();
         skewed_sphere();
@@ -906,5 +730,3 @@ int main(int argc, const char* argv[])
         sphere();
     }
 }
-
-#endif

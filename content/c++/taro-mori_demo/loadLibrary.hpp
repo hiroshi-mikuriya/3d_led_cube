@@ -1,9 +1,11 @@
 #pragma once
 
 #include "led.h"
-#include <dlfcn.h>
 #include <stdexcept>
 #include <iostream>
+#include <Windows.h>
+
+#undef SetPort // SetPortWÇ∆Ç¢Ç§ä÷êîÇ™Ç†ÇÈÇÁÇµÇ¢
 
 SetUrl_t * SetUrl;
 SetPort_t * SetPort;
@@ -11,23 +13,25 @@ SetLed_t * SetLed;
 Clear_t * Clear;
 Show_t * Show;
 Wait_t * Wait;
+EnableSimulator_t * EnableSimulator;
 SetChar_t * SetChar;
 ShowMotioningText1_t * ShowMotioningText1;
 ShowFirework_t * ShowFirework;
 
 inline void loadLibrary(const char * lib)
 {
-    void * dylib = dlopen(lib, RTLD_LAZY);
-    if(0 == dylib){
-        throw std::runtime_error(dlerror());
+    HMODULE mod = LoadLibraryA(lib);
+    if(0 == mod){
+        throw std::runtime_error("Failed to load library");
     }
-    SetUrl = (SetUrl_t*)dlsym(dylib, "SetUrl");
-    SetPort = (SetPort_t*)dlsym(dylib, "SetPort");
-    SetLed = (SetLed_t*)dlsym(dylib, "SetLed");
-    Clear = (Clear_t*)dlsym(dylib, "Clear");
-    Show = (Show_t*)dlsym(dylib, "Show");
-    Wait = (Wait_t*)dlsym(dylib, "Wait");
-    SetChar = (SetChar_t*)dlsym(dylib, "SetChar");
-    ShowMotioningText1 = (ShowMotioningText1_t*)dlsym(dylib, "ShowMotioningText1");
-    ShowFirework = (ShowFirework_t*)dlsym(dylib, "ShowFirework");
+    SetUrl = reinterpret_cast<SetUrl_t*>(GetProcAddress(mod, "SetUrl"));
+    SetPort = reinterpret_cast<SetPort_t*>(GetProcAddress(mod, "SetPort"));
+    SetLed = reinterpret_cast<SetLed_t*>(GetProcAddress(mod, "SetLed"));
+    Clear = reinterpret_cast<Clear_t*>(GetProcAddress(mod, "Clear"));
+    Show = reinterpret_cast<Show_t*>(GetProcAddress(mod, "Show"));
+    Wait = reinterpret_cast<Wait_t*>(GetProcAddress(mod, "Wait"));
+    EnableSimulator = reinterpret_cast<EnableSimulator_t*>(GetProcAddress(mod, "EnableSimulator"));
+    SetChar = reinterpret_cast<SetChar_t*>(GetProcAddress(mod, "SetChar"));
+    ShowMotioningText1 = reinterpret_cast<ShowMotioningText1_t*>(GetProcAddress(mod, "ShowMotioningText1"));
+    ShowFirework = reinterpret_cast<ShowFirework_t*>(GetProcAddress(mod, "ShowFirework"));
 }
