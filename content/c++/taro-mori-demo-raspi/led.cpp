@@ -110,23 +110,16 @@ namespace
     }
 }
 
-
-extern "C"
-EXPORT
 void SetUrl(char const * url)
 {
     sUrl = url;
 }
 
-extern "C"
-EXPORT
 void SetPort(unsigned short port)
 {
     sPort = port;
 }
 
-extern "C"
-EXPORT
 void SetLed(int x, int y, int z, int rgb)
 {
     MutexLocker locker(sMutex);
@@ -142,8 +135,6 @@ void SetLed(int x, int y, int z, int rgb)
     m[x][y][z] = rgb;
 }
 
-extern "C"
-EXPORT
 void Clear()
 {
     MutexLocker locker(sMutex);
@@ -181,8 +172,6 @@ namespace {
     }
 }
 
-extern "C"
-EXPORT
 void Show()
 {
     MutexLocker locker(sMutex);
@@ -199,8 +188,6 @@ void Show()
     }
 }
 
-extern "C"
-EXPORT
 void Wait(int ms)
 {
     static auto sLastWaitTime = std::chrono::system_clock::now();
@@ -211,8 +198,6 @@ void Wait(int ms)
     sLastWaitTime = std::chrono::system_clock::now();
 }
 
-extern "C"
-EXPORT
 void EnableSimulator(bool isEnable)
 {
     sIsEnableSimulator = isEnable;
@@ -255,8 +240,6 @@ namespace
     }
 }
 
-extern "C"
-EXPORT
 void ShowMotioningText1(const char * text)
 {
     const int N0 = 4 * 2;
@@ -354,8 +337,6 @@ void ShowMotioningText1(const char * text)
     }
 }
 
-extern "C"
-EXPORT
 void SetChar(int x, int y, int z, char c, int rgb)
 {
     if (x < -LED_WIDTH || LED_WIDTH <= x){
@@ -385,8 +366,6 @@ void SetChar(int x, int y, int z, char c, int rgb)
     }
 }
 
-extern "C"
-EXPORT
 void ShowFirework(int x, int y, int z)
 {
     const int N = 39;
