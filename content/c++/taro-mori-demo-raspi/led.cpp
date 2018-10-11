@@ -7,14 +7,6 @@
 #include <chrono>
 #include <random>
 
-#if defined(WIN32)
-#define EXPORT __declspec(dllexport)
-#elif defined(MAC)
-#define EXPORT __attribute__((visibility("default")))
-#else
-#define EXPORT
-#endif
-
 namespace
 {
     std::mutex sMutex;

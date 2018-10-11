@@ -5,17 +5,6 @@
 #include <random>
 #include <cmath>
 
-extern void SetUrl(char const * url);
-extern void SetPort(unsigned short port);
-extern void SetLed(int x, int y, int z, int rgb);
-extern void Clear();
-extern void Show();
-extern void Wait(int ms);
-extern void EnableSimulator(bool isEnable);
-extern void SetChar(int x, int y, int z, char c, int rgb);
-extern void ShowMotioningText1(const char * text);
-extern void ShowFirework(int x, int y, int z);
-
 int N = 100;
 int get_power(int ix)
 {
