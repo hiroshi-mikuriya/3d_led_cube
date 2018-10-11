@@ -706,15 +706,15 @@ int main(int argc, const char* argv[])
 {
     static_cast<void>(argc); // unused
     static_cast<void>(argv); // unused
-	if (1 < argc){
-		SetUrl(argv[1]);
-	}
+    if (1 < argc){
+        SetUrl(argv[1]);
+    }
     if(2 < argc){
         SetPort(atoi(argv[2]));
     }
     EnableSimulator(true);
-	for (;;) {
-		ShowMotioningText1("HelloWorld");
+    for (;;) {
+        ShowMotioningText1("HelloWorld");
         wave();
         balls();
         gala();
